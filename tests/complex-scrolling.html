@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Complex Scrolling Test - Live Highlighter</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Roboto, sans-serif;
+        background: #f5f5f5;
+        overflow: hidden;
+        height: 100vh;
+      }
+
+      /* Azure DevOps-like layout */
+      .app-container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
+
+      /* Top nav */
+      .top-nav {
+        background: #106ebe;
+        color: white;
+        padding: 0 20px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        z-index: 100;
+      }
+      .top-nav h1 {
+        font-size: 16px;
+        font-weight: 400;
+      }
+
+      /* Main container with sidebar */
+      .main-container {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+      }
+
+      /* Left sidebar */
+      .sidebar {
+        width: 250px;
+        background: white;
+        border-right: 1px solid #dadce0;
+        overflow-y: auto;
+        flex-shrink: 0;
+      }
+      .sidebar-item {
+        padding: 12px 20px;
+        border-bottom: 1px solid #f0f0f0;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .sidebar-item:hover {
+        background: #f8f9fa;
+      }
+      .sidebar-item.active {
+        background: #e8f4fd;
+        border-left: 3px solid #1a73e8;
+        padding-left: 17px;
+      }
+
+      /* Main content area with multiple scrollable sections */
+      .content-area {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      /* Toolbar */
+      .toolbar {
+        background: white;
+        padding: 12px 20px;
+        border-bottom: 1px solid #dadce0;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .toolbar button {
+        padding: 6px 16px;
+        background: #1a73e8;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+      }
+      .toolbar button:hover {
+        background: #1557b0;
+      }
+
+      /* Split panes (like Azure DevOps work items) */
+      .split-container {
+        flex: 1;
+        display: flex;
+        overflow: hidden;
+      }
+
+      .left-pane {
+        flex: 1;
+        background: white;
+        overflow-y: auto;
+        border-right: 1px solid #dadce0;
+      }
+
+      .right-pane {
+        width: 400px;
+        background: white;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Card component */
+      .card {
+        margin: 20px;
+        padding: 20px;
+        background: white;
+        border: 1px solid #dadce0;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+      .card h3 {
+        color: #202124;
+        margin-bottom: 15px;
+        font-size: 16px;
+      }
+      .card p {
+        color: #5f6368;
+        line-height: 1.6;
+        margin-bottom: 10px;
+      }
+
+      /* Table */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px;
+      }
+      th,
+      td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #dadce0;
+      }
+      th {
+        background: #f8f9fa;
+        color: #202124;
+        font-weight: 500;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+      tbody tr:hover {
+        background: #f8f9fa;
+      }
+
+      /* Details panel sections */
+      .details-section {
+        padding: 20px;
+        border-bottom: 1px solid #dadce0;
+      }
+      .details-section h4 {
+        color: #202124;
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
+      .details-section p {
+        color: #5f6368;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      /* Nested scrollable area */
+      .nested-scroll {
+        max-height: 200px;
+        overflow-y: auto;
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 4px;
+        margin-top: 10px;
+      }
+
+      /* Status badges */
+      .badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 3px;
+        font-size: 11px;
+        font-weight: 500;
+        margin-right: 5px;
+      }
+      .badge.success {
+        background: #e6f4ea;
+        color: #137333;
+      }
+      .badge.error {
+        background: #fce8e6;
+        color: #c5221f;
+      }
+      .badge.warning {
+        background: #fef7e0;
+        color: #e37400;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- Top navigation -->
+      <div class="top-nav">
+        <h1>Live Highlighter - Complex Scrolling Test (Azure DevOps-like)</h1>
+      </div>
+
+      <div class="main-container">
+        <!-- Left sidebar -->
+        <div class="sidebar">
+          <div class="sidebar-item active">Work Items (error tracking)</div>
+          <div class="sidebar-item">Boards (success metrics)</div>
+          <div class="sidebar-item">Backlogs (resource planning)</div>
+          <div class="sidebar-item">Sprints (data analysis)</div>
+          <div class="sidebar-item">Queries (tags management)</div>
+          <div class="sidebar-item">Plans (kv-store config)</div>
+          <div class="sidebar-item">Analytics</div>
+          <div class="sidebar-item">Settings</div>
+        </div>
+
+        <!-- Main content -->
+        <div class="content-area">
+          <!-- Toolbar -->
+          <div class="toolbar">
+            <button>New Error</button>
+            <button>Filter by Tags</button>
+            <button>Export Data</button>
+            <span style="margin-left: auto; color: #5f6368; font-size: 13px">
+              Showing 150 items
+            </span>
+          </div>
+
+          <!-- Split panes -->
+          <div class="split-container">
+            <!-- Left pane: List of work items -->
+            <div class="left-pane">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Status</th>
+                    <th>Tags</th>
+                  </tr>
+                </thead>
+                <tbody id="workItemsTable">
+                  <!-- Generated by JavaScript -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Right pane: Details -->
+            <div class="right-pane">
+              <div class="details-section">
+                <h4>Work Item Details</h4>
+                <p><strong>ID:</strong> 12345</p>
+                <p>
+                  <strong>Title:</strong> Critical error in resource allocation
+                </p>
+                <p>
+                  <span class="badge error">error</span
+                  ><span class="badge">resource</span
+                  ><span class="badge">tags: production</span>
+                </p>
+              </div>
+
+              <div class="details-section">
+                <h4>Description</h4>
+                <p>
+                  System encountered error during resource provisioning. The
+                  kv-store returned invalid data causing the operation to fail.
+                  Tags were not properly synchronized from the configuration
+                  service.
+                </p>
+                <p>
+                  Expected: success response with resource allocation details.
+                </p>
+                <p>
+                  Actual: error response with code 500, resource unavailable.
+                </p>
+              </div>
+
+              <div class="details-section">
+                <h4>Activity Log</h4>
+                <div class="nested-scroll">
+                  <p>
+                    <strong>10:45 AM</strong> - Error detected in resource
+                    allocation
+                  </p>
+                  <p>
+                    <strong>10:46 AM</strong> - Attempted automatic recovery
+                    from kv-store
+                  </p>
+                  <p>
+                    <strong>10:47 AM</strong> - Recovery failed, escalating
+                    error
+                  </p>
+                  <p>
+                    <strong>10:48 AM</strong> - Tags updated with failure status
+                  </p>
+                  <p>
+                    <strong>10:49 AM</strong> - Resource marked as unavailable
+                  </p>
+                  <p>
+                    <strong>10:50 AM</strong> - Data sync initiated for recovery
+                  </p>
+                  <p>
+                    <strong>10:51 AM</strong> - Manual intervention required
+                  </p>
+                  <p>
+                    <strong>10:52 AM</strong> - Engineer assigned to resolve
+                    error
+                  </p>
+                  <p>
+                    <strong>10:55 AM</strong> - Root cause identified in
+                    kv-configuration
+                  </p>
+                  <p>
+                    <strong>11:00 AM</strong> - Fix applied, testing for success
+                  </p>
+                  <p>
+                    <strong>11:05 AM</strong> - Validation complete, resource
+                    restored
+                  </p>
+                  <p>
+                    <strong>11:06 AM</strong> - Tags updated, data synchronized
+                  </p>
+                  <p>
+                    <strong>11:07 AM</strong> - Success confirmed, closing error
+                  </p>
+                </div>
+              </div>
+
+              <div class="details-section">
+                <h4>Related Items</h4>
+                <p>• Error #12344 - kv-store timeout (related)</p>
+                <p>• Success #12340 - Resource provisioning optimization</p>
+                <p>• Data sync issue #12338 with similar tags</p>
+              </div>
+
+              <div class="details-section">
+                <h4>System Information</h4>
+                <p><strong>Resource ID:</strong> kv-prod-db-001</p>
+                <p><strong>Region:</strong> eastus</p>
+                <p>
+                  <strong>Tags:</strong> environment=production, team=platform,
+                  data=critical
+                </p>
+                <p><strong>Last Success:</strong> 2 hours ago</p>
+                <p><strong>Error Count:</strong> 3 in last 24h</p>
+              </div>
+
+              <div class="details-section">
+                <h4>Configuration (kv-store)</h4>
+                <div class="nested-scroll">
+                  <p>• connection_string: encrypted</p>
+                  <p>• retry_policy: exponential with data validation</p>
+                  <p>• timeout: 30s (may cause errors)</p>
+                  <p>• tags: auto-sync enabled</p>
+                  <p>• resource_pool: shared</p>
+                  <p>• health_check: success required every 60s</p>
+                  <p>• failover: enabled with kv-backup</p>
+                  <p>• monitoring: real-time error tracking</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Generate work items table
+      const workItems = [
+        {
+          id: 12345,
+          title: "Critical error in resource allocation",
+          status: "error",
+          tags: "production, kv-store",
+        },
+        {
+          id: 12344,
+          title: "kv-store timeout affecting data sync",
+          status: "error",
+          tags: "infrastructure",
+        },
+        {
+          id: 12343,
+          title: "Success rate improvement for resource provisioning",
+          status: "success",
+          tags: "optimization",
+        },
+        {
+          id: 12342,
+          title: "Data migration completed successfully",
+          status: "success",
+          tags: "data, migration",
+        },
+        {
+          id: 12341,
+          title: "Resource tags not synchronizing properly",
+          status: "error",
+          tags: "tags, kv-sync",
+        },
+        {
+          id: 12340,
+          title: "Performance success in kv-cache implementation",
+          status: "success",
+          tags: "cache, data",
+        },
+        {
+          id: 12339,
+          title: "Error handling enhancement for resource operations",
+          status: "success",
+          tags: "reliability",
+        },
+        {
+          id: 12338,
+          title: "Data consistency error in distributed kv-store",
+          status: "error",
+          tags: "data, consistency",
+        },
+        {
+          id: 12337,
+          title: "Monitoring dashboard shows success metrics",
+          status: "success",
+          tags: "monitoring",
+        },
+        {
+          id: 12336,
+          title: "Resource cleanup script error fixed",
+          status: "success",
+          tags: "maintenance",
+        },
+      ];
+
+      // Generate additional rows for scrolling
+      const tbody = document.getElementById("workItemsTable");
+      const templates = [
+        "error in {type} processing",
+        "success implementing {type} optimization",
+        "resource allocation for {type}",
+        "data synchronization {type} issue",
+        "tags management {type} update",
+        "kv-store {type} configuration",
+      ];
+      const types = [
+        "service",
+        "database",
+        "cache",
+        "queue",
+        "api",
+        "worker",
+        "scheduler",
+      ];
+
+      for (let i = 0; i < 100; i++) {
+        const template = templates[i % templates.length];
+        const type = types[i % types.length];
+        const statuses = ["error", "success", "warning"];
+        const status = statuses[i % statuses.length];
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+        <td>#${12345 - i}</td>
+        <td>${template.replace("{type}", type)}</td>
+        <td><span class="badge ${status}">${status}</span></td>
+        <td>${type}, data, tags</td>
+      `;
+        tbody.appendChild(tr);
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>iFrames Test - Live Highlighter</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Roboto, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+      .header {
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #1a73e8;
+        margin: 0 0 10px;
+      }
+      .test-section {
+        background: white;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      h2 {
+        color: #202124;
+        margin-top: 0;
+        font-size: 18px;
+      }
+      iframe {
+        width: 100%;
+        border: 1px solid #dadce0;
+        border-radius: 4px;
+        background: white;
+      }
+      .iframe-label {
+        font-size: 12px;
+        color: #5f6368;
+        margin-bottom: 8px;
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>iFrames Test</h1>
+      <p>
+        This page tests Live Highlighter's ability to highlight text inside
+        iframes, similar to Azure Portal's architecture.
+      </p>
+      <p>
+        <strong>Note:</strong> Iframes from same origin should be highlighted.
+        Cross-origin iframes cannot be accessed due to browser security.
+      </p>
+      <p>
+        <strong>Test keywords:</strong> error, success, resource, tags, kv-,
+        data
+      </p>
+    </div>
+
+    <div class="test-section">
+      <h2>Parent Document Content</h2>
+      <p>
+        This text is in the main document. Keywords: error, success, resource
+        management with tags and kv-store data.
+      </p>
+    </div>
+
+    <div class="test-section">
+      <h2>Same-Origin iFrame #1</h2>
+      <div class="iframe-label">Simple content iframe</div>
+      <iframe id="iframe1" height="200"></iframe>
+    </div>
+
+    <div class="test-section">
+      <h2>Same-Origin iFrame #2</h2>
+      <div class="iframe-label">Nested structure iframe</div>
+      <iframe id="iframe2" height="300"></iframe>
+    </div>
+
+    <div class="test-section">
+      <h2>Same-Origin iFrame #3 with Scrolling</h2>
+      <div class="iframe-label">
+        Scrollable content iframe (like Azure Portal panels)
+      </div>
+      <iframe id="iframe3" height="400"></iframe>
+    </div>
+
+    <div class="test-section">
+      <h2>Dynamically Created iFrame</h2>
+      <button
+        id="addIframe"
+        style="
+          padding: 10px 20px;
+          background: #1a73e8;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+        "
+      >
+        Add iFrame
+      </button>
+      <div id="iframeContainer"></div>
+    </div>
+
+    <script>
+      // iFrame 1: Simple content
+      const iframe1 = document.getElementById("iframe1");
+      const doc1 = iframe1.contentDocument;
+      doc1.open();
+      doc1.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body { font-family: 'Segoe UI', sans-serif; padding: 20px; margin: 0; }
+          p { margin: 10px 0; color: #202124; }
+        </style>
+      </head>
+      <body>
+        <h3 style="color: #1A73E8; margin-top: 0;">iFrame Content #1</h3>
+        <p>This content is inside an iframe. Testing keywords: error, success, resource.</p>
+        <p>Additional keywords: data processing, tags management, kv-store configuration.</p>
+      </body>
+      </html>
+    `);
+      doc1.close();
+
+      // iFrame 2: Nested structure
+      const iframe2 = document.getElementById("iframe2");
+      const doc2 = iframe2.contentDocument;
+      doc2.open();
+      doc2.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body { font-family: 'Segoe UI', sans-serif; padding: 20px; margin: 0; }
+          .card { background: #f8f9fa; padding: 15px; margin: 10px 0; border-radius: 4px; border-left: 4px solid #1A73E8; }
+          h4 { margin: 0 0 10px; color: #202124; }
+          p { margin: 5px 0; color: #5F6368; }
+        </style>
+      </head>
+      <body>
+        <h3 style="color: #1A73E8; margin-top: 0;">iFrame Content #2 - Nested Structure</h3>
+        <div class="card">
+          <h4>Error Handling</h4>
+          <p>System detected error in resource allocation. Tags: production, kv-enabled.</p>
+        </div>
+        <div class="card">
+          <h4>Success Metrics</h4>
+          <p>Operation completed with success. Data synchronized from kv-store with proper tags.</p>
+        </div>
+        <div class="card">
+          <h4>Resource Status</h4>
+          <p>All resources available. No errors detected. Tags configured for success tracking.</p>
+        </div>
+      </body>
+      </html>
+    `);
+      doc2.close();
+
+      // iFrame 3: Scrollable content
+      const iframe3 = document.getElementById("iframe3");
+      const doc3 = iframe3.contentDocument;
+      doc3.open();
+      doc3.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body { font-family: 'Segoe UI', sans-serif; padding: 20px; margin: 0; }
+          .panel { background: white; border: 1px solid #DADCE0; border-radius: 4px; margin-bottom: 10px; }
+          .panel-header { background: #f8f9fa; padding: 12px 15px; border-bottom: 1px solid #DADCE0; font-weight: 500; color: #202124; }
+          .panel-body { padding: 15px; color: #5F6368; }
+          table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+          th, td { padding: 8px; text-align: left; border-bottom: 1px solid #DADCE0; }
+          th { background: #f8f9fa; color: #202124; font-weight: 500; }
+        </style>
+      </head>
+      <body>
+        <h3 style="color: #1A73E8; margin-top: 0;">iFrame Content #3 - Scrollable (Azure Portal-like)</h3>
+
+        <div class="panel">
+          <div class="panel-header">Error Logs</div>
+          <div class="panel-body">
+            <p>Recent errors detected in resource provisioning:</p>
+            <ul>
+              <li>Error #1: Resource timeout - tags: production, kv-db</li>
+              <li>Error #2: Data sync failed - kv-store unavailable</li>
+              <li>Error #3: Success threshold not met</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">Resource Metrics</div>
+          <div class="panel-body">
+            <table>
+              <tr>
+                <th>Resource</th>
+                <th>Status</th>
+                <th>Tags</th>
+              </tr>
+              <tr>
+                <td>kv-store-01</td>
+                <td>success</td>
+                <td>data, production</td>
+              </tr>
+              <tr>
+                <td>kv-cache-02</td>
+                <td>error</td>
+                <td>cache, staging</td>
+              </tr>
+              <tr>
+                <td>kv-db-03</td>
+                <td>success</td>
+                <td>database, production</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">Data Operations</div>
+          <div class="panel-body">
+            <p>Data processing completed with success. No errors in resource allocation.</p>
+            <p>Configuration loaded from kv-store with tags: production, data-sync, success-tracking.</p>
+            <p>Resource utilization: 65% - All systems operational.</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">System Health</div>
+          <div class="panel-body">
+            <p>Overall system status: success</p>
+            <p>Active resources: 15 (tags: production, kv-enabled)</p>
+            <p>Error rate: 0.02%</p>
+            <p>Data throughput: 1250 req/s</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">Recent Events</div>
+          <div class="panel-body">
+            <ul>
+              <li>Resource scaled: success - tags updated in kv-store</li>
+              <li>Data backup: completed - no errors</li>
+              <li>Cache invalidation: success - resource tags refreshed</li>
+              <li>Health check: passed - all resources available</li>
+            </ul>
+          </div>
+        </div>
+      </body>
+      </html>
+    `);
+      doc3.close();
+
+      // Dynamic iframe creation
+      document.getElementById("addIframe").addEventListener("click", () => {
+        const container = document.getElementById("iframeContainer");
+        const wrapper = document.createElement("div");
+        wrapper.style.marginTop = "15px";
+
+        const iframe = document.createElement("iframe");
+        iframe.style.width = "100%";
+        iframe.style.height = "200px";
+        iframe.style.border = "1px solid #DADCE0";
+        iframe.style.borderRadius = "4px";
+
+        wrapper.appendChild(iframe);
+        container.appendChild(wrapper);
+
+        const doc = iframe.contentDocument;
+        doc.open();
+        doc.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body { font-family: 'Segoe UI', sans-serif; padding: 20px; margin: 0; background: #f8f9fa; }
+            h3 { color: #1A73E8; margin-top: 0; }
+            p { color: #202124; }
+          </style>
+        </head>
+        <body>
+          <h3>Dynamic iFrame (Created at ${new Date().toLocaleTimeString()})</h3>
+          <p>This iframe was created dynamically. Keywords should still highlight:</p>
+          <p>error, success, resource, data, tags, kv-store</p>
+        </body>
+        </html>
+      `);
+        doc.close();
+      });
+    </script>
+  </body>
+</html>

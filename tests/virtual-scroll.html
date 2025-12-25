@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Virtual Scrolling Test - Live Highlighter</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Roboto, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+      .header {
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #1a73e8;
+        margin: 0 0 10px;
+      }
+      .container {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+      .virtual-list {
+        height: 600px;
+        overflow-y: auto;
+        position: relative;
+        border: 1px solid #dadce0;
+      }
+      .virtual-content {
+        position: relative;
+      }
+      .list-item {
+        padding: 15px 20px;
+        border-bottom: 1px solid #dadce0;
+        position: absolute;
+        left: 0;
+        right: 0;
+        background: white;
+      }
+      .list-item:hover {
+        background: #f8f9fa;
+      }
+      .item-title {
+        font-weight: 500;
+        color: #202124;
+        margin-bottom: 5px;
+      }
+      .item-desc {
+        color: #5f6368;
+        font-size: 13px;
+      }
+      .stats {
+        padding: 15px 20px;
+        background: #f8f9fa;
+        border-top: 1px solid #dadce0;
+        font-size: 13px;
+        color: #5f6368;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>Virtual Scrolling Test</h1>
+      <p>
+        This page implements virtual scrolling where DOM nodes are recycled as
+        you scroll. Live Highlighter should re-highlight content as it becomes
+        visible.
+      </p>
+      <p>
+        <strong>Test keywords:</strong> error, success, resource, tags, kv-,
+        data
+      </p>
+    </div>
+
+    <div class="container">
+      <div id="virtualList" class="virtual-list"></div>
+      <div class="stats">
+        <span id="stats"
+          >Scroll to test highlighting with virtual scrolling...</span
+        >
+      </div>
+    </div>
+
+    <script>
+      // Virtual scrolling implementation
+      const ITEM_HEIGHT = 80;
+      const TOTAL_ITEMS = 10000;
+      const BUFFER_SIZE = 5;
+
+      const listEl = document.getElementById("virtualList");
+      const statsEl = document.getElementById("stats");
+
+      // Sample data with keywords
+      const keywords = [
+        "error",
+        "success",
+        "resource",
+        "tags",
+        "kv-",
+        "data",
+        "api",
+        "service",
+      ];
+      const templates = [
+        "Processing request #INDEX: error handling enabled, success rate: 99.9%",
+        "Resource #INDEX allocated with tags: production, kv-store enabled",
+        "Data sync #INDEX completed successfully with resource optimization",
+        "API call #INDEX: no errors, success response with data payload",
+        "Service #INDEX running, kv-config loaded, tags applied",
+        "Error recovery for resource #INDEX: success, data integrity verified",
+        "Tags management #INDEX: kv-pairs updated, success confirmed",
+        "Request #INDEX processed: no error, resource available, data ready",
+      ];
+
+      function getItemData(index) {
+        const template = templates[index % templates.length];
+        return {
+          title: `Item ${index + 1}`,
+          description: template.replace("#INDEX", index + 1),
+        };
+      }
+
+      let scrollTop = 0;
+      let visibleStart = 0;
+      let visibleEnd = 0;
+
+      function updateVisibleItems() {
+        const containerHeight = listEl.clientHeight;
+        const scrollTop = listEl.scrollTop;
+
+        // Calculate visible range with buffer
+        const start = Math.max(
+          0,
+          Math.floor(scrollTop / ITEM_HEIGHT) - BUFFER_SIZE
+        );
+        const end = Math.min(
+          TOTAL_ITEMS,
+          Math.ceil((scrollTop + containerHeight) / ITEM_HEIGHT) + BUFFER_SIZE
+        );
+
+        // Only update if range changed
+        if (start === visibleStart && end === visibleEnd) return;
+
+        visibleStart = start;
+        visibleEnd = end;
+
+        // Clear and re-render visible items
+        const content = document.createElement("div");
+        content.className = "virtual-content";
+        content.style.height = `${TOTAL_ITEMS * ITEM_HEIGHT}px`;
+
+        for (let i = start; i < end; i++) {
+          const data = getItemData(i);
+          const item = document.createElement("div");
+          item.className = "list-item";
+          item.style.top = `${i * ITEM_HEIGHT}px`;
+          item.style.height = `${ITEM_HEIGHT}px`;
+          item.innerHTML = `
+          <div class="item-title">${data.title}</div>
+          <div class="item-desc">${data.description}</div>
+        `;
+          content.appendChild(item);
+        }
+
+        listEl.innerHTML = "";
+        listEl.appendChild(content);
+
+        // Update stats
+        statsEl.textContent = `Showing items ${
+          start + 1
+        }-${end} of ${TOTAL_ITEMS.toLocaleString()} (scroll position: ${Math.round(
+          scrollTop
+        )}px)`;
+      }
+
+      // Handle scroll events
+      let scrollTimeout;
+      listEl.addEventListener("scroll", () => {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(updateVisibleItems, 50);
+      });
+
+      // Initial render
+      updateVisibleItems();
+    </script>
+  </body>
+</html>

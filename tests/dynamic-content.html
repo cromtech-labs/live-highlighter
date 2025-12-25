@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dynamic Content Test - Live Highlighter</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 40px 20px;
+        background: #f5f5f5;
+      }
+      .header {
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #1a73e8;
+        margin: 0 0 10px;
+      }
+      .test-section {
+        background: white;
+        padding: 30px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      h2 {
+        color: #202124;
+        margin-top: 0;
+      }
+      button {
+        padding: 10px 20px;
+        margin: 5px;
+        background: #1a73e8;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      button:hover {
+        background: #1557b0;
+      }
+      button.danger {
+        background: #d93025;
+      }
+      button.danger:hover {
+        background: #b31412;
+      }
+      .content-area {
+        margin-top: 20px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 4px;
+        min-height: 100px;
+      }
+      .log {
+        margin-top: 10px;
+        padding: 10px;
+        background: #f8f9fa;
+        border-radius: 4px;
+        font-size: 12px;
+        font-family: "Courier New", monospace;
+        max-height: 150px;
+        overflow-y: auto;
+      }
+      .log-entry {
+        padding: 3px 0;
+        color: #5f6368;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>Dynamic Content Test</h1>
+      <p>
+        This page tests Live Highlighter's ability to highlight dynamically
+        added, modified, and removed content.
+      </p>
+      <p>
+        <strong>Test keywords:</strong> error, success, resource, tags, data
+      </p>
+    </div>
+
+    <div class="test-section">
+      <h2>Add Content</h2>
+      <button id="addParagraph">Add Paragraph</button>
+      <button id="addList">Add List</button>
+      <button id="addTable">Add Table</button>
+      <div id="addContent" class="content-area"></div>
+    </div>
+
+    <div class="test-section">
+      <h2>Modify Content</h2>
+      <button id="modifyText">Change Text</button>
+      <button id="modifyAttr">Change Attributes</button>
+      <div id="modifyContent" class="content-area">
+        <p id="modifiablePara">
+          Original text with error and success keywords.
+        </p>
+        <div id="modifiableDiv">
+          This div contains resource and data management tags.
+        </div>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2>Remove Content</h2>
+      <button id="removeFirst">Remove First</button>
+      <button id="removeLast">Remove Last</button>
+      <button class="danger" id="clearAll">Clear All</button>
+      <div id="removeContent" class="content-area">
+        <p>Paragraph 1 with error handling</p>
+        <p>Paragraph 2 with success metrics</p>
+        <p>Paragraph 3 with resource allocation</p>
+        <p>Paragraph 4 with data processing tags</p>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2>Continuous Updates</h2>
+      <button id="startUpdates">Start Updates</button>
+      <button class="danger" id="stopUpdates">Stop Updates</button>
+      <div id="liveContent" class="content-area">
+        <p id="livePara">Waiting for updates...</p>
+      </div>
+      <div id="log" class="log"></div>
+    </div>
+
+    <script>
+      let updateInterval = null;
+      let updateCount = 0;
+
+      const messages = [
+        "Processing request: error count 0, success rate 100%",
+        "Resource allocation: 5 instances, tags: production, kv-enabled",
+        "Data sync completed: success, no errors detected",
+        "API response: success, data payload received, resource usage: 45%",
+        "Service health check: success, all resources available with proper tags",
+        "Error recovery initiated: attempting to restore resource state from kv-store",
+        "Cache update: success, data refreshed, tags synchronized",
+        "Database query: success, no errors, resource pool at 60% with optimization tags",
+      ];
+
+      // Add content
+      document.getElementById("addParagraph").addEventListener("click", () => {
+        const p = document.createElement("p");
+        p.textContent = messages[Math.floor(Math.random() * messages.length)];
+        document.getElementById("addContent").appendChild(p);
+        log("Added paragraph with keywords");
+      });
+
+      document.getElementById("addList").addEventListener("click", () => {
+        const ul = document.createElement("ul");
+        ul.innerHTML = `
+        <li>Error handling: enabled with resource monitoring</li>
+        <li>Success metrics: tracked with data analytics and tags</li>
+        <li>Resource management: automated with kv-store configuration</li>
+      `;
+        document.getElementById("addContent").appendChild(ul);
+        log("Added list with keywords");
+      });
+
+      document.getElementById("addTable").addEventListener("click", () => {
+        const table = document.createElement("table");
+        table.style.width = "100%";
+        table.style.borderCollapse = "collapse";
+        table.innerHTML = `
+        <tr style="border-bottom: 1px solid #ddd;">
+          <th style="padding: 8px; text-align: left;">Metric</th>
+          <th style="padding: 8px; text-align: left;">Value</th>
+        </tr>
+        <tr style="border-bottom: 1px solid #ddd;">
+          <td style="padding: 8px;">Error Rate</td>
+          <td style="padding: 8px;">0.01%</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #ddd;">
+          <td style="padding: 8px;">Success Rate</td>
+          <td style="padding: 8px;">99.99%</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px;">Resource Usage (tags: kv-store, data-cache)</td>
+          <td style="padding: 8px;">45%</td>
+        </tr>
+      `;
+        document.getElementById("addContent").appendChild(table);
+        log("Added table with keywords");
+      });
+
+      // Modify content
+      document.getElementById("modifyText").addEventListener("click", () => {
+        const para = document.getElementById("modifiablePara");
+        para.textContent =
+          messages[Math.floor(Math.random() * messages.length)];
+        log("Modified paragraph text");
+      });
+
+      document.getElementById("modifyAttr").addEventListener("click", () => {
+        const div = document.getElementById("modifiableDiv");
+        div.setAttribute(
+          "data-status",
+          "Updated: " + new Date().toLocaleTimeString()
+        );
+        div.textContent = `Updated at ${new Date().toLocaleTimeString()}: error count 0, success with resource tags and kv-data`;
+        log("Modified div attributes and content");
+      });
+
+      // Remove content
+      document.getElementById("removeFirst").addEventListener("click", () => {
+        const container = document.getElementById("removeContent");
+        if (container.firstElementChild) {
+          container.removeChild(container.firstElementChild);
+          log("Removed first element");
+        }
+      });
+
+      document.getElementById("removeLast").addEventListener("click", () => {
+        const container = document.getElementById("removeContent");
+        if (container.lastElementChild) {
+          container.removeChild(container.lastElementChild);
+          log("Removed last element");
+        }
+      });
+
+      document.getElementById("clearAll").addEventListener("click", () => {
+        document.getElementById("removeContent").innerHTML =
+          '<p style="color: #999;">All content removed</p>';
+        log("Cleared all content");
+      });
+
+      // Continuous updates
+      document.getElementById("startUpdates").addEventListener("click", () => {
+        if (updateInterval) return;
+
+        updateInterval = setInterval(() => {
+          updateCount++;
+          const para = document.getElementById("livePara");
+          para.textContent = `Update #${updateCount}: ${
+            messages[updateCount % messages.length]
+          }`;
+          log(`Live update #${updateCount}`);
+        }, 2000);
+
+        log("Started continuous updates (every 2s)");
+      });
+
+      document.getElementById("stopUpdates").addEventListener("click", () => {
+        if (updateInterval) {
+          clearInterval(updateInterval);
+          updateInterval = null;
+          log("Stopped continuous updates");
+        }
+      });
+
+      // Logging
+      function log(message) {
+        const logDiv = document.getElementById("log");
+        const entry = document.createElement("div");
+        entry.className = "log-entry";
+        entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+        logDiv.insertBefore(entry, logDiv.firstChild);
+
+        // Keep only last 20 entries
+        while (logDiv.children.length > 20) {
+          logDiv.removeChild(logDiv.lastChild);
+        }
+      }
+
+      log("Page loaded, ready for testing");
+    </script>
+  </body>
+</html>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Three highlight bars only - transparent background -->
+  <!-- Line 1 - blue -->
+  <rect x="0" y="1" width="32" height="8" rx="2" fill="#3b82f6"/>
+  
+  <!-- Line 2 - amber -->
+  <rect x="0" y="12" width="24" height="8" rx="2" fill="#f59e0b"/>
+  
+  <!-- Line 3 - red -->
+  <rect x="0" y="23" width="29" height="8" rx="2" fill="#ef4444"/>
+</svg>
