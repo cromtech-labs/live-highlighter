@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Overlapping Text Test - Live Highlighter</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 40px 20px;
+        background: #f5f5f5;
+      }
+      .header {
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #1a73e8;
+        margin: 0 0 10px;
+      }
+      .test-section {
+        background: white;
+        padding: 30px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      h2 {
+        color: #202124;
+        margin-top: 0;
+      }
+      .test-case {
+        padding: 15px;
+        background: #f8f9fa;
+        margin: 15px 0;
+        border-radius: 4px;
+        border-left: 4px solid #1a73e8;
+      }
+      .label {
+        font-size: 12px;
+        color: #5f6368;
+        font-weight: 500;
+        margin-bottom: 8px;
+      }
+      .priority-info {
+        background: #fff3e0;
+        padding: 15px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        border-left: 4px solid #fb8c00;
+      }
+      code {
+        background: #f8f9fa;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: "Courier New", monospace;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>Overlapping Text Test</h1>
+      <p>
+        This page tests how Live Highlighter handles overlapping text matches
+        where multiple rules could apply to the same text.
+      </p>
+      <p>
+        <strong>Priority rule:</strong> First matching rule wins (based on rule
+        order in settings)
+      </p>
+    </div>
+
+    <div class="test-section">
+      <h2>How Priority Works</h2>
+      <div class="priority-info">
+        <p>
+          <strong>Rule Priority:</strong> When multiple rules match the same
+          text, the first rule in your list takes precedence.
+        </p>
+        <p>For example, if you have:</p>
+        <ol style="margin: 10px 0; padding-left: 20px">
+          <li>Rule #1: Highlight "error" in yellow</li>
+          <li>Rule #2: Highlight "error handling" in orange</li>
+        </ol>
+        <p>
+          The text "error handling" will be highlighted as:
+          <code>error</code> (yellow) + <code> handling</code> (no highlight),
+          because "error" matches first.
+        </p>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2>Test Cases</h2>
+
+      <div class="test-case">
+        <div class="label">Case 1: Exact Word Repetition</div>
+        <p>
+          error error error success success resource resource data data tags
+          tags
+        </p>
+        <p><em>Expected: Each word highlighted independently</em></p>
+      </div>
+
+      <div class="test-case">
+        <div class="label">Case 2: Words in Phrases</div>
+        <p>
+          The error handling system detects errors and logs error messages for
+          error recovery.
+        </p>
+        <p><em>Expected: Each "error" occurrence highlighted separately</em></p>
+      </div>
+
+      <div class="test-case">
+        <div class="label">Case 3: Substring Matches</div>
+        <p>
+          successful success successfully, resource resources resourceful, data
+          database datastore
+        </p>
+        <p>
+          <em
+            >Expected: Only exact matches highlighted (success, resource,
+            data)</em
+          >
+        </p>
+      </div>
+
+      <div class="test-case">
+        <div class="label">Case 4: Consecutive Matches</div>
+        <p>
+          errorsuccess (no space), error success (with space), error-success
+          (hyphenated)
+        </p>
+        <p>
+          <em>Expected: Only separated words highlighted, not concatenated</em>
+        </p>
+      </div>
+
+      <div class="test-case">
+        <div class="label">Case 5: Case Insensitive</div>
+        <p>
+          ERROR Error error, SUCCESS Success success, RESOURCE Resource resource
+        </p>
+        <p>
+          <em
+            >Expected: All variations highlighted (case insensitive
+            matching)</em
+          >
+        </p>
+      </div>
+
+      <div class="test-case">
+        <div class="label">Case 6: Prefix Pattern (kv-)</div>
+        <p>kv-store, kv-cache, kv-database, kv-123, kv-production-data</p>
+        <p><em>Expected: All "kv-" occurrences highlighted</em></p>
+      </div>
+
+      <div class="test-case">
+        <div class="label">Case 7: Multiple Keywords in Sentence</div>
+        <p>
+          The resource manager detected an error while processing data with tags
+          from the kv-store, but the operation completed with success.
+        </p>
+        <p>
+          <em
+            >Expected: resource, error, data, tags, kv-, success all
+            highlighted</em
+          >
+        </p>
+      </div>
+
+      <div class="test-case">
+        <div class="label">Case 8: Dense Keyword Concentration</div>
+        <p>
+          error resource data tags kv-store success error resource data tags
+          kv-cache success
+        </p>
+        <p><em>Expected: All keywords highlighted in sequence</em></p>
+      </div>
+
+      <div class="test-case">
+        <div class="label">Case 9: Keywords in Different Contexts</div>
+        <ul>
+          <li>System error occurred</li>
+          <li>Resource allocation success</li>
+          <li>Data tags updated</li>
+          <li>kv-store connection established</li>
+        </ul>
+        <p><em>Expected: Keywords highlighted in list items</em></p>
+      </div>
+
+      <div class="test-case">
+        <div class="label">Case 10: Keywords in Table</div>
+        <table style="width: 100%; border-collapse: collapse">
+          <tr style="border-bottom: 1px solid #ddd">
+            <th style="padding: 8px; text-align: left">Event</th>
+            <th style="padding: 8px; text-align: left">Status</th>
+            <th style="padding: 8px; text-align: left">Details</th>
+          </tr>
+          <tr style="border-bottom: 1px solid #ddd">
+            <td style="padding: 8px">error detected</td>
+            <td style="padding: 8px">failure</td>
+            <td style="padding: 8px">resource unavailable</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #ddd">
+            <td style="padding: 8px">data sync</td>
+            <td style="padding: 8px">success</td>
+            <td style="padding: 8px">tags updated from kv-store</td>
+          </tr>
+        </table>
+        <p><em>Expected: Keywords highlighted in table cells</em></p>
+      </div>
+
+      <div class="test-case">
+        <div class="label">Case 11: Adjacent Keywords</div>
+        <p>
+          datasuccess (concatenated), data success (spaced), data-success
+          (hyphenated), data/success (slashed)
+        </p>
+        <p>
+          <em
+            >Expected: Only spaced versions highlighted as separate matches</em
+          >
+        </p>
+      </div>
+
+      <div class="test-case">
+        <div class="label">Case 12: Keywords at Boundaries</div>
+        <p>
+          error, success. resource! data? tags; kv-store: (keywords with
+          punctuation)
+        </p>
+        <p>
+          <em
+            >Expected: All keywords highlighted, punctuation not highlighted</em
+          >
+        </p>
+      </div>
+
+      <div class="test-case">
+        <div class="label">Case 13: Very Long Text with Scattered Keywords</div>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. An error
+          occurred during processing. Sed do eiusmod tempor incididunt ut labore
+          et dolore magna aliqua. The operation completed with success. Ut enim
+          ad minim veniam, quis nostrud exercitation. Resource allocation was
+          optimized. Ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          Data synchronization finished. Duis aute irure dolor in reprehenderit.
+          Tags were updated in the kv-store. Voluptate velit esse cillum dolore
+          eu fugiat nulla pariatur.
+        </p>
+        <p><em>Expected: Keywords highlighted throughout the paragraph</em></p>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2>Performance Test</h2>
+      <div class="test-case">
+        <div class="label">Case 14: High Density Keywords (100+ matches)</div>
+        <p id="densePara"></p>
+        <p><em>Expected: All matches highlighted with good performance</em></p>
+      </div>
+    </div>
+
+    <script>
+      // Generate high-density keyword paragraph
+      const keywords = [
+        "error",
+        "success",
+        "resource",
+        "data",
+        "tags",
+        "kv-store",
+      ];
+      const densePara = document.getElementById("densePara");
+      let denseText = "";
+      for (let i = 0; i < 100; i++) {
+        denseText += keywords[i % keywords.length] + " ";
+        if ((i + 1) % 10 === 0) denseText += "| "; // Add separators every 10 words
+      }
+      densePara.textContent = denseText;
+    </script>
+  </body>
+</html>

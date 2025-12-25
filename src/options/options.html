@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Live Highlighter - Options</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="header-content">
+          <div class="title-section">
+            <div class="title-with-logo">
+              <img
+                src="../../icons/icon48.png"
+                alt="Live Highlighter Logo"
+                class="logo"
+              />
+              <div>
+                <h1>Live Highlighter</h1>
+                <p class="tagline">Highlight what matters, instantly</p>
+              </div>
+            </div>
+          </div>
+          <div class="header-controls">
+            <div class="toggle-container">
+              <label class="toggle-label">
+                <input type="checkbox" id="globalToggle" class="toggle-input" />
+                <span class="toggle-slider"></span>
+                <span class="toggle-text">Highlighting Enabled</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <div class="controls-bar">
+          <div class="rule-count">
+            <span id="ruleCount">0</span> / <span id="maxRules">10</span> rules
+          </div>
+          <button id="addRuleBtn" class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"
+              />
+            </svg>
+            Add Rule
+          </button>
+        </div>
+
+        <div id="rulesContainer" class="rules-container">
+          <div class="empty-state" id="emptyState">
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+              <circle cx="32" cy="32" r="30" stroke="#ddd" stroke-width="2" />
+              <path
+                d="M32 16v32M16 32h32"
+                stroke="#ddd"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+            <h3>No rules yet</h3>
+            <p>Click "Add Rule" to create your first highlight rule</p>
+          </div>
+
+          <div id="rulesList" class="rules-list"></div>
+        </div>
+
+        <div class="help-section">
+          <h3>How to use</h3>
+          <ul>
+            <li>
+              <strong>Add a rule:</strong> Click "Add Rule" and enter text to
+              highlight and choose a color
+            </li>
+            <li>
+              <strong>Priority:</strong> Drag rules to reorder - higher rules
+              have priority when text overlaps
+            </li>
+            <li>
+              <strong>Edit:</strong> Click on text or color to edit - changes
+              save automatically
+            </li>
+            <li>
+              <strong>Toggle:</strong> Use the switch on each rule to
+              enable/disable it
+            </li>
+            <li>
+              <strong>Delete:</strong> Click the × button to remove a rule
+            </li>
+          </ul>
+        </div>
+      </main>
+    </div>
+
+    <!-- Template for rule items (will be cloned by JavaScript) -->
+    <template id="ruleTemplate">
+      <div class="rule-item" draggable="true" data-rule-id="">
+        <div class="drag-handle" title="Drag to reorder">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <circle cx="4" cy="4" r="1.5" />
+            <circle cx="4" cy="8" r="1.5" />
+            <circle cx="4" cy="12" r="1.5" />
+            <circle cx="12" cy="4" r="1.5" />
+            <circle cx="12" cy="8" r="1.5" />
+            <circle cx="12" cy="12" r="1.5" />
+          </svg>
+        </div>
+
+        <div class="rule-order"></div>
+
+        <div class="rule-content">
+          <input
+            type="text"
+            class="rule-text"
+            placeholder="Text to highlight..."
+            maxlength="100"
+          />
+
+          <div class="rule-color-picker">
+            <button class="color-button" type="button">
+              <span class="color-preview"></span>
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="currentColor"
+              >
+                <path d="M3 5l3 3 3-3z" />
+              </svg>
+            </button>
+            <div class="color-dropdown"></div>
+          </div>
+        </div>
+
+        <div class="rule-actions">
+          <label class="rule-toggle">
+            <input type="checkbox" class="rule-enabled" checked />
+            <span class="toggle-slider small"></span>
+          </label>
+
+          <button class="btn-icon delete-btn" title="Delete rule">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M2 2l12 12M14 2L2 14"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </template>
+
+    <script src="../shared/constants.js"></script>
+    <script src="../shared/storage.js"></script>
+    <script src="options.js"></script>
+  </body>
+</html>
