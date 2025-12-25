@@ -90,8 +90,6 @@ We're actively seeking feedback to improve Live Highlighter. Your input helps ma
 
 - **Chrome:** Version 105+ (September 2022 or later)
 - **Edge:** Version 105+ (September 2022 or later)
-- **Firefox:** Not currently supported (planned for future release)
-- **Safari:** Not currently supported
 
 ---
 
