@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip install:*)",
+      "Bash(mkdocs build:*)",
+      "Bash(tree:*)",
+      "WebFetch(domain:dev.azure.com)",
+      "mcp__azure-devops__pipelines_get_build_status",
+      "mcp__azure-devops__pipelines_get_build_log",
+      "mcp__azure-devops__pipelines_get_build_log_by_id"
+    ],
+    "additionalDirectories": [
+      "d:\\live-highlighter-docs"
+    ]
+  }
+}

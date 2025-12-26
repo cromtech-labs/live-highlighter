@@ -78,7 +78,7 @@ See our [Privacy Policy](PRIVACY.md) for more details.
 
 ### Reporting Issues
 
-Found a bug or have a feature request? Please report it on our [GitHub Issues](https://github.com/cromtech-labs/browser-highlighter/issues) page.
+Found a bug or have a feature request? Please report it on our [GitHub Issues](https://github.com/cromtech-labs/live-highlighter/issues) page.
 
 ### Feedback
 

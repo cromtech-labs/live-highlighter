@@ -6,8 +6,10 @@ const LiveHighlighter = (function ()
   'use strict';
 
   return {
-    // Maximum number of rules (free tier limit)
-    MAX_RULES: 6,
+    // Maximum limits (free tier)
+    MAX_GROUPS: 10,              // Maximum number of groups
+    MAX_WORDS_PER_GROUP: 20,     // Maximum words per group
+    MAX_TOTAL_WORDS: 200,        // Maximum total words across all groups
 
     // Preset colour options (free tier)
     // WCAG AA compliant colors optimized for light backgrounds with black text
@@ -21,21 +23,27 @@ const LiveHighlighter = (function ()
       { name: 'Lavender', hex: '#CE93D8', textColor: '#000000' }     // Light purple - good contrast
     ],
 
-    // Default rules (empty on first install)
-    DEFAULT_RULES: [],
+    // Default group for new installs
+    DEFAULT_GROUP: {
+      name: 'Example Group',
+      colour: '#FFF59D',
+      textColor: '#000000',
+      enabled: true,
+      words: ['Important', 'TODO', 'URGENT']
+    },
 
     // Storage keys
     STORAGE_KEYS: {
-      RULES: 'rules',
+      GROUPS: 'groups',
       ENABLED: 'enabled',
       VERSION: 'version'
     },
 
     // Default settings
     DEFAULT_SETTINGS: {
-      rules: [],  // Empty array, not reference to DEFAULT_RULES
+      groups: [],  // Will be populated with DEFAULT_GROUP on first install
       enabled: true,
-      version: 1
+      version: 2   // Bumped version to indicate new schema
     },
 
     // MutationObserver debounce delay (ms)

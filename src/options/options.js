@@ -1,25 +1,29 @@
-// Live Highlighter - Options Page Logic
+// Live Highlighter - Options Page Logic (Groups Architecture)
 
 (function ()
 {
   'use strict';
 
   // Access namespace
-  const { Storage, PRESET_COLOURS, MAX_RULES } = LiveHighlighter;
+  const { Storage, PRESET_COLOURS, MAX_GROUPS, MAX_WORDS_PER_GROUP, MAX_TOTAL_WORDS } = LiveHighlighter;
 
   // DOM elements
-  let rulesList;
+  let groupsList;
   let emptyState;
-  let ruleCountSpan;
-  let maxRulesSpan;
-  let addRuleBtn;
+  let groupCountSpan;
+  let maxGroupsSpan;
+  let totalWordCountSpan;
+  let maxTotalWordsSpan;
+  let addGroupBtn;
   let globalToggle;
-  let ruleTemplate;
+  let groupTemplate;
+  let wordChipTemplate;
 
   // State
-  let rules = [];
+  let groups = [];
   let draggedElement = null;
   let dragOverElement = null;
+  let expandedGroupIds = new Set(); // Track which groups are expanded
 
   // ============================================================================
   // Initialization
@@ -30,23 +34,27 @@
     console.log('Live Highlighter: Options page initializing');
 
     // Get DOM elements
-    rulesList = document.getElementById('rulesList');
+    groupsList = document.getElementById('groupsList');
     emptyState = document.getElementById('emptyState');
-    ruleCountSpan = document.getElementById('ruleCount');
-    maxRulesSpan = document.getElementById('maxRules');
-    addRuleBtn = document.getElementById('addRuleBtn');
+    groupCountSpan = document.getElementById('groupCount');
+    maxGroupsSpan = document.getElementById('maxGroups');
+    totalWordCountSpan = document.getElementById('totalWordCount');
+    maxTotalWordsSpan = document.getElementById('maxTotalWords');
+    addGroupBtn = document.getElementById('addGroupBtn');
     globalToggle = document.getElementById('globalToggle');
-    ruleTemplate = document.getElementById('ruleTemplate');
+    groupTemplate = document.getElementById('groupTemplate');
+    wordChipTemplate = document.getElementById('wordChipTemplate');
 
-    // Set max rules
-    maxRulesSpan.textContent = MAX_RULES;
+    // Set max limits
+    maxGroupsSpan.textContent = MAX_GROUPS;
+    maxTotalWordsSpan.textContent = MAX_TOTAL_WORDS;
 
     // Load current state
-    await loadRules();
+    await loadGroups();
     await loadGlobalEnabled();
 
     // Set up event listeners
-    addRuleBtn.addEventListener('click', handleAddRule);
+    addGroupBtn.addEventListener('click', handleAddGroup);
     globalToggle.addEventListener('change', handleGlobalToggle);
 
     // Listen for storage changes from other tabs
@@ -59,10 +67,10 @@
   // Loading and Rendering
   // ============================================================================
 
-  async function loadRules()
+  async function loadGroups()
   {
-    rules = await Storage.getRules();
-    renderRules();
+    groups = await Storage.getGroups();
+    renderGroups();
   }
 
   async function loadGlobalEnabled()
@@ -71,262 +79,463 @@
     globalToggle.checked = enabled;
   }
 
-  function renderRules()
+  function renderGroups()
   {
     // Clear current list
-    rulesList.innerHTML = '';
+    groupsList.innerHTML = '';
 
     // Show/hide empty state
-    if (rules.length === 0) {
+    if (groups.length === 0) {
       emptyState.style.display = 'flex';
-      rulesList.style.display = 'none';
+      groupsList.style.display = 'none';
     } else {
       emptyState.style.display = 'none';
-      rulesList.style.display = 'block';
+      groupsList.style.display = 'block';
 
-      // Sort rules by order
-      const sortedRules = [...rules].sort((a, b) => a.order - b.order);
+      // Sort groups by order
+      const sortedGroups = [...groups].sort((a, b) => a.order - b.order);
 
-      // Render each rule
-      sortedRules.forEach((rule, index) =>
+      // Render each group
+      sortedGroups.forEach((group, index) =>
       {
-        const ruleElement = createRuleElement(rule, index);
-        rulesList.appendChild(ruleElement);
+        const groupElement = createGroupElement(group, index);
+        groupsList.appendChild(groupElement);
       });
     }
 
-    // Update count
-    updateRuleCount();
-
-    // Update add button state
-    addRuleBtn.disabled = rules.length >= MAX_RULES;
+    // Update counts
+    updateCounts();
   }
 
-  function createRuleElement(rule, index)
+  function updateCounts()
   {
-    // Clone template
-    const clone = ruleTemplate.content.cloneNode(true);
-    const ruleItem = clone.querySelector('.rule-item');
+    const totalWords = groups.reduce((sum, g) => sum + g.words.length, 0);
 
-    // Set data
-    ruleItem.dataset.ruleId = rule.id;
+    groupCountSpan.textContent = groups.length;
+    totalWordCountSpan.textContent = totalWords;
+
+    // Disable add group button if at limit
+    addGroupBtn.disabled = groups.length >= MAX_GROUPS;
+  }
+
+  // ============================================================================
+  // Group Element Creation
+  // ============================================================================
+
+  function createGroupElement(group, index)
+  {
+    const template = groupTemplate.content.cloneNode(true);
+    const groupItem = template.querySelector('.group-item');
+
+    // Set group ID
+    groupItem.dataset.groupId = group.id;
 
     // Set order number
-    const orderDiv = ruleItem.querySelector('.rule-order');
-    orderDiv.textContent = index + 1;
+    groupItem.querySelector('.group-order').textContent = index + 1;
 
-    // Set text input
-    const textInput = ruleItem.querySelector('.rule-text');
-    textInput.value = rule.text;
-    textInput.addEventListener('input', () => handleTextEdit(rule.id, textInput.value));
-    textInput.addEventListener('blur', () => validateText(textInput, rule.id));
+    // Set group name (read-only by default with edit button)
+    const nameDisplay = groupItem.querySelector('.group-name-display');
+    const nameInput = groupItem.querySelector('.group-name-input');
+    const editNameBtn = groupItem.querySelector('.edit-name-btn');
 
-    // Set color picker
-    const colorButton = ruleItem.querySelector('.color-button');
-    const colorPreview = ruleItem.querySelector('.color-preview');
-    const colorDropdown = ruleItem.querySelector('.color-dropdown');
+    nameDisplay.textContent = group.name;
+    nameInput.value = group.name;
 
-    colorPreview.style.backgroundColor = rule.colour;
-    setupColorPicker(colorButton, colorDropdown, rule.id, rule.colour);
+    // Edit button click - switch to edit mode
+    editNameBtn.addEventListener('click', (e) =>
+    {
+      e.stopPropagation(); // Don't trigger header expansion
+      nameDisplay.style.display = 'none';
+      editNameBtn.style.display = 'none';
+      nameInput.style.display = 'inline-block';
+      nameInput.focus();
+      nameInput.select();
+    });
 
-    // Set enabled toggle
-    const enabledToggle = ruleItem.querySelector('.rule-enabled');
-    enabledToggle.checked = rule.enabled;
-    enabledToggle.addEventListener('change', () => handleToggleEnabled(rule.id, enabledToggle.checked));
+    // Save on blur
+    nameInput.addEventListener('blur', async () =>
+    {
+      await handleGroupNameChange(group.id, nameInput.value);
+      // Switch back to display mode
+      nameDisplay.style.display = 'inline-block';
+      editNameBtn.style.display = 'inline-flex';
+      nameInput.style.display = 'none';
+    });
 
-    // Set delete button
-    const deleteBtn = ruleItem.querySelector('.delete-btn');
-    deleteBtn.addEventListener('click', () => handleDeleteRule(rule.id));
+    // Save on Enter
+    nameInput.addEventListener('keypress', (e) =>
+    {
+      if (e.key === 'Enter') {
+        nameInput.blur();
+      }
+    });
 
-    // Set up drag and drop
-    setupDragAndDrop(ruleItem);
+    // Set color
+    setupColorPicker(groupItem, group);
 
-    return ruleItem;
+    // Set word count
+    updateGroupWordCount(groupItem, group);
+
+    // Set enabled state
+    const enabledCheckbox = groupItem.querySelector('.group-enabled');
+    enabledCheckbox.checked = group.enabled;
+    enabledCheckbox.addEventListener('change', () => handleGroupToggle(group.id, enabledCheckbox.checked));
+
+    // Expand/collapse functionality
+    const expandBtn = groupItem.querySelector('.expand-btn');
+    const wordsSection = groupItem.querySelector('.group-words');
+    const groupHeader = groupItem.querySelector('.group-header');
+
+    // Function to toggle expansion
+    const toggleExpansion = () =>
+    {
+      const isExpanded = wordsSection.style.display !== 'none';
+      wordsSection.style.display = isExpanded ? 'none' : 'block';
+      expandBtn.classList.toggle('expanded', !isExpanded);
+
+      // Track expanded state
+      if (isExpanded) {
+        expandedGroupIds.delete(group.id);
+      } else {
+        expandedGroupIds.add(group.id);
+      }
+    };
+
+    // Restore expanded state if this group was previously expanded
+    if (expandedGroupIds.has(group.id)) {
+      wordsSection.style.display = 'block';
+      expandBtn.classList.add('expanded');
+    }
+
+    // Click anywhere on header to expand/collapse
+    groupHeader.addEventListener('click', (e) =>
+    {
+      // Don't toggle if clicking on interactive elements
+      if (e.target.closest('.group-name-container') ||
+          e.target.closest('.group-color-picker') ||
+          e.target.closest('.color-button') ||
+          e.target.closest('.color-dropdown') ||
+          e.target.closest('.group-toggle') ||
+          e.target.closest('.delete-group-btn')) {
+        return;
+      }
+      toggleExpansion();
+    });
+
+    // Also allow expand button to work
+    expandBtn.addEventListener('click', (e) =>
+    {
+      e.stopPropagation(); // Prevent double-toggle from header click
+      toggleExpansion();
+    });
+
+    // Render words
+    renderWords(groupItem, group);
+
+    // Delete button
+    const deleteBtn = groupItem.querySelector('.delete-group-btn');
+    deleteBtn.addEventListener('click', () => handleDeleteGroup(group.id));
+
+    // Drag and drop
+    setupGroupDragDrop(groupItem);
+
+    return groupItem;
   }
 
-  function setupColorPicker(button, dropdown, ruleId, currentColour)
+  function updateGroupWordCount(groupElement, group)
   {
-    // Create color options
+    const wordCountSpan = groupElement.querySelector('.word-count');
+    wordCountSpan.textContent = `${group.words.length} / ${MAX_WORDS_PER_GROUP} words`;
+  }
+
+  function setupColorPicker(groupElement, group)
+  {
+    const colorButton = groupElement.querySelector('.color-button');
+    const colorPreview = groupElement.querySelector('.color-preview');
+    const colorDropdown = groupElement.querySelector('.color-dropdown');
+
+    // Set current color
+    colorPreview.style.backgroundColor = group.colour;
+
+    // Build color dropdown
     PRESET_COLOURS.forEach(preset =>
     {
-      const option = document.createElement('button');
-      option.className = 'color-option';
-      option.type = 'button';
-      option.innerHTML = `
-        <span class="color-swatch" style="background-color: ${preset.hex}"></span>
-        <span class="color-name">${preset.name}</span>
-        ${preset.hex === currentColour ? '<span class="check">✓</span>' : ''}
-      `;
-      option.addEventListener('click', () =>
+      const colorOption = document.createElement('div');
+      colorOption.className = 'color-option';
+      if (preset.hex === group.colour) {
+        colorOption.classList.add('selected');
+      }
+
+      const colorSwatch = document.createElement('div');
+      colorSwatch.className = 'color-swatch';
+      colorSwatch.style.backgroundColor = preset.hex;
+
+      const colorName = document.createElement('span');
+      colorName.textContent = preset.name;
+
+      colorOption.appendChild(colorSwatch);
+      colorOption.appendChild(colorName);
+
+      colorOption.addEventListener('click', async () =>
       {
-        handleColorChange(ruleId, preset.hex);
-        closeColorDropdown(dropdown);
+        await handleGroupColorChange(group.id, preset.hex);
+        colorDropdown.classList.remove('show');
       });
-      dropdown.appendChild(option);
+
+      colorDropdown.appendChild(colorOption);
     });
 
     // Toggle dropdown
-    button.addEventListener('click', (e) =>
+    colorButton.addEventListener('click', (e) =>
     {
       e.stopPropagation();
-      const isOpen = dropdown.classList.contains('open');
+      colorDropdown.classList.toggle('show');
 
-      // Close all other dropdowns
-      document.querySelectorAll('.color-dropdown.open').forEach(d =>
+      // Close other dropdowns
+      document.querySelectorAll('.color-dropdown.show').forEach(dropdown =>
       {
-        d.classList.remove('open');
+        if (dropdown !== colorDropdown) {
+          dropdown.classList.remove('show');
+        }
       });
-
-      if (!isOpen) {
-        dropdown.classList.add('open');
-      }
     });
 
     // Close dropdown when clicking outside
     document.addEventListener('click', () =>
     {
-      closeColorDropdown(dropdown);
+      colorDropdown.classList.remove('show');
     });
   }
 
-  function closeColorDropdown(dropdown)
+  // ============================================================================
+  // Word Rendering
+  // ============================================================================
+
+  function renderWords(groupElement, group)
   {
-    dropdown.classList.remove('open');
+    const wordsList = groupElement.querySelector('.words-list');
+    wordsList.innerHTML = '';
+
+    // Render each word as a chip
+    group.words.forEach(word =>
+    {
+      const wordChip = createWordChip(group.id, word);
+      wordsList.appendChild(wordChip);
+    });
+
+    // Setup add word input
+    const addWordInput = groupElement.querySelector('.add-word-input');
+    const addWordBtn = groupElement.querySelector('.add-word-btn');
+
+    // Clear any existing event listeners by cloning the elements
+    const newAddWordBtn = addWordBtn.cloneNode(true);
+    addWordBtn.replaceWith(newAddWordBtn);
+
+    newAddWordBtn.addEventListener('click', async () =>
+    {
+      await handleAddWord(group.id, addWordInput.value);
+      addWordInput.value = '';
+    });
+
+    addWordInput.addEventListener('keypress', async (e) =>
+    {
+      if (e.key === 'Enter') {
+        await handleAddWord(group.id, addWordInput.value);
+        addWordInput.value = '';
+      }
+    });
   }
 
-  function updateRuleCount()
+  function createWordChip(groupId, word)
   {
-    ruleCountSpan.textContent = rules.length;
+    const template = wordChipTemplate.content.cloneNode(true);
+    const chip = template.querySelector('.word-chip');
+
+    chip.dataset.word = word;
+    chip.querySelector('.word-text').textContent = word;
+
+    const removeBtn = chip.querySelector('.remove-word-btn');
+    removeBtn.addEventListener('click', () => handleRemoveWord(groupId, word));
+
+    return chip;
   }
 
   // ============================================================================
-  // Event Handlers
+  // Event Handlers - Groups
   // ============================================================================
 
-  async function handleAddRule()
+  async function handleAddGroup()
   {
-    if (rules.length >= MAX_RULES) {
-      alert(`Maximum ${MAX_RULES} rules reached. Delete a rule to add a new one.`);
+    if (groups.length >= MAX_GROUPS) {
+      showNotification(`Maximum ${MAX_GROUPS} groups reached`, 'error');
       return;
     }
 
-    // Get first available color (cycle through presets)
-    const colorIndex = rules.length % PRESET_COLOURS.length;
-    const defaultColor = PRESET_COLOURS[colorIndex].hex;
+    // Get next color (cycle through preset colors)
+    const nextColorIndex = groups.length % PRESET_COLOURS.length;
+    const nextColor = PRESET_COLOURS[nextColorIndex].hex;
 
-    // Generate unique placeholder text
-    let placeholderText = 'text to highlight';
-    let counter = 1;
-    while (rules.some(r => r.text.toLowerCase() === placeholderText.toLowerCase())) {
-      placeholderText = `text to highlight ${counter}`;
-      counter++;
-    }
+    const newGroup = await Storage.addGroup(`Group ${groups.length + 1}`, nextColor);
+    if (newGroup) {
+      await loadGroups();
+      showNotification('Group added', 'success');
 
-    // Add rule with unique placeholder text
-    const newRule = await Storage.addRule(placeholderText, defaultColor);
-
-    if (newRule) {
-      await loadRules();
-
-      // Focus and select the text for easy editing
+      // Auto-expand the new group
       setTimeout(() =>
       {
-        const newRuleElement = document.querySelector(`[data-rule-id="${newRule.id}"]`);
-        if (newRuleElement) {
-          const textInput = newRuleElement.querySelector('.rule-text');
-          textInput.focus();
-          textInput.select(); // Select all text so user can start typing
+        const newGroupElement = document.querySelector(`[data-group-id="${newGroup.id}"]`);
+        if (newGroupElement) {
+          const expandBtn = newGroupElement.querySelector('.expand-btn');
+          const wordsSection = newGroupElement.querySelector('.group-words');
+          wordsSection.style.display = 'block';
+          expandBtn.classList.add('expanded');
+
+          // Focus on group name input
+          const nameInput = newGroupElement.querySelector('.group-name');
+          nameInput.select();
         }
       }, 100);
     } else {
-      alert('Failed to add rule. Please try again.');
+      showNotification('Failed to add group', 'error');
     }
   }
 
-  async function handleTextEdit(ruleId, newText)
+  async function handleDeleteGroup(groupId)
   {
-    // Auto-save on input (debounced by browser)
-    // Validation happens on blur
+    if (confirm('Delete this group and all its words?')) {
+      const success = await Storage.deleteGroup(groupId);
+      if (success) {
+        await loadGroups();
+        showNotification('Group deleted', 'success');
+      } else {
+        showNotification('Failed to delete group', 'error');
+      }
+    }
   }
 
-  async function validateText(textInput, ruleId)
+  async function handleGroupNameChange(groupId, newName)
   {
-    const newText = textInput.value.trim();
+    if (!newName || !newName.trim()) {
+      showNotification('Group name cannot be empty', 'error');
+      await loadGroups();  // Revert
+      return;
+    }
 
-    if (newText === '') {
-      // If empty, delete the rule
-      const confirmDelete = confirm('Empty rule will be deleted. Continue?');
-      if (confirmDelete) {
-        await Storage.deleteRule(ruleId);
-        await loadRules();
-      } else {
-        // Restore previous value
-        const rule = rules.find(r => r.id === ruleId);
-        if (rule) {
-          textInput.value = rule.text;
+    const success = await Storage.updateGroup(groupId, { name: newName.trim() });
+    if (success) {
+      // Update the display without full reload to avoid closing the group
+      const group = groups.find(g => g.id === groupId);
+      if (group) {
+        group.name = newName.trim();
+        const groupElement = document.querySelector(`[data-group-id="${groupId}"]`);
+        if (groupElement) {
+          const nameDisplay = groupElement.querySelector('.group-name-display');
+          nameDisplay.textContent = newName.trim();
         }
       }
+    } else {
+      showNotification('Failed to update group name', 'error');
+      await loadGroups();  // Revert
+    }
+  }
+
+  async function handleGroupColorChange(groupId, newColor)
+  {
+    const preset = PRESET_COLOURS.find(p => p.hex === newColor);
+    const success = await Storage.updateGroup(groupId, {
+      colour: newColor,
+      textColor: preset ? preset.textColor : '#000000'
+    });
+
+    if (success) {
+      await loadGroups();
+      showNotification('Color updated', 'success');
+    } else {
+      showNotification('Failed to update color', 'error');
+    }
+  }
+
+  async function handleGroupToggle(groupId, enabled)
+  {
+    const success = await Storage.updateGroup(groupId, { enabled });
+    if (!success) {
+      showNotification('Failed to toggle group', 'error');
+      await loadGroups();  // Revert
+    }
+  }
+
+  // ============================================================================
+  // Event Handlers - Words
+  // ============================================================================
+
+  async function handleAddWord(groupId, word)
+  {
+    if (!word || !word.trim()) {
       return;
     }
 
-    // Check for duplicates
-    const duplicate = rules.find(r => r.id !== ruleId && r.text.toLowerCase() === newText.toLowerCase());
-    if (duplicate) {
-      alert(`Duplicate rule: "${newText}" already exists.`);
-      const rule = rules.find(r => r.id === ruleId);
-      if (rule) {
-        textInput.value = rule.text;
+    // Parse input: handle quoted strings and split by comma or space
+    const words = parseWordInput(word);
+
+    if (words.length === 0) {
+      return;
+    }
+
+    // Add each word
+    let successCount = 0;
+    let failedWords = [];
+
+    for (const singleWord of words) {
+      const canAdd = await Storage.canAddWord(groupId);
+      if (!canAdd) {
+        const group = groups.find(g => g.id === groupId);
+        if (group && group.words.length >= MAX_WORDS_PER_GROUP) {
+          showNotification(`Maximum ${MAX_WORDS_PER_GROUP} words per group reached`, 'error');
+        } else {
+          showNotification(`Maximum ${MAX_TOTAL_WORDS} total words reached`, 'error');
+        }
+        break; // Stop adding if limit reached
       }
-      return;
+
+      const success = await Storage.addWordToGroup(groupId, singleWord);
+      if (success) {
+        successCount++;
+      } else {
+        failedWords.push(singleWord);
+      }
     }
 
-    // Update the rule
-    const success = await Storage.updateRule(ruleId, { text: newText });
-    if (success) {
-      await loadRules();
-    } else {
-      alert('Failed to update rule. Please try again.');
+    // Reload once after all additions
+    await loadGroups();
+
+    // Show appropriate message
+    if (successCount > 0) {
+      if (successCount === 1) {
+        showNotification('Word added', 'success');
+      } else {
+        showNotification(`${successCount} words added`, 'success');
+      }
+    }
+
+    if (failedWords.length > 0) {
+      showNotification(`Failed to add: ${failedWords.join(', ')} (may be duplicates)`, 'error');
     }
   }
 
-  async function handleColorChange(ruleId, newColor)
+  async function handleRemoveWord(groupId, word)
   {
-    const success = await Storage.updateRule(ruleId, { colour: newColor });
+    const success = await Storage.removeWordFromGroup(groupId, word);
     if (success) {
-      await loadRules();
+      await loadGroups();
+      showNotification('Word removed', 'success');
     } else {
-      alert('Failed to update color. Please try again.');
+      showNotification('Failed to remove word', 'error');
     }
   }
 
-  async function handleToggleEnabled(ruleId, enabled)
-  {
-    const success = await Storage.updateRule(ruleId, { enabled });
-    if (success) {
-      await loadRules();
-    } else {
-      alert('Failed to toggle rule. Please try again.');
-    }
-  }
-
-  async function handleDeleteRule(ruleId)
-  {
-    const rule = rules.find(r => r.id === ruleId);
-    if (!rule) return;
-
-    // Confirm deletion if rule has text
-    if (rule.text.trim() !== '') {
-      const confirmDelete = confirm(`Delete rule "${rule.text}"?`);
-      if (!confirmDelete) return;
-    }
-
-    const success = await Storage.deleteRule(ruleId);
-    if (success) {
-      await loadRules();
-    } else {
-      alert('Failed to delete rule. Please try again.');
-    }
-  }
+  // ============================================================================
+  // Event Handlers - Global
+  // ============================================================================
 
   async function handleGlobalToggle()
   {
@@ -334,17 +543,8 @@
     const success = await Storage.setEnabled(enabled);
 
     if (!success) {
-      alert('Failed to update setting. Please try again.');
       globalToggle.checked = !enabled;
-    }
-  }
-
-  function handleStorageChange(changes)
-  {
-    // Reload rules if changed externally
-    if (changes.rules || changes.enabled) {
-      loadRules();
-      loadGlobalEnabled();
+      showNotification('Failed to update setting', 'error');
     }
   }
 
@@ -352,108 +552,164 @@
   // Drag and Drop
   // ============================================================================
 
-  function setupDragAndDrop(ruleItem)
+  function setupGroupDragDrop(groupElement)
   {
-    ruleItem.addEventListener('dragstart', handleDragStart);
-    ruleItem.addEventListener('dragend', handleDragEnd);
-    ruleItem.addEventListener('dragover', handleDragOver);
-    ruleItem.addEventListener('drop', handleDrop);
-    ruleItem.addEventListener('dragenter', handleDragEnter);
-    ruleItem.addEventListener('dragleave', handleDragLeave);
-  }
-
-  function handleDragStart(e)
-  {
-    draggedElement = e.currentTarget;
-    e.currentTarget.classList.add('dragging');
-    e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/html', e.currentTarget.innerHTML);
-  }
-
-  function handleDragEnd(e)
-  {
-    e.currentTarget.classList.remove('dragging');
-
-    // Remove all drag-over classes
-    document.querySelectorAll('.rule-item').forEach(item =>
+    // Drag start
+    groupElement.addEventListener('dragstart', (e) =>
     {
-      item.classList.remove('drag-over');
+      draggedElement = groupElement;
+      groupElement.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
     });
 
-    draggedElement = null;
-    dragOverElement = null;
-  }
+    // Drag end
+    groupElement.addEventListener('dragend', () =>
+    {
+      groupElement.classList.remove('dragging');
+      draggedElement = null;
+      dragOverElement = null;
 
-  function handleDragOver(e)
-  {
-    if (e.preventDefault) {
+      // Remove all drag-over classes
+      document.querySelectorAll('.drag-over').forEach(el =>
+      {
+        el.classList.remove('drag-over');
+      });
+    });
+
+    // Drag over
+    groupElement.addEventListener('dragover', (e) =>
+    {
       e.preventDefault();
-    }
+      e.dataTransfer.dropEffect = 'move';
 
-    e.dataTransfer.dropEffect = 'move';
-    return false;
-  }
-
-  function handleDragEnter(e)
-  {
-    const target = e.currentTarget;
-    if (target !== draggedElement) {
-      target.classList.add('drag-over');
-      dragOverElement = target;
-    }
-  }
-
-  function handleDragLeave(e)
-  {
-    e.currentTarget.classList.remove('drag-over');
-  }
-
-  async function handleDrop(e)
-  {
-    if (e.stopPropagation) {
-      e.stopPropagation();
-    }
-
-    if (!draggedElement || !dragOverElement || draggedElement === dragOverElement) {
-      return false;
-    }
-
-    // Get the rule IDs
-    const draggedId = draggedElement.dataset.ruleId;
-    const targetId = dragOverElement.dataset.ruleId;
-
-    // Find the rules
-    const draggedRule = rules.find(r => r.id === draggedId);
-    const targetRule = rules.find(r => r.id === targetId);
-
-    if (!draggedRule || !targetRule) return false;
-
-    // Reorder the rules array
-    const newRules = [...rules];
-    const draggedIndex = newRules.findIndex(r => r.id === draggedId);
-    const targetIndex = newRules.findIndex(r => r.id === targetId);
-
-    // Remove dragged item and insert at new position
-    newRules.splice(draggedIndex, 1);
-    newRules.splice(targetIndex, 0, draggedRule);
-
-    // Update order field
-    newRules.forEach((rule, index) =>
-    {
-      rule.order = index;
+      if (draggedElement && draggedElement !== groupElement) {
+        dragOverElement = groupElement;
+        groupElement.classList.add('drag-over');
+      }
     });
 
-    // Save to storage
-    const orderedIds = newRules.map(r => r.id);
-    const success = await Storage.reorderRules(orderedIds);
+    // Drag leave
+    groupElement.addEventListener('dragleave', () =>
+    {
+      groupElement.classList.remove('drag-over');
+    });
 
-    if (success) {
-      await loadRules();
-    } else {
-      alert('Failed to reorder rules. Please try again.');
+    // Drop
+    groupElement.addEventListener('drop', async (e) =>
+    {
+      e.preventDefault();
+      groupElement.classList.remove('drag-over');
+
+      if (!draggedElement || draggedElement === groupElement) {
+        return;
+      }
+
+      // Get all group elements in current order
+      const allGroupElements = Array.from(groupsList.querySelectorAll('.group-item'));
+
+      // Remove dragged element from its current position
+      const draggedIndex = allGroupElements.indexOf(draggedElement);
+      const dropIndex = allGroupElements.indexOf(groupElement);
+
+      if (draggedIndex === dropIndex) {
+        return;
+      }
+
+      // Reorder in DOM
+      if (draggedIndex < dropIndex) {
+        groupElement.after(draggedElement);
+      } else {
+        groupElement.before(draggedElement);
+      }
+
+      // Get new order
+      const reorderedElements = Array.from(groupsList.querySelectorAll('.group-item'));
+      const orderedIds = reorderedElements.map(el => el.dataset.groupId);
+
+      // Save new order
+      const success = await Storage.reorderGroups(orderedIds);
+      if (success) {
+        await loadGroups();
+      } else {
+        showNotification('Failed to reorder groups', 'error');
+        await loadGroups();  // Revert
+      }
+    });
+  }
+
+  // ============================================================================
+  // Word Parsing Helper
+  // ============================================================================
+
+  /**
+   * Parse word input handling quoted strings and comma/space separation
+   * Examples:
+   *   "Alice Bob Charlie" -> ["Alice", "Bob", "Charlie"]
+   *   "Alice, Bob, Charlie" -> ["Alice", "Bob", "Charlie"]
+   *   '"hey there" test' -> ["hey there", "test"]
+   *   '"error message", "warning text"' -> ["error message", "warning text"]
+   */
+  function parseWordInput(input)
+  {
+    const words = [];
+    let current = '';
+    let inQuotes = false;
+
+    for (let i = 0; i < input.length; i++) {
+      const char = input[i];
+
+      if (char === '"') {
+        // Toggle quote state
+        inQuotes = !inQuotes;
+      } else if ((char === ',' || char === ' ') && !inQuotes) {
+        // Separator outside quotes - save current word
+        if (current.trim()) {
+          words.push(current.trim());
+          current = '';
+        }
+      } else {
+        // Regular character - add to current word
+        current += char;
+      }
     }
 
-    return false;
+    // Don't forget the last word
+    if (current.trim()) {
+      words.push(current.trim());
+    }
+
+    return words;
+  }
+
+  // ============================================================================
+  // Storage Change Listener
+  // ============================================================================
+
+  function handleStorageChange(changes, area)
+  {
+    // Reload groups if changed in another tab
+    if (changes.groups) {
+      loadGroups();
+    }
+
+    if (changes.enabled) {
+      loadGlobalEnabled();
+    }
+  }
+
+  // ============================================================================
+  // Notifications
+  // ============================================================================
+
+  function showNotification(message, type = 'info')
+  {
+    // Simple console notification for now
+    // Could be enhanced with toast notifications
+    if (type === 'error') {
+      console.error('Live Highlighter:', message);
+    } else {
+      console.log('Live Highlighter:', message);
+    }
   }
 
   // ============================================================================

@@ -12,7 +12,8 @@
   // State Management
   // ============================================================================
 
-  let rules = [];
+  let groups = [];   // Groups from storage
+  let rules = [];    // Flattened rules for highlighting (derived from groups)
   let enabled = true;
   let observer = null;
   let debounceTimer = null;
@@ -36,6 +37,39 @@
   }
 
   // ============================================================================
+  // Groups to Rules Flattening
+  // ============================================================================
+
+  /**
+   * Flatten groups into a flat array of word-color mappings
+   * This maintains compatibility with existing highlighting logic
+   * @param {Array} groups - Array of group objects
+   * @returns {Array} Flat array of {text, colour, textColor, enabled, order} objects
+   */
+  function flattenGroupsToRules(groups)
+  {
+    const flatRules = [];
+
+    groups.forEach(group =>
+    {
+      if (!group.enabled) return;
+
+      group.words.forEach(word =>
+      {
+        flatRules.push({
+          text: word.trim(),
+          colour: group.colour,
+          textColor: group.textColor,
+          enabled: true,
+          order: group.order  // Inherit priority from group
+        });
+      });
+    });
+
+    return flatRules;
+  }
+
+  // ============================================================================
   // Initialization
   // ============================================================================
 
@@ -54,10 +88,13 @@
     }
 
     // Load initial state from storage
-    rules = await Storage.getRules();
+    groups = await Storage.getGroups();
     enabled = await Storage.getEnabled();
 
-    console.log(`Live Highlighter: Loaded ${rules.length} rules, enabled: ${enabled}`);
+    // Flatten groups to rules for highlighting
+    rules = flattenGroupsToRules(groups);
+
+    console.log(`Live Highlighter: Loaded ${groups.length} groups (${rules.length} words), enabled: ${enabled}`);
 
     if (enabled && rules.length > 0) {
       // Process the current page
@@ -533,8 +570,9 @@
   {
     let needsRefresh = false;
 
-    if (changes.rules) {
-      rules = await Storage.getRules();
+    if (changes.groups) {
+      groups = await Storage.getGroups();
+      rules = flattenGroupsToRules(groups);
       needsRefresh = true;
     }
 

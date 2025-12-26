@@ -59,10 +59,12 @@
       const enabled = await Storage.getEnabled();
       globalToggle.checked = enabled;
 
-      // Get rules count
-      const rules = await Storage.getRules();
-      const enabledRules = rules.filter(r => r.enabled);
-      ruleCountSpan.textContent = `${enabledRules.length} / ${rules.length}`;
+      // Get groups and count words
+      const groups = await Storage.getGroups();
+      const enabledGroups = groups.filter(g => g.enabled);
+      const totalWords = groups.reduce((sum, g) => sum + g.words.length, 0);
+      const enabledWords = enabledGroups.reduce((sum, g) => sum + g.words.length, 0);
+      ruleCountSpan.textContent = `${enabledWords} / ${totalWords}`;
 
       // Get highlight count from active tab
       await getHighlightCount();
@@ -191,12 +193,12 @@
   async function checkGetStartedBanner()
   {
     try {
-      // Get rules and banner dismissed state
-      const rules = await Storage.getRules();
+      // Get groups and banner dismissed state
+      const groups = await Storage.getGroups();
       const dismissed = await chrome.storage.local.get('bannerDismissed');
 
-      // Show banner if no rules and not dismissed
-      if (rules.length === 0 && !dismissed.bannerDismissed) {
+      // Show banner if no groups and not dismissed
+      if (groups.length === 0 && !dismissed.bannerDismissed) {
         document.getElementById('getStartedBanner').style.display = 'block';
       }
     } catch (error) {
