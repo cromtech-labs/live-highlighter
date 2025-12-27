@@ -74,10 +74,10 @@ This directory contains test files to validate Live Highlighter's highlighting c
 ---
 
 ### 5. `overlapping-text.html` - Priority and Edge Cases
-**Purpose:** Test rule priority and edge cases for text matching
+**Purpose:** Test group priority and edge cases for text matching
 
 **Features:**
-- Multiple rules matching same text
+- Multiple groups matching same text
 - Case insensitivity testing
 - Punctuation boundaries
 - Prefix patterns (kv-)
@@ -85,7 +85,7 @@ This directory contains test files to validate Live Highlighter's highlighting c
 - High-density keyword concentration
 
 **What to test:**
-- First matching rule wins (priority)
+- First matching group wins (priority)
 - Case insensitive matching works
 - Punctuation doesn't interfere
 - Prefix patterns match correctly
@@ -101,23 +101,23 @@ This directory contains test files to validate Live Highlighter's highlighting c
    - Enable Developer Mode
    - Load unpacked extension from project root
 
-2. **Configure test rules:**
-   Create these rules in the extension options:
-   - `error` → Yellow
-   - `success` → Green
-   - `resource` → Cyan
-   - `data` → Pink
-   - `tags` → Orange
-   - `kv-` → Lavender
+2. **Configure test groups:**
+   Create these groups in the extension options:
+   - Group 1 (Yellow): Add word `error`
+   - Group 2 (Green): Add word `success` and `error`
+   - Group 3 (Cyan): Add word `resource`
+   - Group 4 (Pink): Add word `data`
+   - Group 5 (Orange): Add word `tags`
+   - Group 6 (Lavender): Add word `kv-`
 
 3. **Open test files:**
-   - Navigate to `file:///D:/BrowserHighlighter/tests/[testfile].html`
+   - Navigate to `file:///D:/live-highlighter/tests/[testfile].html`
    - Or use a local server: `python -m http.server 8000`
 
 4. **Verify highlighting:**
    - Check that keywords are highlighted with correct colors
    - Test enabling/disabling highlighting
-   - Test adding/removing/reordering rules
+   - Test adding/removing/reordering groups
    - Monitor browser performance and console for errors
 
 ---
@@ -140,7 +140,7 @@ This directory contains test files to validate Live Highlighter's highlighting c
 - Memory leaks (check DevTools Performance)
 - Highlights don't update when content changes
 - Shadow DOM content not highlighted
-- Incorrect color applied (wrong rule priority)
+- Incorrect color applied (wrong group priority)
 
 ---
 
@@ -164,7 +164,7 @@ This directory contains test files to validate Live Highlighter's highlighting c
 1. **Open DevTools Console** to see Live Highlighter logs:
    ```
    Live Highlighter: Content script initializing
-   Live Highlighter: Loaded X rules, enabled: true
+   Live Highlighter: Loaded X groups, enabled: true
    Live Highlighter: MutationObserver started
    ```
 
@@ -185,7 +185,7 @@ This directory contains test files to validate Live Highlighter's highlighting c
    - Light mode and dark mode
    - With DevTools open/closed
    - With extension enabled/disabled
-   - With different rule counts (1, 5, 10 rules)
+   - With different group counts (1, 5, 10 groups)
 
 ---
 

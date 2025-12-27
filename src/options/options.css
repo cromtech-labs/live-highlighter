@@ -183,6 +183,10 @@ header {
   background-color: var(--primary-color);
 }
 
+.toggle-slider.active::before {
+  transform: translateX(22px);
+}
+
 .toggle-slider.small.active::before {
   transform: translateX(16px);
 }

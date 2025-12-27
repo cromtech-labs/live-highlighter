@@ -598,6 +598,23 @@
     init();
   }
 
+  // Special handling for iframes created with document.write() or programmatically
+  // These iframes may not have content when the script first loads
+  if (window.self !== window.top) {
+    // We're in an iframe - retry after delays to catch late-loading content
+    setTimeout(() => {
+      if (enabled && rules.length > 0) {
+        highlightPage();
+      }
+    }, 500);
+
+    setTimeout(() => {
+      if (enabled && rules.length > 0) {
+        highlightPage();
+      }
+    }, 1500);
+  }
+
   console.log('Live Highlighter: Content script loaded');
 
 })();
