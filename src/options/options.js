@@ -55,7 +55,7 @@
 
     // Set up event listeners
     addGroupBtn.addEventListener('click', handleAddGroup);
-    globalToggle.addEventListener('change', handleGlobalToggle);
+    globalToggle.addEventListener('click', handleGlobalToggle);
 
     // Listen for storage changes from other tabs
     Storage.onStorageChanged(handleStorageChange);
@@ -76,7 +76,12 @@
   async function loadGlobalEnabled()
   {
     const enabled = await Storage.getEnabled();
-    globalToggle.checked = enabled;
+    const toggleSlider = globalToggle.querySelector('.toggle-slider');
+    if (enabled) {
+      toggleSlider.classList.add('active');
+    } else {
+      toggleSlider.classList.remove('active');
+    }
   }
 
   function renderGroups()
@@ -177,9 +182,19 @@
     updateGroupWordCount(groupItem, group);
 
     // Set enabled state
-    const enabledCheckbox = groupItem.querySelector('.group-enabled');
-    enabledCheckbox.checked = group.enabled;
-    enabledCheckbox.addEventListener('change', () => handleGroupToggle(group.id, enabledCheckbox.checked));
+    const toggleElement = groupItem.querySelector('.group-toggle');
+    const toggleSlider = groupItem.querySelector('.toggle-slider');
+
+    // Set initial visual state
+    if (group.enabled) {
+      toggleSlider.classList.add('active');
+    }
+
+    // Handle toggle click
+    toggleElement.addEventListener('click', (e) => {
+      e.stopPropagation(); // Don't trigger header expansion
+      handleGroupToggle(group.id, !group.enabled);
+    });
 
     // Expand/collapse functionality
     const expandBtn = groupItem.querySelector('.expand-btn');
@@ -210,13 +225,14 @@
     // Click anywhere on header to expand/collapse
     groupHeader.addEventListener('click', (e) =>
     {
-      // Don't toggle if clicking on interactive elements
-      if (e.target.closest('.group-name-container') ||
-          e.target.closest('.group-color-picker') ||
-          e.target.closest('.color-button') ||
+      // Don't toggle if clicking directly on interactive elements
+      if (e.target.closest('.color-button') ||
           e.target.closest('.color-dropdown') ||
+          e.target.closest('.edit-name-btn') ||
+          e.target.closest('.group-name-input') ||
           e.target.closest('.group-toggle') ||
-          e.target.closest('.delete-group-btn')) {
+          e.target.closest('.delete-group-btn') ||
+          e.target.closest('.expand-btn')) {
         return;
       }
       toggleExpansion();
@@ -288,22 +304,35 @@
     // Toggle dropdown
     colorButton.addEventListener('click', (e) =>
     {
+      e.preventDefault();
       e.stopPropagation();
-      colorDropdown.classList.toggle('show');
 
-      // Close other dropdowns
+      const wasShown = colorDropdown.classList.contains('show');
+
+      // Close all other dropdowns first
       document.querySelectorAll('.color-dropdown.show').forEach(dropdown =>
       {
-        if (dropdown !== colorDropdown) {
-          dropdown.classList.remove('show');
-        }
+        dropdown.classList.remove('show');
       });
+
+      // Toggle this dropdown
+      if (!wasShown) {
+        colorDropdown.classList.add('show');
+      }
+    });
+
+    // Prevent dropdown clicks from closing it or expanding header
+    colorDropdown.addEventListener('click', (e) =>
+    {
+      e.stopPropagation();
     });
 
     // Close dropdown when clicking outside
-    document.addEventListener('click', () =>
+    document.addEventListener('click', (e) =>
     {
-      colorDropdown.classList.remove('show');
+      if (!e.target.closest('.group-color-picker')) {
+        colorDropdown.classList.remove('show');
+      }
     });
   }
 
@@ -458,7 +487,24 @@
   async function handleGroupToggle(groupId, enabled)
   {
     const success = await Storage.updateGroup(groupId, { enabled });
-    if (!success) {
+    if (success) {
+      // Update local state
+      const group = groups.find(g => g.id === groupId);
+      if (group) {
+        group.enabled = enabled;
+      }
+
+      // Update visual state
+      const groupElement = document.querySelector(`[data-group-id="${groupId}"]`);
+      if (groupElement) {
+        const toggleSlider = groupElement.querySelector('.toggle-slider');
+        if (enabled) {
+          toggleSlider.classList.add('active');
+        } else {
+          toggleSlider.classList.remove('active');
+        }
+      }
+    } else {
       showNotification('Failed to toggle group', 'error');
       await loadGroups();  // Revert
     }
@@ -539,11 +585,20 @@
 
   async function handleGlobalToggle()
   {
-    const enabled = globalToggle.checked;
-    const success = await Storage.setEnabled(enabled);
+    const toggleSlider = globalToggle.querySelector('.toggle-slider');
+    const currentEnabled = await Storage.getEnabled();
+    const newEnabled = !currentEnabled;
 
-    if (!success) {
-      globalToggle.checked = !enabled;
+    const success = await Storage.setEnabled(newEnabled);
+
+    if (success) {
+      // Update visual state
+      if (newEnabled) {
+        toggleSlider.classList.add('active');
+      } else {
+        toggleSlider.classList.remove('active');
+      }
+    } else {
       showNotification('Failed to update setting', 'error');
     }
   }

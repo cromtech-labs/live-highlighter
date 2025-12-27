@@ -145,19 +145,13 @@ header {
   user-select: none;
 }
 
-.toggle-input {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
 .toggle-slider {
   position: relative;
   width: 48px;
   height: 26px;
   background-color: #ccc;
   border-radius: 26px;
+  cursor: pointer;
   transition: background-color 0.2s;
 }
 
@@ -173,14 +167,6 @@ header {
   transition: transform 0.2s;
 }
 
-.toggle-input:checked+.toggle-slider {
-  background-color: var(--primary-color);
-}
-
-.toggle-input:checked+.toggle-slider::before {
-  transform: translateX(22px);
-}
-
 .toggle-slider.small {
   width: 36px;
   height: 20px;
@@ -192,15 +178,12 @@ header {
   top: 3px;
 }
 
-.toggle-input:checked+.toggle-slider.small::before {
-  transform: translateX(16px);
-}
-
-.rule-enabled:checked+.toggle-slider {
+/* Active state */
+.toggle-slider.active {
   background-color: var(--primary-color);
 }
 
-.rule-enabled:checked+.toggle-slider::before {
+.toggle-slider.small.active::before {
   transform: translateX(16px);
 }
 
@@ -452,7 +435,8 @@ header {
   display: none;
 }
 
-.color-dropdown.open {
+.color-dropdown.open,
+.color-dropdown.show {
   display: block;
   animation: slideDown 0.2s ease;
 }
@@ -515,17 +499,10 @@ header {
   gap: 8px;
 }
 
-.rule-toggle {
+.group-toggle {
   display: flex;
   align-items: center;
   cursor: pointer;
-}
-
-.rule-enabled {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
 }
 
 .delete-btn svg {
@@ -653,7 +630,7 @@ header {
   background: var(--bg-white);
   border: 1px solid var(--border-color);
   border-radius: var(--radius);
-  overflow: hidden;
+  overflow: visible;
   transition: box-shadow 0.2s, border-color 0.2s;
 }
 
@@ -678,12 +655,22 @@ header {
   gap: 12px;
   padding: 12px;
   background: var(--bg-light);
-  cursor: pointer;
+  cursor: default;
   user-select: none;
 }
 
 .group-header:hover {
   background: var(--border-color);
+}
+
+/* Make only the empty areas clickable for expansion */
+.drag-handle,
+.group-order {
+  cursor: grab;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
 }
 
 .group-content {
@@ -704,7 +691,7 @@ header {
   font-weight: 600;
   font-size: 14px;
   color: var(--text-primary);
-  cursor: default;
+  cursor: text;
   user-select: none;
 }
 
@@ -751,6 +738,10 @@ header {
   font-size: 12px;
   color: var(--text-secondary);
   white-space: nowrap;
+}
+
+.group-color-picker {
+  position: relative;
 }
 
 /* Expand Button */

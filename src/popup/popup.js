@@ -40,7 +40,7 @@
     await checkGetStartedBanner();
 
     // Set up event listeners
-    globalToggle.addEventListener('change', handleGlobalToggle);
+    globalToggle.addEventListener('click', handleGlobalToggle);
     openOptionsBtn.addEventListener('click', handleOpenOptions);
     document.getElementById('createFirstRule').addEventListener('click', handleCreateFirstRule);
     document.getElementById('dismissBanner').addEventListener('click', handleDismissBanner);
@@ -57,7 +57,12 @@
     try {
       // Get enabled state
       const enabled = await Storage.getEnabled();
-      globalToggle.checked = enabled;
+      const toggleSlider = globalToggle.querySelector('.toggle-slider');
+      if (enabled) {
+        toggleSlider.classList.add('active');
+      } else {
+        toggleSlider.classList.remove('active');
+      }
 
       // Get groups and count words
       const groups = await Storage.getGroups();
@@ -157,25 +162,31 @@
 
   async function handleGlobalToggle()
   {
-    const enabled = globalToggle.checked;
+    const toggleSlider = globalToggle.querySelector('.toggle-slider');
+    const currentEnabled = await Storage.getEnabled();
+    const newEnabled = !currentEnabled;
 
     try {
-      const success = await Storage.setEnabled(enabled);
+      const success = await Storage.setEnabled(newEnabled);
 
-      if (!success) {
-        // Revert toggle if save failed
-        globalToggle.checked = !enabled;
-        alert('Failed to update setting. Please try again.');
-      } else {
+      if (success) {
+        // Update visual state
+        if (newEnabled) {
+          toggleSlider.classList.add('active');
+        } else {
+          toggleSlider.classList.remove('active');
+        }
+
         // Update highlight count after toggling
         setTimeout(() =>
         {
           getHighlightCount();
         }, 500); // Give content script time to update
+      } else {
+        alert('Failed to update setting. Please try again.');
       }
     } catch (error) {
       console.error('Live Highlighter: Error toggling', error);
-      globalToggle.checked = !enabled;
       alert('Failed to update setting. Please try again.');
     }
   }
