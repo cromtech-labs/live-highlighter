@@ -228,6 +228,34 @@ This directory contains test files to validate Live Highlighter's highlighting c
 
 ---
 
+### 8. `max-capacity.html` - Maximum Capacity Test (200 Words)
+**Purpose:** Test extension at maximum capacity with 200 total words across all groups
+
+**Features:**
+- All 200 words displayed in grid (10 groups × 20 words each)
+- Large document performance test (~5,000 words)
+- Priority and overlap testing with 200-word configuration
+- Dynamic content with full word set
+- Boundary testing (199, 200, 201 words)
+- Multi-document iframe testing
+- Toggle performance measurement
+- High-density stress test (80%+ target words)
+
+**What to test:**
+- All 200 words highlight correctly
+- Performance remains acceptable with maximum words
+- Priority system works with 10 groups
+- Dynamic content updates handle 200 words
+- Iframes work with full word set
+- Toggle operations complete quickly
+- No memory leaks at capacity
+- High density content renders correctly
+
+**Setup Required:**
+Create 10 groups with 20 words each following the setup instructions in the test file. This requires configuring the maximum allowed groups and words.
+
+---
+
 ## Adding New Tests
 
 When adding new test files:

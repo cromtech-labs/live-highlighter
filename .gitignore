@@ -25,6 +25,7 @@ hs_err_pid*
 
 .claude.local
 .claude
+claude.md
 
 .env
 .env.local
