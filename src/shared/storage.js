@@ -1,13 +1,15 @@
-// Live Highlighter - Storage Abstraction Layer
+// Live Highlighter - Storage Abstraction Layer (Groups Architecture)
 
 /**
- * Rule object schema:
+ * Group object schema:
  * {
  *   id: string,        // UUID
- *   text: string,      // String to match
- *   colour: string,    // Hex colour
- *   enabled: boolean,  // Per-rule toggle
- *   order: number      // Priority (lower = higher priority)
+ *   name: string,      // Group name (e.g., "Team Names")
+ *   colour: string,    // Hex colour for all words in group
+ *   textColor: string, // Text color for readability
+ *   enabled: boolean,  // Per-group toggle
+ *   order: number,     // Priority (lower = higher priority)
+ *   words: string[]    // Array of words to highlight
  * }
  */
 
@@ -17,7 +19,15 @@ LiveHighlighter.Storage = (function ()
   'use strict';
 
   // Shorthand references to constants
-  const { MAX_RULES, PRESET_COLOURS, DEFAULT_RULES, STORAGE_KEYS, DEFAULT_SETTINGS } = LiveHighlighter;
+  const {
+    MAX_GROUPS,
+    MAX_WORDS_PER_GROUP,
+    MAX_TOTAL_WORDS,
+    PRESET_COLOURS,
+    DEFAULT_GROUP,
+    STORAGE_KEYS,
+    DEFAULT_SETTINGS
+  } = LiveHighlighter;
 
   // ============================================================================
   // Validation Helpers
@@ -31,19 +41,40 @@ LiveHighlighter.Storage = (function ()
   function isValidColour(colour)
   {
     // Accept any valid hex color format (#RGB, #RRGGBB, or #RRGGBBAA)
-    // This allows existing rules with old colors and new colors
     if (typeof colour !== 'string') return false;
     return /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$/.test(colour);
   }
 
   /**
-   * Validate if text is non-empty after trimming
-   * @param {string} text - Text to validate
+   * Validate if group name is valid
+   * @param {string} name - Group name
    * @returns {boolean}
    */
-  function isValidText(text)
+  function isValidGroupName(name)
   {
-    return typeof text === 'string' && text.trim().length > 0;
+    return typeof name === 'string' && name.trim().length > 0 && name.length <= 50;
+  }
+
+  /**
+   * Validate if word is valid
+   * @param {string} word - Word to validate
+   * @returns {boolean}
+   */
+  function isValidWord(word)
+  {
+    return typeof word === 'string' && word.trim().length > 0 && word.length <= 100;
+  }
+
+  /**
+   * Validate if words array is valid
+   * @param {Array<string>} words - Array of words
+   * @returns {boolean}
+   */
+  function isValidWordsArray(words)
+  {
+    return Array.isArray(words) &&
+           words.length <= MAX_WORDS_PER_GROUP &&
+           words.every(isValidWord);
   }
 
   // ============================================================================
@@ -51,60 +82,69 @@ LiveHighlighter.Storage = (function ()
   // ============================================================================
 
   /**
-   * Get all rules from storage
-   * @returns {Promise<Array>} Array of rule objects
+   * Get all groups from storage
+   * @returns {Promise<Array>} Array of group objects
    */
-  async function getRules()
+  async function getGroups()
   {
     try {
-      const result = await chrome.storage.local.get(STORAGE_KEYS.RULES);
+      const result = await chrome.storage.local.get(STORAGE_KEYS.GROUPS);
       // Return a copy to prevent mutation of stored data
-      const rules = result[STORAGE_KEYS.RULES];
-      return rules ? [...rules] : [];
+      const groups = result[STORAGE_KEYS.GROUPS];
+      return groups ? JSON.parse(JSON.stringify(groups)) : [];
     } catch (error) {
-      console.error('Live Highlighter: Error getting rules', error);
+      console.error('Live Highlighter: Error getting groups', error);
       return [];
     }
   }
 
   /**
-   * Save rules to storage
-   * @param {Array} rules - Array of rule objects
+   * Save groups to storage
+   * @param {Array} groups - Array of group objects
    * @returns {Promise<boolean>} Success status
    */
-  async function saveRules(rules)
+  async function saveGroups(groups)
   {
     try {
-      // Validate rules array
-      if (!Array.isArray(rules)) {
-        console.error('Live Highlighter: saveRules requires an array');
+      // Validate groups array
+      if (!Array.isArray(groups)) {
+        console.error('Live Highlighter: saveGroups requires an array');
         return false;
       }
 
-      // Enforce MAX_RULES limit
-      if (rules.length > MAX_RULES) {
-        console.warn(`Live Highlighter: Cannot save more than ${MAX_RULES} rules`);
+      // Enforce MAX_GROUPS limit
+      if (groups.length > MAX_GROUPS) {
+        console.warn(`Live Highlighter: Cannot save more than ${MAX_GROUPS} groups`);
         return false;
       }
 
-      // Validate each rule has required fields
-      const validRules = rules.every(rule =>
-        rule.id &&
-        isValidText(rule.text) &&
-        isValidColour(rule.colour) &&
-        typeof rule.enabled === 'boolean' &&
-        typeof rule.order === 'number'
+      // Enforce total word count limit
+      const totalWords = groups.reduce((sum, g) => sum + g.words.length, 0);
+      if (totalWords > MAX_TOTAL_WORDS) {
+        console.warn(`Live Highlighter: Cannot save more than ${MAX_TOTAL_WORDS} words total`);
+        return false;
+      }
+
+      // Validate each group has required fields
+      const validGroups = groups.every(group =>
+        group.id &&
+        isValidGroupName(group.name) &&
+        isValidColour(group.colour) &&
+        isValidColour(group.textColor) &&
+        typeof group.enabled === 'boolean' &&
+        typeof group.order === 'number' &&
+        isValidWordsArray(group.words)
       );
 
-      if (!validRules) {
-        console.error('Live Highlighter: Invalid rule structure');
+      if (!validGroups) {
+        console.error('Live Highlighter: Invalid group structure');
         return false;
       }
 
-      await chrome.storage.local.set({ [STORAGE_KEYS.RULES]: rules });
+      await chrome.storage.local.set({ [STORAGE_KEYS.GROUPS]: groups });
       return true;
     } catch (error) {
-      console.error('Live Highlighter: Error saving rules', error);
+      console.error('Live Highlighter: Error saving groups', error);
       return false;
     }
   }
@@ -152,7 +192,7 @@ LiveHighlighter.Storage = (function ()
   // ============================================================================
 
   /**
-   * Generate a unique ID for a rule
+   * Generate a unique ID for a group
    * @returns {string} UUID v4
    */
   function generateId()
@@ -168,15 +208,31 @@ LiveHighlighter.Storage = (function ()
   {
     try {
       const result = await chrome.storage.local.get([
-        STORAGE_KEYS.RULES,
+        STORAGE_KEYS.GROUPS,
         STORAGE_KEYS.ENABLED,
         STORAGE_KEYS.VERSION
       ]);
 
       // Only initialize if not already set
       if (result[STORAGE_KEYS.VERSION] === undefined) {
-        await chrome.storage.local.set(DEFAULT_SETTINGS);
-        console.log('Live Highlighter: Storage initialized with defaults');
+        // Create default group with sample words
+        const defaultGroup = {
+          id: generateId(),
+          name: DEFAULT_GROUP.name,
+          colour: DEFAULT_GROUP.colour,
+          textColor: DEFAULT_GROUP.textColor,
+          enabled: DEFAULT_GROUP.enabled,
+          order: 0,
+          words: [...DEFAULT_GROUP.words]
+        };
+
+        await chrome.storage.local.set({
+          [STORAGE_KEYS.GROUPS]: [defaultGroup],
+          [STORAGE_KEYS.ENABLED]: DEFAULT_SETTINGS.enabled,
+          [STORAGE_KEYS.VERSION]: DEFAULT_SETTINGS.version
+        });
+
+        console.log('Live Highlighter: Storage initialized with default group');
       }
 
       return true;
@@ -187,88 +243,83 @@ LiveHighlighter.Storage = (function ()
   }
 
   // ============================================================================
-  // Convenience Functions for Rule Management
+  // Group Management Functions
   // ============================================================================
 
   /**
-   * Add a new rule
-   * @param {string} text - Text to highlight
+   * Add a new group
+   * @param {string} name - Group name
    * @param {string} colour - Hex colour code
-   * @returns {Promise<object|null>} The new rule object or null if failed
+   * @returns {Promise<object|null>} The new group object or null if failed
    */
-  async function addRule(text, colour)
+  async function addGroup(name, colour)
   {
     try {
       // Validate input
-      if (!isValidText(text)) {
-        console.warn('Live Highlighter: Rule text cannot be empty');
+      if (!isValidGroupName(name)) {
+        console.warn('Live Highlighter: Group name is invalid');
         return null;
       }
 
       if (!isValidColour(colour)) {
-        console.warn('Live Highlighter: Invalid colour - must be from preset list');
+        console.warn('Live Highlighter: Invalid colour');
         return null;
       }
 
-      const rules = await getRules();
+      const groups = await getGroups();
 
-      // Check if we've hit the limit
-      if (rules.length >= MAX_RULES) {
-        console.warn(`Live Highlighter: Maximum ${MAX_RULES} rules reached`);
+      // Check if we've hit the group limit
+      if (groups.length >= MAX_GROUPS) {
+        console.warn(`Live Highlighter: Maximum ${MAX_GROUPS} groups reached`);
         return null;
       }
 
-      const trimmedText = text.trim();
-
-      // Check for duplicate text
-      if (rules.some(rule => rule.text.toLowerCase() === trimmedText.toLowerCase())) {
-        console.warn('Live Highlighter: Duplicate rule text');
-        return null;
-      }
+      const trimmedName = name.trim();
 
       // Find textColor from preset colors
       const preset = PRESET_COLOURS.find(p => p.hex === colour);
-      const textColor = preset ? preset.textColor : '#000000'; // Default to black if not found
+      const textColor = preset ? preset.textColor : '#000000';
 
-      // Create new rule
-      const newRule = {
+      // Create new group
+      const newGroup = {
         id: generateId(),
-        text: trimmedText,
+        name: trimmedName,
         colour: colour,
         textColor: textColor,
         enabled: true,
-        order: rules.length  // Add to end
+        order: groups.length,  // Add to end
+        words: []  // Start with empty words array
       };
 
-      rules.push(newRule);
-      const success = await saveRules(rules);
+      groups.push(newGroup);
+      const success = await saveGroups(groups);
 
-      return success ? newRule : null;
+      return success ? newGroup : null;
     } catch (error) {
-      console.error('Live Highlighter: Error adding rule', error);
+      console.error('Live Highlighter: Error adding group', error);
       return null;
     }
   }
 
   /**
-   * Update an existing rule
-   * @param {string} id - Rule ID
-   * @param {object} updates - Fields to update (only text, colour, enabled, order allowed)
+   * Update an existing group
+   * @param {string} id - Group ID
+   * @param {object} updates - Fields to update (name, colour, enabled, order, words allowed)
    * @returns {Promise<boolean>} Success status
    */
-  async function updateRule(id, updates)
+  async function updateGroup(id, updates)
   {
     try {
-      const rules = await getRules();
-      const index = rules.findIndex(rule => rule.id === id);
+      const groups = await getGroups();
+      const index = groups.findIndex(group => group.id === id);
 
       if (index === -1) {
-        console.warn('Live Highlighter: Rule not found');
+        console.warn('Live Highlighter: Group not found');
         return false;
       }
 
       // Whitelist allowed fields to prevent id tampering
-      const allowedFields = ['text', 'colour', 'enabled', 'order'];
+      const allowedFields = ['name', 'colour', 'textColor', 'enabled', 'order', 'words'];
       const validUpdates = {};
 
       for (const field of allowedFields) {
@@ -278,13 +329,18 @@ LiveHighlighter.Storage = (function ()
       }
 
       // Validate updated values
-      if (validUpdates.text !== undefined && !isValidText(validUpdates.text)) {
-        console.warn('Live Highlighter: Invalid text in update');
+      if (validUpdates.name !== undefined && !isValidGroupName(validUpdates.name)) {
+        console.warn('Live Highlighter: Invalid name in update');
         return false;
       }
 
       if (validUpdates.colour !== undefined && !isValidColour(validUpdates.colour)) {
         console.warn('Live Highlighter: Invalid colour in update');
+        return false;
+      }
+
+      if (validUpdates.textColor !== undefined && !isValidColour(validUpdates.textColor)) {
+        console.warn('Live Highlighter: Invalid textColor in update');
         return false;
       }
 
@@ -298,110 +354,319 @@ LiveHighlighter.Storage = (function ()
         return false;
       }
 
-      // Apply validated updates
-      rules[index] = { ...rules[index], ...validUpdates };
-
-      return await saveRules(rules);
-    } catch (error) {
-      console.error('Live Highlighter: Error updating rule', error);
-      return false;
-    }
-  }
-
-  /**
-   * Delete a rule
-   * @param {string} id - Rule ID
-   * @returns {Promise<boolean>} Success status
-   */
-  async function deleteRule(id)
-  {
-    try {
-      const rules = await getRules();
-      const filtered = rules.filter(rule => rule.id !== id);
-
-      if (filtered.length === rules.length) {
-        console.warn('Live Highlighter: Rule not found');
+      if (validUpdates.words !== undefined && !isValidWordsArray(validUpdates.words)) {
+        console.warn('Live Highlighter: Invalid words array in update');
         return false;
       }
 
-      // Reorder remaining rules
-      filtered.forEach((rule, index) =>
-      {
-        rule.order = index;
-      });
+      // Apply validated updates
+      groups[index] = { ...groups[index], ...validUpdates };
 
-      return await saveRules(filtered);
+      return await saveGroups(groups);
     } catch (error) {
-      console.error('Live Highlighter: Error deleting rule', error);
+      console.error('Live Highlighter: Error updating group', error);
       return false;
     }
   }
 
   /**
-   * Reorder rules
-   * @param {Array<string>} orderedIds - Array of rule IDs in desired order
+   * Delete a group
+   * @param {string} id - Group ID
    * @returns {Promise<boolean>} Success status
    */
-  async function reorderRules(orderedIds)
+  async function deleteGroup(id)
   {
     try {
-      const rules = await getRules();
+      const groups = await getGroups();
+      const filtered = groups.filter(group => group.id !== id);
+
+      if (filtered.length === groups.length) {
+        console.warn('Live Highlighter: Group not found');
+        return false;
+      }
+
+      // Reorder remaining groups
+      filtered.forEach((group, index) =>
+      {
+        group.order = index;
+      });
+
+      return await saveGroups(filtered);
+    } catch (error) {
+      console.error('Live Highlighter: Error deleting group', error);
+      return false;
+    }
+  }
+
+  /**
+   * Reorder groups
+   * @param {Array<string>} orderedIds - Array of group IDs in desired order
+   * @returns {Promise<boolean>} Success status
+   */
+  async function reorderGroups(orderedIds)
+  {
+    try {
+      const groups = await getGroups();
 
       // Create a map for quick lookup
-      const ruleMap = new Map(rules.map(rule => [rule.id, rule]));
+      const groupMap = new Map(groups.map(group => [group.id, group]));
 
       // Build new array in specified order
       const reordered = orderedIds
-        .map(id => ruleMap.get(id))
-        .filter(rule => rule !== undefined);
+        .map(id => groupMap.get(id))
+        .filter(group => group !== undefined);
 
-      // Verify all rules are accounted for
-      if (reordered.length !== rules.length) {
-        console.warn('Live Highlighter: Invalid rule order');
+      // Verify all groups are accounted for
+      if (reordered.length !== groups.length) {
+        console.warn('Live Highlighter: Invalid group order');
         return false;
       }
 
       // Update order field
-      reordered.forEach((rule, index) =>
+      reordered.forEach((group, index) =>
       {
-        rule.order = index;
+        group.order = index;
       });
 
-      return await saveRules(reordered);
+      return await saveGroups(reordered);
     } catch (error) {
-      console.error('Live Highlighter: Error reordering rules', error);
+      console.error('Live Highlighter: Error reordering groups', error);
       return false;
     }
   }
 
   /**
-   * Get a single rule by ID
-   * @param {string} id - Rule ID
-   * @returns {Promise<object|null>} Rule object or null if not found
+   * Get a single group by ID
+   * @param {string} id - Group ID
+   * @returns {Promise<object|null>} Group object or null if not found
    */
-  async function getRule(id)
+  async function getGroup(id)
   {
     try {
-      const rules = await getRules();
-      const rule = rules.find(rule => rule.id === id);
+      const groups = await getGroups();
+      const group = groups.find(group => group.id === id);
       // Return a copy to prevent mutation
-      return rule ? { ...rule } : null;
+      return group ? JSON.parse(JSON.stringify(group)) : null;
     } catch (error) {
-      console.error('Live Highlighter: Error getting rule', error);
+      console.error('Live Highlighter: Error getting group', error);
       return null;
     }
   }
 
   /**
-   * Clear all rules
+   * Clear all groups
    * @returns {Promise<boolean>} Success status
    */
-  async function clearAllRules()
+  async function clearAllGroups()
   {
     try {
-      return await saveRules([]);
+      return await saveGroups([]);
     } catch (error) {
-      console.error('Live Highlighter: Error clearing rules', error);
+      console.error('Live Highlighter: Error clearing groups', error);
+      return false;
+    }
+  }
+
+  // ============================================================================
+  // Word Management Functions (NEW)
+  // ============================================================================
+
+  /**
+   * Add a word to a specific group
+   * @param {string} groupId - Group ID
+   * @param {string} word - Word to add
+   * @returns {Promise<boolean>} Success status
+   */
+  async function addWordToGroup(groupId, word)
+  {
+    try {
+      if (!isValidWord(word)) {
+        console.warn('Live Highlighter: Invalid word');
+        return false;
+      }
+
+      const groups = await getGroups();
+      const group = groups.find(g => g.id === groupId);
+
+      if (!group) {
+        console.warn('Live Highlighter: Group not found');
+        return false;
+      }
+
+      // Check group word limit
+      if (group.words.length >= MAX_WORDS_PER_GROUP) {
+        console.warn(`Live Highlighter: Maximum ${MAX_WORDS_PER_GROUP} words per group reached`);
+        return false;
+      }
+
+      // Check total word limit
+      const totalWords = groups.reduce((sum, g) => sum + g.words.length, 0);
+      if (totalWords >= MAX_TOTAL_WORDS) {
+        console.warn(`Live Highlighter: Maximum ${MAX_TOTAL_WORDS} total words reached`);
+        return false;
+      }
+
+      const trimmedWord = word.trim();
+
+      // Check for duplicate in this group (case-insensitive)
+      if (group.words.some(w => w.toLowerCase() === trimmedWord.toLowerCase())) {
+        console.warn('Live Highlighter: Duplicate word in group');
+        return false;
+      }
+
+      // Add word to group
+      group.words.push(trimmedWord);
+
+      return await saveGroups(groups);
+    } catch (error) {
+      console.error('Live Highlighter: Error adding word to group', error);
+      return false;
+    }
+  }
+
+  /**
+   * Remove a word from a specific group
+   * @param {string} groupId - Group ID
+   * @param {string} word - Word to remove
+   * @returns {Promise<boolean>} Success status
+   */
+  async function removeWordFromGroup(groupId, word)
+  {
+    try {
+      const groups = await getGroups();
+      const group = groups.find(g => g.id === groupId);
+
+      if (!group) {
+        console.warn('Live Highlighter: Group not found');
+        return false;
+      }
+
+      // Remove word (case-insensitive)
+      const initialLength = group.words.length;
+      group.words = group.words.filter(w => w.toLowerCase() !== word.toLowerCase());
+
+      if (group.words.length === initialLength) {
+        console.warn('Live Highlighter: Word not found in group');
+        return false;
+      }
+
+      return await saveGroups(groups);
+    } catch (error) {
+      console.error('Live Highlighter: Error removing word from group', error);
+      return false;
+    }
+  }
+
+  /**
+   * Update a word within a group
+   * @param {string} groupId - Group ID
+   * @param {string} oldWord - Word to replace
+   * @param {string} newWord - New word
+   * @returns {Promise<boolean>} Success status
+   */
+  async function updateWordInGroup(groupId, oldWord, newWord)
+  {
+    try {
+      if (!isValidWord(newWord)) {
+        console.warn('Live Highlighter: Invalid new word');
+        return false;
+      }
+
+      const groups = await getGroups();
+      const group = groups.find(g => g.id === groupId);
+
+      if (!group) {
+        console.warn('Live Highlighter: Group not found');
+        return false;
+      }
+
+      // Find word index (case-insensitive)
+      const index = group.words.findIndex(w => w.toLowerCase() === oldWord.toLowerCase());
+
+      if (index === -1) {
+        console.warn('Live Highlighter: Word not found in group');
+        return false;
+      }
+
+      const trimmedNewWord = newWord.trim();
+
+      // Check for duplicate (case-insensitive, excluding current word)
+      const duplicate = group.words.some((w, i) =>
+        i !== index && w.toLowerCase() === trimmedNewWord.toLowerCase()
+      );
+
+      if (duplicate) {
+        console.warn('Live Highlighter: Duplicate word in group');
+        return false;
+      }
+
+      // Update word
+      group.words[index] = trimmedNewWord;
+
+      return await saveGroups(groups);
+    } catch (error) {
+      console.error('Live Highlighter: Error updating word in group', error);
+      return false;
+    }
+  }
+
+  /**
+   * Get total word count across all groups
+   * @returns {Promise<number>} Total word count
+   */
+  async function getTotalWordCount()
+  {
+    try {
+      const groups = await getGroups();
+      return groups.reduce((sum, g) => sum + g.words.length, 0);
+    } catch (error) {
+      console.error('Live Highlighter: Error getting total word count', error);
+      return 0;
+    }
+  }
+
+  /**
+   * Check if a word can be added to a group
+   * @param {string} groupId - Group ID
+   * @returns {Promise<boolean>} Whether word can be added
+   */
+  async function canAddWord(groupId)
+  {
+    try {
+      const groups = await getGroups();
+      const group = groups.find(g => g.id === groupId);
+
+      if (!group) return false;
+
+      // Check group word limit
+      if (group.words.length >= MAX_WORDS_PER_GROUP) {
+        return false;
+      }
+
+      // Check total word limit
+      const totalWords = groups.reduce((sum, g) => sum + g.words.length, 0);
+      if (totalWords >= MAX_TOTAL_WORDS) {
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Live Highlighter: Error checking if word can be added', error);
+      return false;
+    }
+  }
+
+  /**
+   * Check if a group can be added
+   * @returns {Promise<boolean>} Whether group can be added
+   */
+  async function canAddGroup()
+  {
+    try {
+      const groups = await getGroups();
+      return groups.length < MAX_GROUPS;
+    } catch (error) {
+      console.error('Live Highlighter: Error checking if group can be added', error);
       return false;
     }
   }
@@ -430,19 +695,27 @@ LiveHighlighter.Storage = (function ()
 
   return {
     // Core functions
-    getRules,
-    saveRules,
+    getGroups,
+    saveGroups,
     getEnabled,
     setEnabled,
     initializeStorage,
 
-    // Rule management
-    addRule,
-    updateRule,
-    deleteRule,
-    reorderRules,
-    getRule,
-    clearAllRules,
+    // Group management
+    addGroup,
+    updateGroup,
+    deleteGroup,
+    reorderGroups,
+    getGroup,
+    clearAllGroups,
+
+    // Word management
+    addWordToGroup,
+    removeWordFromGroup,
+    updateWordInGroup,
+    getTotalWordCount,
+    canAddWord,
+    canAddGroup,
 
     // Listeners
     onStorageChanged,
@@ -450,8 +723,9 @@ LiveHighlighter.Storage = (function ()
     // Utilities (exposed for testing/advanced use)
     generateId,
     isValidColour,
-    isValidText
+    isValidGroupName,
+    isValidWord
   };
 })();
 
-console.log('Live Highlighter: Storage module loaded');
+console.log('Live Highlighter: Storage module loaded (Groups Architecture)');

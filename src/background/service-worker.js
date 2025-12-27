@@ -51,11 +51,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) =>
 
   // Handle different message types
   switch (message.type) {
-    case 'GET_RULES':
-      // Popup or content script requesting rules
-      Storage.getRules().then(rules =>
+    case 'GET_GROUPS':
+      // Popup or content script requesting groups
+      Storage.getGroups().then(groups =>
       {
-        sendResponse({ success: true, rules });
+        sendResponse({ success: true, groups });
       });
       return true; // Keep channel open for async response
 
@@ -126,8 +126,8 @@ chrome.storage.onChanged.addListener((changes, area) =>
   if (area === 'local') {
     console.log('Live Highlighter: Storage changed', changes);
 
-    // Notify content scripts when rules or enabled state changes
-    if (changes[STORAGE_KEYS.RULES] || changes[STORAGE_KEYS.ENABLED]) {
+    // Notify content scripts when groups or enabled state changes
+    if (changes[STORAGE_KEYS.GROUPS] || changes[STORAGE_KEYS.ENABLED]) {
       notifyAllTabs({
         type: 'STORAGE_CHANGED',
         changes: changes

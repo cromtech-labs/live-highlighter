@@ -25,11 +25,10 @@
           </div>
           <div class="header-controls">
             <div class="toggle-container">
-              <label class="toggle-label">
-                <input type="checkbox" id="globalToggle" class="toggle-input" />
+              <div class="toggle-label" id="globalToggle">
                 <span class="toggle-slider"></span>
                 <span class="toggle-text">Highlighting Enabled</span>
-              </label>
+              </div>
             </div>
           </div>
         </div>
@@ -37,20 +36,22 @@
 
       <main>
         <div class="controls-bar">
-          <div class="rule-count">
-            <span id="ruleCount">0</span> / <span id="maxRules">10</span> rules
+          <div class="limits-display">
+            <span id="groupCount">0</span> / <span id="maxGroups">10</span> groups
+            <span class="separator">•</span>
+            <span id="totalWordCount">0</span> / <span id="maxTotalWords">200</span> words
           </div>
-          <button id="addRuleBtn" class="btn btn-primary">
+          <button id="addGroupBtn" class="btn btn-primary">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
               <path
                 d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"
               />
             </svg>
-            Add Rule
+            Add Group
           </button>
         </div>
 
-        <div id="rulesContainer" class="rules-container">
+        <div id="groupsContainer" class="groups-container">
           <div class="empty-state" id="emptyState">
             <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
               <circle cx="32" cy="32" r="30" stroke="#ddd" stroke-width="2" />
@@ -61,97 +62,139 @@
                 stroke-linecap="round"
               />
             </svg>
-            <h3>No rules yet</h3>
-            <p>Click "Add Rule" to create your first highlight rule</p>
+            <h3>No groups yet</h3>
+            <p>Click "Add Group" to create your first highlight group</p>
           </div>
 
-          <div id="rulesList" class="rules-list"></div>
+          <div id="groupsList" class="groups-list"></div>
         </div>
 
         <div class="help-section">
           <h3>How to use</h3>
           <ul>
             <li>
-              <strong>Add a rule:</strong> Click "Add Rule" and enter text to
-              highlight and choose a color
+              <strong>Add a group:</strong> Click "Add Group" to create a new highlight group
             </li>
             <li>
-              <strong>Priority:</strong> Drag rules to reorder - higher rules
+              <strong>Add words:</strong> Click a group to expand it, then add words to highlight
+            </li>
+            <li>
+              <strong>Priority:</strong> Drag groups to reorder - higher groups
               have priority when text overlaps
             </li>
             <li>
-              <strong>Edit:</strong> Click on text or color to edit - changes
+              <strong>Edit:</strong> Click on group name or color to edit - changes
               save automatically
             </li>
             <li>
-              <strong>Toggle:</strong> Use the switch on each rule to
+              <strong>Toggle:</strong> Use the switch on each group to
               enable/disable it
             </li>
             <li>
-              <strong>Delete:</strong> Click the × button to remove a rule
+              <strong>Delete:</strong> Click the × button to remove a group or word
             </li>
           </ul>
         </div>
       </main>
     </div>
 
-    <!-- Template for rule items (will be cloned by JavaScript) -->
-    <template id="ruleTemplate">
-      <div class="rule-item" draggable="true" data-rule-id="">
-        <div class="drag-handle" title="Drag to reorder">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-            <circle cx="4" cy="4" r="1.5" />
-            <circle cx="4" cy="8" r="1.5" />
-            <circle cx="4" cy="12" r="1.5" />
-            <circle cx="12" cy="4" r="1.5" />
-            <circle cx="12" cy="8" r="1.5" />
-            <circle cx="12" cy="12" r="1.5" />
-          </svg>
-        </div>
+    <!-- Template for group items (will be cloned by JavaScript) -->
+    <template id="groupTemplate">
+      <div class="group-item" draggable="true" data-group-id="">
+        <div class="group-header">
+          <div class="drag-handle" title="Drag to reorder">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <circle cx="4" cy="4" r="1.5" />
+              <circle cx="4" cy="8" r="1.5" />
+              <circle cx="4" cy="12" r="1.5" />
+              <circle cx="12" cy="4" r="1.5" />
+              <circle cx="12" cy="8" r="1.5" />
+              <circle cx="12" cy="12" r="1.5" />
+            </svg>
+          </div>
 
-        <div class="rule-order"></div>
+          <div class="group-order"></div>
 
-        <div class="rule-content">
-          <input
-            type="text"
-            class="rule-text"
-            placeholder="Text to highlight..."
-            maxlength="100"
-          />
+          <div class="group-content">
+            <div class="group-name-container">
+              <span class="group-name-display"></span>
+              <input
+                type="text"
+                class="group-name-input"
+                placeholder="Group name..."
+                maxlength="50"
+                style="display: none;"
+              />
+              <button class="edit-name-btn" title="Edit group name">
+                <svg width="14" height="14" viewBox="0 0 512 512" fill="currentColor">
+                  <path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"/>
+                </svg>
+              </button>
+            </div>
 
-          <div class="rule-color-picker">
-            <button class="color-button" type="button">
-              <span class="color-preview"></span>
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="currentColor"
-              >
-                <path d="M3 5l3 3 3-3z" />
+            <div class="group-color-picker">
+              <button class="color-button" type="button">
+                <span class="color-preview"></span>
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 12 12"
+                  fill="currentColor"
+                >
+                  <path d="M3 5l3 3 3-3z" />
+                </svg>
+              </button>
+              <div class="color-dropdown"></div>
+            </div>
+
+            <span class="word-count">0 / 20 words</span>
+          </div>
+
+          <button class="expand-btn" title="Expand to see words">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M4 6l4 4 4-4z" />
+            </svg>
+          </button>
+
+          <div class="group-actions">
+            <div class="group-toggle">
+              <span class="toggle-slider small"></span>
+            </div>
+
+            <button class="btn-icon delete-group-btn" title="Delete group">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path
+                  d="M2 2l12 12M14 2L2 14"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
               </svg>
             </button>
-            <div class="color-dropdown"></div>
           </div>
         </div>
 
-        <div class="rule-actions">
-          <label class="rule-toggle">
-            <input type="checkbox" class="rule-enabled" checked />
-            <span class="toggle-slider small"></span>
-          </label>
+        <div class="group-words" style="display: none;">
+          <div class="words-list"></div>
 
-          <button class="btn-icon delete-btn" title="Delete rule">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-              <path
-                d="M2 2l12 12M14 2L2 14"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-              />
-            </svg>
-          </button>
+          <div class="add-word-section">
+            <input
+              type="text"
+              class="add-word-input"
+              placeholder='Add words (comma/space separated, or use "quotes" for phrases)...'
+              maxlength="500"
+            />
+            <button class="add-word-btn">Add</button>
+          </div>
         </div>
+      </div>
+    </template>
+
+    <!-- Template for word chips -->
+    <template id="wordChipTemplate">
+      <div class="word-chip" data-word="">
+        <span class="word-text"></span>
+        <button class="remove-word-btn" title="Remove word">×</button>
       </div>
     </template>
 

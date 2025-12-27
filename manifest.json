@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Live Highlighter",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Stop searching. Start seeing. Make important words pop with colour highlights. Never miss what matters on any webpage",
   "permissions": ["storage", "activeTab", "scripting"],
   "background": {
@@ -15,7 +15,6 @@
         "src/shared/storage.js",
         "src/content/content.js"
       ],
-      "css": ["src/content/content.css"],
       "run_at": "document_idle",
       "all_frames": true
     }

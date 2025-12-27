@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Maximum Capacity Test (200 Words) - Live Highlighter</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Roboto, sans-serif;
+        background: #f5f5f5;
+        padding: 20px;
+        line-height: 1.6;
+      }
+
+      .header {
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        color: #1a73e8;
+        margin-bottom: 10px;
+      }
+
+      h2 {
+        color: #202124;
+        margin-top: 0;
+        font-size: 18px;
+        padding: 15px 20px;
+        background: #f8f9fa;
+        border-left: 4px solid #1a73e8;
+      }
+
+      .test-section {
+        background: white;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .word-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 8px;
+        margin-top: 15px;
+      }
+
+      .word-item {
+        padding: 8px 12px;
+        background: #f8f9fa;
+        border-radius: 4px;
+        font-size: 13px;
+        text-align: center;
+        border: 1px solid #dadce0;
+      }
+
+      .stats {
+        background: #e8f0fe;
+        padding: 15px;
+        border-radius: 4px;
+        margin: 15px 0;
+        font-family: monospace;
+        font-size: 13px;
+      }
+
+      .stats div {
+        margin: 5px 0;
+      }
+
+      .test-content {
+        padding: 15px;
+        background: #fafafa;
+        border-radius: 4px;
+        margin-top: 15px;
+        max-height: 300px;
+        overflow-y: auto;
+      }
+
+      .controls {
+        display: flex;
+        gap: 10px;
+        margin: 15px 0;
+      }
+
+      button {
+        padding: 10px 20px;
+        background: #1a73e8;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      button:hover {
+        background: #1557b0;
+      }
+
+      button.secondary {
+        background: #5f6368;
+      }
+
+      button.secondary:hover {
+        background: #3c4043;
+      }
+
+      .metric {
+        display: inline-block;
+        padding: 4px 8px;
+        background: #34a853;
+        color: white;
+        border-radius: 3px;
+        margin-left: 10px;
+        font-weight: 500;
+      }
+
+      .metric.warning {
+        background: #fbbc04;
+        color: #000;
+      }
+
+      .metric.error {
+        background: #ea4335;
+      }
+
+      .expected {
+        color: #5f6368;
+        font-style: italic;
+        margin-top: 10px;
+        padding: 10px;
+        background: #f8f9fa;
+        border-radius: 4px;
+      }
+
+      .setup-instructions {
+        background: #fff3cd;
+        border: 1px solid #ffc107;
+        padding: 15px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+      }
+
+      .setup-instructions ol {
+        margin: 10px 0 0 20px;
+      }
+
+      .setup-instructions li {
+        margin: 5px 0;
+      }
+
+      #dynamic-content {
+        min-height: 100px;
+      }
+
+      .iframe-container {
+        margin-top: 15px;
+      }
+
+      iframe {
+        width: 100%;
+        height: 200px;
+        border: 1px solid #dadce0;
+        border-radius: 4px;
+        margin-top: 10px;
+      }
+
+      .stress-test {
+        line-height: 1.4;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>Maximum Capacity Test (200 Words)</h1>
+      <p>
+        This page tests Live Highlighter at maximum capacity: 200 total words
+        across all groups (10 groups × 20 words each).
+      </p>
+      <p style="margin-top: 10px">
+        <strong>Extension Limits:</strong> MAX_GROUPS: 10 | MAX_WORDS_PER_GROUP:
+        20 | MAX_TOTAL_WORDS: 200
+      </p>
+    </div>
+
+    <div class="setup-instructions">
+      <strong>⚠️ Setup Required:</strong> Create 10 groups with 20 words each
+      (200 total):
+      <ol>
+        <li>
+          <strong>Group 1 (Yellow):</strong> error, failure, failed, exception,
+          fault, bug, crash, critical, emergency, alert, severe, broken,
+          invalid, rejected, timeout, denied, forbidden, unauthorized, conflict,
+          abort
+        </li>
+        <li>
+          <strong>Group 2 (Orange):</strong> warning, caution, notice,
+          attention, deprecated, legacy, outdated, review, pending, waiting,
+          delayed, slow, limited, throttled, retry, fallback, degraded,
+          unstable, experimental, beta
+        </li>
+        <li>
+          <strong>Group 3 (Cyan):</strong> success, completed, passed, approved,
+          verified, confirmed, validated, accepted, active, enabled, ready,
+          available, healthy, stable, optimal, live, deployed, published,
+          released, production
+        </li>
+        <li>
+          <strong>Group 4 (Pink):</strong> data, database, storage, cache,
+          memory, disk, volume, backup, restore, snapshot, replica, shard,
+          partition, index, query, table, schema, record, row, column
+        </li>
+        <li>
+          <strong>Group 5 (Green):</strong> request, response, api, endpoint,
+          service, client, server, host, port, protocol, http, https, rest,
+          graphql, websocket, tcp, udp, dns, proxy, gateway
+        </li>
+        <li>
+          <strong>Group 6 (Lavender):</strong> user, account, profile, session,
+          token, auth, login, logout, password, credential, permission, role,
+          admin, guest, member, owner, viewer, editor, contributor, subscriber
+        </li>
+        <li>
+          <strong>Group 7 (Yellow):</strong> config, setting, option, parameter,
+          variable, constant, environment, property, attribute, metadata, flag,
+          feature, toggle, switch, preference, default, custom, override,
+          inherit, global
+        </li>
+        <li>
+          <strong>Group 8 (Orange):</strong> network, connection, bandwidth,
+          latency, throughput, packet, route, switch, router, firewall, load,
+          balancer, cdn, edge, origin, upstream, downstream, peer, node, cluster
+        </li>
+        <li>
+          <strong>Group 9 (Cyan):</strong> monitor, metric, log, trace, event,
+          alert, alarm, threshold, dashboard, panel, chart, graph, report,
+          analytics, insight, telemetry, observability, instrumentation, audit,
+          compliance
+        </li>
+        <li>
+          <strong>Group 10 (Pink):</strong> process, thread, task, job, worker,
+          queue, scheduler, executor, pipeline, workflow, stage, step, phase,
+          cycle, iteration, batch, stream, consumer, producer, handler
+        </li>
+      </ol>
+    </div>
+
+    <!-- Test 1: Basic Functionality -->
+    <div class="test-section">
+      <h2>Test 1: Basic Functionality - All 200 Words</h2>
+      <p>
+        Verify all 200 words are highlighted correctly with proper group colors.
+      </p>
+
+      <div class="word-grid" id="word-grid">
+        <!-- Generated dynamically -->
+      </div>
+
+      <div class="expected">
+        <strong>Expected:</strong> All 200 words should be highlighted with
+        their respective group colors. Each word should appear in its assigned
+        color with no missing highlights.
+      </div>
+    </div>
+
+    <!-- Test 2: Performance Test -->
+    <div class="test-section">
+      <h2>Test 2: Performance Test - Large Document</h2>
+      <p>
+        Large document (~5,000 words) with heavy occurrence of all 200 target
+        words. Tests highlighting performance at scale.
+      </p>
+
+      <div class="stats" id="perf-stats">
+        <div>Page Load Time: <span id="load-time">Measuring...</span></div>
+        <div>
+          Document Size: <span id="doc-size">~5,000 words</span>
+        </div>
+        <div>
+          Target Word Density: <span id="density">~40% of content</span>
+        </div>
+      </div>
+
+      <div class="test-content" id="large-content">
+        <!-- Large content generated dynamically -->
+      </div>
+
+      <div class="expected">
+        <strong>Expected:</strong> Initial highlighting completes in under 1
+        second. Scrolling remains smooth (60 FPS). Memory usage stays under 50MB
+        additional.
+      </div>
+    </div>
+
+    <!-- Test 3: Priority & Overlap Test -->
+    <div class="test-section">
+      <h2>Test 3: Priority & Overlap Test</h2>
+      <p>
+        Test priority when multiple groups could match the same text. First
+        group should always win.
+      </p>
+
+      <div class="test-content">
+        <p><strong>Overlap Scenario 1:</strong> Group 1 vs Group 4</p>
+        <p>
+          The database failure caused a critical error in the data storage
+          system.
+        </p>
+        <p style="margin-top: 5px; font-size: 13px; color: #5f6368">
+          → "error" (Group 1) should be Yellow, "database", "data", "storage"
+          (Group 4) should be Pink
+        </p>
+
+        <p style="margin-top: 15px">
+          <strong>Overlap Scenario 2:</strong> Group 2 vs Group 3
+        </p>
+        <p>
+          The deprecated warning was confirmed after the success of the
+          completed validation.
+        </p>
+        <p style="margin-top: 5px; font-size: 13px; color: #5f6368">
+          → "warning", "deprecated" (Group 2) should be Orange, "success",
+          "completed", "confirmed", "validated" (Group 3) should be Cyan
+        </p>
+
+        <p style="margin-top: 15px">
+          <strong>Overlap Scenario 3:</strong> Group 5 vs Group 8
+        </p>
+        <p>
+          The api request failed due to network connection issues on the server.
+        </p>
+        <p style="margin-top: 5px; font-size: 13px; color: #5f6368">
+          → "request", "api", "server" (Group 5) should be Green, "network",
+          "connection" (Group 8) should be Orange
+        </p>
+      </div>
+
+      <div class="expected">
+        <strong>Expected:</strong> When words from multiple groups appear
+        together, each word is highlighted with its own group's color. No
+        incorrect color blending or priority conflicts.
+      </div>
+    </div>
+
+    <!-- Test 4: Dynamic Content Test -->
+    <div class="test-section">
+      <h2>Test 4: Dynamic Content Test</h2>
+      <p>
+        Test MutationObserver performance with 200-word configuration when
+        content is added/removed.
+      </p>
+
+      <div class="controls">
+        <button onclick="addDynamicContent()">Add 100 Paragraphs</button>
+        <button onclick="removeDynamicContent()" class="secondary">
+          Remove Content
+        </button>
+      </div>
+
+      <div class="stats" id="dynamic-stats">
+        <div>Content Additions: <span id="add-count">0</span></div>
+        <div>
+          Last Update Time: <span id="update-time">N/A</span>
+        </div>
+      </div>
+
+      <div class="test-content" id="dynamic-content">
+        <p><em>Click "Add 100 Paragraphs" to test dynamic content...</em></p>
+      </div>
+
+      <div class="expected">
+        <strong>Expected:</strong> New content is highlighted within 300ms.
+        Removal doesn't cause errors. Performance remains consistent across
+        multiple add/remove cycles.
+      </div>
+    </div>
+
+    <!-- Test 5: Boundary Test -->
+    <div class="test-section">
+      <h2>Test 5: Boundary Test (199, 200, 201 words)</h2>
+      <p>Test behavior at the exact limits of word capacity.</p>
+
+      <div class="test-content">
+        <p><strong>199 Words (Below Limit):</strong></p>
+        <p>
+          All 200 words minus "abort" - error failure failed exception fault bug
+          crash critical emergency alert severe broken invalid rejected timeout
+          denied forbidden unauthorized conflict warning caution notice attention
+          deprecated legacy outdated review pending waiting delayed slow limited
+          throttled retry fallback degraded unstable experimental beta success
+          completed passed approved verified confirmed validated accepted active
+          enabled ready available healthy stable optimal live deployed published
+          released production data database storage cache memory disk volume
+          backup restore snapshot replica shard partition index query table
+          schema record row column request response api endpoint service client
+          server host port protocol http https rest graphql websocket tcp udp
+          dns proxy gateway user account profile session token auth login logout
+          password credential permission role admin guest member owner viewer
+          editor contributor subscriber config setting option parameter variable
+          constant environment property attribute metadata flag feature toggle
+          switch preference default custom override inherit global network
+          connection bandwidth latency throughput packet route switch router
+          firewall load balancer cdn edge origin upstream downstream peer node
+          cluster monitor metric log trace event alert alarm threshold dashboard
+          panel chart graph report analytics insight telemetry observability
+          instrumentation audit compliance process thread task job worker queue
+          scheduler executor pipeline workflow stage step phase cycle iteration
+          batch stream consumer producer handler
+        </p>
+        <p style="margin-top: 5px; font-size: 13px; color: #5f6368">
+          → Should work perfectly (199 words)
+        </p>
+
+        <p style="margin-top: 15px"><strong>200 Words (At Limit):</strong></p>
+        <p>
+          All 200 words - error failure failed exception fault bug crash
+          critical emergency alert severe broken invalid rejected timeout denied
+          forbidden unauthorized conflict abort warning caution notice attention
+          deprecated legacy outdated review pending waiting delayed slow limited
+          throttled retry fallback degraded unstable experimental beta success
+          completed passed approved verified confirmed validated accepted active
+          enabled ready available healthy stable optimal live deployed published
+          released production data database storage cache memory disk volume
+          backup restore snapshot replica shard partition index query table
+          schema record row column request response api endpoint service client
+          server host port protocol http https rest graphql websocket tcp udp
+          dns proxy gateway user account profile session token auth login logout
+          password credential permission role admin guest member owner viewer
+          editor contributor subscriber config setting option parameter variable
+          constant environment property attribute metadata flag feature toggle
+          switch preference default custom override inherit global network
+          connection bandwidth latency throughput packet route switch router
+          firewall load balancer cdn edge origin upstream downstream peer node
+          cluster monitor metric log trace event alert alarm threshold dashboard
+          panel chart graph report analytics insight telemetry observability
+          instrumentation audit compliance process thread task job worker queue
+          scheduler executor pipeline workflow stage step phase cycle iteration
+          batch stream consumer producer handler
+        </p>
+        <p style="margin-top: 5px; font-size: 13px; color: #5f6368">
+          → Should work perfectly (200 words - exact limit)
+        </p>
+
+        <p style="margin-top: 15px"><strong>201 Words (Above Limit):</strong></p>
+        <p style="color: #ea4335">
+          ⚠️ The extension UI should prevent adding a 201st word. Test by
+          attempting to add "extra" to any group when already at 200 words
+          total.
+        </p>
+      </div>
+
+      <div class="expected">
+        <strong>Expected:</strong> 199 and 200 words work correctly. Extension
+        prevents adding 201st word with appropriate error message.
+      </div>
+    </div>
+
+    <!-- Test 6: Multi-Document Test (Iframes) -->
+    <div class="test-section">
+      <h2>Test 6: Multi-Document Test (Iframes)</h2>
+      <p>Test 200-word configuration across main document and iframes.</p>
+
+      <div class="test-content">
+        <p>
+          <strong>Main Document Content:</strong> The critical error in the api
+          request caused a server failure. The database connection was rejected
+          due to invalid credentials.
+        </p>
+      </div>
+
+      <div class="iframe-container">
+        <p><strong>Same-Origin Iframe #1:</strong></p>
+        <iframe id="iframe1" title="Test iframe 1"></iframe>
+      </div>
+
+      <div class="iframe-container">
+        <p><strong>Same-Origin Iframe #2 (document.write):</strong></p>
+        <iframe id="iframe2" title="Test iframe 2"></iframe>
+      </div>
+
+      <div class="expected">
+        <strong>Expected:</strong> All 200 words highlighted in main document.
+        All 200 words highlighted in both iframes. No cross-origin errors.
+      </div>
+    </div>
+
+    <!-- Test 7: Toggle Performance Test -->
+    <div class="test-section">
+      <h2>Test 7: Toggle Performance Test</h2>
+      <p>Test performance of toggling extension on/off with 200 words active.</p>
+
+      <div class="controls">
+        <button onclick="measureToggle()">Measure Toggle Performance</button>
+      </div>
+
+      <div class="stats" id="toggle-stats">
+        <div>Toggle Cycles Completed: <span id="cycle-count">0</span></div>
+        <div>Average Toggle OFF Time: <span id="avg-off-time">N/A</span></div>
+        <div>Average Toggle ON Time: <span id="avg-on-time">N/A</span></div>
+      </div>
+
+      <div class="test-content">
+        <p>
+          Click "Measure Toggle Performance" to run 10 toggle cycles and measure
+          timing. The extension will be toggled off and on 10 times.
+        </p>
+        <p style="margin-top: 10px; font-size: 13px; color: #5f6368">
+          Note: You must manually toggle the extension. This test will prompt
+          you when to toggle.
+        </p>
+      </div>
+
+      <div class="expected">
+        <strong>Expected:</strong> Toggle OFF completes in under 200ms. Toggle
+        ON completes in under 500ms. No memory leaks after 10+ cycles.
+      </div>
+    </div>
+
+    <!-- Test 8: Stress Test - High Density -->
+    <div class="test-section">
+      <h2>Test 8: Stress Test - High Density</h2>
+      <p>
+        Short document where 80%+ of words match one of the 200 target words.
+        Tests rendering performance with extreme highlight density.
+      </p>
+
+      <div class="test-content stress-test">
+        <p>
+          error failure bug crash critical alert severe timeout denied
+          unauthorized warning deprecated pending delayed throttled retry success
+          completed verified active enabled available healthy stable deployed
+          production data database cache memory backup snapshot replica query
+          table request response api endpoint service client server protocol
+          user account session token login credential admin config setting
+          parameter environment network connection latency packet firewall
+          monitor metric log event dashboard report process thread task queue
+          pipeline workflow error failed exception fault broken invalid rejected
+          conflict caution legacy review waiting slow unstable passed approved
+          confirmed validated ready optimal published storage volume restore
+          shard partition index schema record row column http rest gateway
+          profile password permission role member option variable constant flag
+          feature bandwidth throughput route load balancer trace alarm threshold
+          analytics telemetry job worker scheduler executor stage phase error
+          failure critical emergency alert severe denied forbidden conflict
+          warning deprecated experimental success completed approved active
+          deployed data database storage cache request api service server user
+          account token config network connection monitor log process thread
+          error bug crash invalid timeout warning retry success verified enabled
+          database query api protocol session credential setting parameter
+          latency dashboard metric task pipeline
+        </p>
+      </div>
+
+      <div class="expected">
+        <strong>Expected:</strong> All words highlighted correctly despite high
+        density. No rendering issues or highlight overlaps. Smooth scrolling
+        maintained.
+      </div>
+    </div>
+
+    <script>
+      // All 200 test words organized by group
+      const testWords = {
+        group1: [
+          "error",
+          "failure",
+          "failed",
+          "exception",
+          "fault",
+          "bug",
+          "crash",
+          "critical",
+          "emergency",
+          "alert",
+          "severe",
+          "broken",
+          "invalid",
+          "rejected",
+          "timeout",
+          "denied",
+          "forbidden",
+          "unauthorized",
+          "conflict",
+          "abort",
+        ],
+        group2: [
+          "warning",
+          "caution",
+          "notice",
+          "attention",
+          "deprecated",
+          "legacy",
+          "outdated",
+          "review",
+          "pending",
+          "waiting",
+          "delayed",
+          "slow",
+          "limited",
+          "throttled",
+          "retry",
+          "fallback",
+          "degraded",
+          "unstable",
+          "experimental",
+          "beta",
+        ],
+        group3: [
+          "success",
+          "completed",
+          "passed",
+          "approved",
+          "verified",
+          "confirmed",
+          "validated",
+          "accepted",
+          "active",
+          "enabled",
+          "ready",
+          "available",
+          "healthy",
+          "stable",
+          "optimal",
+          "live",
+          "deployed",
+          "published",
+          "released",
+          "production",
+        ],
+        group4: [
+          "data",
+          "database",
+          "storage",
+          "cache",
+          "memory",
+          "disk",
+          "volume",
+          "backup",
+          "restore",
+          "snapshot",
+          "replica",
+          "shard",
+          "partition",
+          "index",
+          "query",
+          "table",
+          "schema",
+          "record",
+          "row",
+          "column",
+        ],
+        group5: [
+          "request",
+          "response",
+          "api",
+          "endpoint",
+          "service",
+          "client",
+          "server",
+          "host",
+          "port",
+          "protocol",
+          "http",
+          "https",
+          "rest",
+          "graphql",
+          "websocket",
+          "tcp",
+          "udp",
+          "dns",
+          "proxy",
+          "gateway",
+        ],
+        group6: [
+          "user",
+          "account",
+          "profile",
+          "session",
+          "token",
+          "auth",
+          "login",
+          "logout",
+          "password",
+          "credential",
+          "permission",
+          "role",
+          "admin",
+          "guest",
+          "member",
+          "owner",
+          "viewer",
+          "editor",
+          "contributor",
+          "subscriber",
+        ],
+        group7: [
+          "config",
+          "setting",
+          "option",
+          "parameter",
+          "variable",
+          "constant",
+          "environment",
+          "property",
+          "attribute",
+          "metadata",
+          "flag",
+          "feature",
+          "toggle",
+          "switch",
+          "preference",
+          "default",
+          "custom",
+          "override",
+          "inherit",
+          "global",
+        ],
+        group8: [
+          "network",
+          "connection",
+          "bandwidth",
+          "latency",
+          "throughput",
+          "packet",
+          "route",
+          "switch",
+          "router",
+          "firewall",
+          "load",
+          "balancer",
+          "cdn",
+          "edge",
+          "origin",
+          "upstream",
+          "downstream",
+          "peer",
+          "node",
+          "cluster",
+        ],
+        group9: [
+          "monitor",
+          "metric",
+          "log",
+          "trace",
+          "event",
+          "alert",
+          "alarm",
+          "threshold",
+          "dashboard",
+          "panel",
+          "chart",
+          "graph",
+          "report",
+          "analytics",
+          "insight",
+          "telemetry",
+          "observability",
+          "instrumentation",
+          "audit",
+          "compliance",
+        ],
+        group10: [
+          "process",
+          "thread",
+          "task",
+          "job",
+          "worker",
+          "queue",
+          "scheduler",
+          "executor",
+          "pipeline",
+          "workflow",
+          "stage",
+          "step",
+          "phase",
+          "cycle",
+          "iteration",
+          "batch",
+          "stream",
+          "consumer",
+          "producer",
+          "handler",
+        ],
+      };
+
+      // Initialize Test 1: Display all 200 words
+      function initWordGrid() {
+        const grid = document.getElementById("word-grid");
+        let count = 0;
+
+        Object.entries(testWords).forEach(([group, words]) => {
+          words.forEach((word) => {
+            const item = document.createElement("div");
+            item.className = "word-item";
+            item.textContent = word;
+            grid.appendChild(item);
+            count++;
+          });
+        });
+
+        console.log(`Displayed ${count} words in grid`);
+      }
+
+      // Initialize Test 2: Generate large content
+      function initLargeContent() {
+        const container = document.getElementById("large-content");
+        const startTime = performance.now();
+
+        // Generate ~5000 words with heavy use of target words
+        let content = "";
+        const allWords = Object.values(testWords).flat();
+
+        for (let i = 0; i < 250; i++) {
+          // 250 paragraphs
+          let paragraph = "<p>";
+
+          // Each paragraph has ~20 words
+          for (let j = 0; j < 20; j++) {
+            // 40% chance of target word, 60% filler
+            if (Math.random() < 0.4) {
+              const randomWord =
+                allWords[Math.floor(Math.random() * allWords.length)];
+              paragraph += randomWord + " ";
+            } else {
+              paragraph += "the system is running smoothly and ".split(" ")[
+                Math.floor(Math.random() * 6)
+              ];
+              paragraph += " ";
+            }
+          }
+
+          paragraph += "</p>";
+          content += paragraph;
+        }
+
+        container.innerHTML = content;
+
+        const endTime = performance.now();
+        document.getElementById("load-time").textContent =
+          Math.round(endTime - startTime) + "ms";
+      }
+
+      // Test 4: Add dynamic content
+      let addCount = 0;
+      function addDynamicContent() {
+        const container = document.getElementById("dynamic-content");
+        const startTime = performance.now();
+
+        const allWords = Object.values(testWords).flat();
+        let content = "";
+
+        for (let i = 0; i < 100; i++) {
+          let paragraph = "<p>";
+          for (let j = 0; j < 15; j++) {
+            const randomWord =
+              allWords[Math.floor(Math.random() * allWords.length)];
+            paragraph += randomWord + " ";
+          }
+          paragraph += "</p>";
+          content += paragraph;
+        }
+
+        container.innerHTML += content;
+
+        const endTime = performance.now();
+        addCount++;
+
+        document.getElementById("add-count").textContent = addCount;
+        document.getElementById("update-time").textContent =
+          Math.round(endTime - startTime) + "ms";
+      }
+
+      function removeDynamicContent() {
+        const container = document.getElementById("dynamic-content");
+        container.innerHTML =
+          "<p><em>Content removed. Click 'Add 100 Paragraphs' to test again...</em></p>";
+        addCount = 0;
+        document.getElementById("add-count").textContent = "0";
+        document.getElementById("update-time").textContent = "N/A";
+      }
+
+      // Test 6: Initialize iframes
+      function initIframes() {
+        // Iframe 1 - simple content
+        const iframe1 = document.getElementById("iframe1");
+        const doc1 = iframe1.contentDocument;
+        doc1.open();
+        doc1.write(`
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <style>
+              body { font-family: 'Segoe UI', sans-serif; padding: 15px; }
+            </style>
+          </head>
+          <body>
+            <p>Iframe content: The critical error in the api request caused a database failure. The server connection was rejected due to invalid credentials and timeout issues.</p>
+          </body>
+          </html>
+        `);
+        doc1.close();
+
+        // Iframe 2 - document.write test
+        const iframe2 = document.getElementById("iframe2");
+        const doc2 = iframe2.contentDocument;
+        doc2.open();
+        doc2.write(`
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <style>
+              body { font-family: 'Segoe UI', sans-serif; padding: 15px; background: #f8f9fa; }
+            </style>
+          </head>
+          <body>
+            <p>Success: The completed validation confirmed that all active services are healthy and ready for production deployment. No errors detected in monitoring dashboard.</p>
+          </body>
+          </html>
+        `);
+        doc2.close();
+      }
+
+      // Test 7: Toggle performance measurement
+      let cycleCount = 0;
+      function measureToggle() {
+        alert(
+          "This test requires manual toggling. Please toggle the extension OFF and ON 10 times using the extension icon. Click OK to start."
+        );
+        cycleCount++;
+        document.getElementById("cycle-count").textContent = cycleCount;
+
+        // Note: Actual timing would require extension API access
+        // This is a placeholder for manual testing
+        document.getElementById("avg-off-time").textContent =
+          "Manual test - use DevTools Performance";
+        document.getElementById("avg-on-time").textContent =
+          "Manual test - use DevTools Performance";
+      }
+
+      // Initialize all tests on page load
+      window.addEventListener("DOMContentLoaded", () => {
+        initWordGrid();
+        initLargeContent();
+        initIframes();
+
+        console.log("Max Capacity Test: All tests initialized");
+        console.log(
+          "Total test words:",
+          Object.values(testWords).flat().length
+        );
+      });
+    </script>
+  </body>
+</html>

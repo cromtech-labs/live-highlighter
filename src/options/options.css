@@ -145,19 +145,13 @@ header {
   user-select: none;
 }
 
-.toggle-input {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
 .toggle-slider {
   position: relative;
   width: 48px;
   height: 26px;
   background-color: #ccc;
   border-radius: 26px;
+  cursor: pointer;
   transition: background-color 0.2s;
 }
 
@@ -173,14 +167,6 @@ header {
   transition: transform 0.2s;
 }
 
-.toggle-input:checked+.toggle-slider {
-  background-color: var(--primary-color);
-}
-
-.toggle-input:checked+.toggle-slider::before {
-  transform: translateX(22px);
-}
-
 .toggle-slider.small {
   width: 36px;
   height: 20px;
@@ -192,15 +178,16 @@ header {
   top: 3px;
 }
 
-.toggle-input:checked+.toggle-slider.small::before {
-  transform: translateX(16px);
-}
-
-.rule-enabled:checked+.toggle-slider {
+/* Active state */
+.toggle-slider.active {
   background-color: var(--primary-color);
 }
 
-.rule-enabled:checked+.toggle-slider::before {
+.toggle-slider.active::before {
+  transform: translateX(22px);
+}
+
+.toggle-slider.small.active::before {
   transform: translateX(16px);
 }
 
@@ -452,7 +439,8 @@ header {
   display: none;
 }
 
-.color-dropdown.open {
+.color-dropdown.open,
+.color-dropdown.show {
   display: block;
   animation: slideDown 0.2s ease;
 }
@@ -515,17 +503,10 @@ header {
   gap: 8px;
 }
 
-.rule-toggle {
+.group-toggle {
   display: flex;
   align-items: center;
   cursor: pointer;
-}
-
-.rule-enabled {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
 }
 
 .delete-btn svg {
@@ -621,5 +602,351 @@ header {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================================
+   Groups Architecture Styles
+   ============================================================================ */
+
+/* Limits Display */
+.limits-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.separator {
+  color: var(--border-color);
+}
+
+/* Groups List */
+.groups-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Group Item */
+.group-item {
+  background: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  overflow: visible;
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.group-item:hover {
+  box-shadow: var(--shadow-sm);
+  border-color: var(--primary-color);
+}
+
+.group-item.dragging {
+  opacity: 0.5;
+}
+
+.group-item.drag-over {
+  border-color: var(--primary-color);
+  box-shadow: var(--shadow-md);
+}
+
+/* Group Header */
+.group-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--bg-light);
+  cursor: default;
+  user-select: none;
+}
+
+.group-header:hover {
+  background: var(--border-color);
+}
+
+/* Make only the empty areas clickable for expansion */
+.drag-handle,
+.group-order {
+  cursor: grab;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.group-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.group-name-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.group-name-display {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-primary);
+  cursor: text;
+  user-select: none;
+}
+
+.group-name-input {
+  flex: 1;
+  font-weight: 600;
+  font-size: 14px;
+  border: 1px solid var(--primary-color);
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-white);
+  color: var(--text-primary);
+}
+
+.group-name-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.1);
+}
+
+.edit-name-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: var(--text-tertiary);
+  transition: color 0.2s;
+  opacity: 0;
+  transition: opacity 0.2s, color 0.2s;
+}
+
+.group-name-container:hover .edit-name-btn {
+  opacity: 1;
+}
+
+.edit-name-btn:hover {
+  color: var(--primary-color);
+}
+
+.word-count {
+  font-size: 12px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.group-color-picker {
+  position: relative;
+}
+
+/* Expand Button */
+.expand-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: var(--text-secondary);
+  transition: transform 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.expand-btn:hover {
+  color: var(--text-primary);
+}
+
+.expand-btn.expanded {
+  transform: rotate(180deg);
+}
+
+.group-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Group Words Section */
+.group-words {
+  padding: 12px;
+  background: var(--bg-white);
+  border-top: 1px solid var(--border-color);
+}
+
+.words-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+  min-height: 32px;
+}
+
+.words-list:empty::before {
+  content: 'No words yet. Add words below.';
+  color: var(--text-tertiary);
+  font-size: 13px;
+  font-style: italic;
+}
+
+/* Word Chip */
+.word-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px 4px 12px;
+  background: var(--bg-light);
+  border-radius: 16px;
+  font-size: 13px;
+  color: var(--text-primary);
+  transition: background-color 0.2s;
+}
+
+.word-chip:hover {
+  background: var(--border-color);
+}
+
+.remove-word-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  opacity: 0.6;
+  padding: 0;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: opacity 0.2s, color 0.2s;
+}
+
+.remove-word-btn:hover {
+  opacity: 1;
+  color: var(--danger-color);
+}
+
+/* Add Word Section */
+.add-word-section {
+  display: flex;
+  gap: 8px;
+}
+
+.add-word-input {
+  flex: 1;
+  padding: 6px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  background: var(--bg-white);
+  color: var(--text-primary);
+  transition: border-color 0.2s;
+}
+
+.add-word-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.add-word-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.add-word-btn {
+  padding: 6px 16px;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.add-word-btn:hover {
+  background: var(--primary-hover);
+}
+
+.add-word-btn:active {
+  transform: translateY(1px);
+}
+
+/* Delete Group Button */
+.delete-group-btn {
+  color: var(--text-secondary);
+}
+
+.delete-group-btn:hover {
+  color: var(--danger-color);
+}
+
+/* Dark Mode Overrides for Groups */
+@media (prefers-color-scheme: dark) {
+  .group-item {
+    background-color: #292A2D;
+    border-color: #5F6368;
+  }
+
+  .group-item:hover {
+    background-color: #3C4043;
+  }
+
+  .group-header {
+    background-color: #202124;
+  }
+
+  .group-header:hover {
+    background-color: #3C4043;
+  }
+
+  .group-name-display {
+    color: #E8EAED;
+  }
+
+  .group-name-input {
+    background-color: #3C4043;
+    color: #E8EAED;
+    border-color: #8AB4F8;
+  }
+
+  .group-name-input:focus {
+    background-color: #3C4043;
+    border-color: #8AB4F8;
+    box-shadow: 0 0 0 2px rgba(138, 180, 248, 0.2);
+  }
+
+  .group-words {
+    background-color: #292A2D;
+    border-top-color: #5F6368;
+  }
+
+  .word-chip {
+    background-color: #3C4043;
+    color: #E8EAED;
+  }
+
+  .word-chip:hover {
+    background-color: #5F6368;
+  }
+
+  .add-word-input {
+    background-color: #3C4043;
+    color: #E8EAED;
+    border-color: #5F6368;
+  }
+
+  .add-word-input::placeholder {
+    color: #9AA0A6;
   }
 }

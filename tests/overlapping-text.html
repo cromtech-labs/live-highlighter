@@ -68,10 +68,10 @@
       <h1>Overlapping Text Test</h1>
       <p>
         This page tests how Live Highlighter handles overlapping text matches
-        where multiple rules could apply to the same text.
+        where multiple groups could apply to the same text.
       </p>
       <p>
-        <strong>Priority rule:</strong> First matching rule wins (based on rule
+        <strong>Priority rule:</strong> First matching group wins (based on group
         order in settings)
       </p>
     </div>
@@ -80,18 +80,18 @@
       <h2>How Priority Works</h2>
       <div class="priority-info">
         <p>
-          <strong>Rule Priority:</strong> When multiple rules match the same
-          text, the first rule in your list takes precedence.
+          <strong>Group Priority:</strong> When multiple groups match the same
+          text, the first group in your list takes precedence.
         </p>
         <p>For example, if you have:</p>
         <ol style="margin: 10px 0; padding-left: 20px">
-          <li>Rule #1: Highlight "error" in yellow</li>
-          <li>Rule #2: Highlight "error handling" in orange</li>
+          <li>Group #1 (Yellow): Contains word "error"</li>
+          <li>Group #2 (Orange): Contains phrase "error handling"</li>
         </ol>
         <p>
           The text "error handling" will be highlighted as:
           <code>error</code> (yellow) + <code> handling</code> (no highlight),
-          because "error" matches first.
+          because "error" from Group #1 matches first.
         </p>
       </div>
     </div>

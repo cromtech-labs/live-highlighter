@@ -238,13 +238,7 @@ main {
 .toggle-switch {
   display: flex;
   align-items: center;
-}
-
-.toggle-input {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
+  cursor: pointer;
 }
 
 .toggle-slider {
@@ -269,11 +263,12 @@ main {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-.toggle-input:checked+.toggle-slider {
+/* Active state */
+.toggle-slider.active {
   background-color: var(--primary-color);
 }
 
-.toggle-input:checked+.toggle-slider::before {
+.toggle-slider.active::before {
   transform: translateX(20px);
 }
 

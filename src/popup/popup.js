@@ -40,7 +40,7 @@
     await checkGetStartedBanner();
 
     // Set up event listeners
-    globalToggle.addEventListener('change', handleGlobalToggle);
+    globalToggle.addEventListener('click', handleGlobalToggle);
     openOptionsBtn.addEventListener('click', handleOpenOptions);
     document.getElementById('createFirstRule').addEventListener('click', handleCreateFirstRule);
     document.getElementById('dismissBanner').addEventListener('click', handleDismissBanner);
@@ -57,12 +57,19 @@
     try {
       // Get enabled state
       const enabled = await Storage.getEnabled();
-      globalToggle.checked = enabled;
+      const toggleSlider = globalToggle.querySelector('.toggle-slider');
+      if (enabled) {
+        toggleSlider.classList.add('active');
+      } else {
+        toggleSlider.classList.remove('active');
+      }
 
-      // Get rules count
-      const rules = await Storage.getRules();
-      const enabledRules = rules.filter(r => r.enabled);
-      ruleCountSpan.textContent = `${enabledRules.length} / ${rules.length}`;
+      // Get groups and count words
+      const groups = await Storage.getGroups();
+      const enabledGroups = groups.filter(g => g.enabled);
+      const totalWords = groups.reduce((sum, g) => sum + g.words.length, 0);
+      const enabledWords = enabledGroups.reduce((sum, g) => sum + g.words.length, 0);
+      ruleCountSpan.textContent = `${enabledWords} / ${totalWords}`;
 
       // Get highlight count from active tab
       await getHighlightCount();
@@ -155,25 +162,31 @@
 
   async function handleGlobalToggle()
   {
-    const enabled = globalToggle.checked;
+    const toggleSlider = globalToggle.querySelector('.toggle-slider');
+    const currentEnabled = await Storage.getEnabled();
+    const newEnabled = !currentEnabled;
 
     try {
-      const success = await Storage.setEnabled(enabled);
+      const success = await Storage.setEnabled(newEnabled);
 
-      if (!success) {
-        // Revert toggle if save failed
-        globalToggle.checked = !enabled;
-        alert('Failed to update setting. Please try again.');
-      } else {
+      if (success) {
+        // Update visual state
+        if (newEnabled) {
+          toggleSlider.classList.add('active');
+        } else {
+          toggleSlider.classList.remove('active');
+        }
+
         // Update highlight count after toggling
         setTimeout(() =>
         {
           getHighlightCount();
         }, 500); // Give content script time to update
+      } else {
+        alert('Failed to update setting. Please try again.');
       }
     } catch (error) {
       console.error('Live Highlighter: Error toggling', error);
-      globalToggle.checked = !enabled;
       alert('Failed to update setting. Please try again.');
     }
   }
@@ -191,12 +204,12 @@
   async function checkGetStartedBanner()
   {
     try {
-      // Get rules and banner dismissed state
-      const rules = await Storage.getRules();
+      // Get groups and banner dismissed state
+      const groups = await Storage.getGroups();
       const dismissed = await chrome.storage.local.get('bannerDismissed');
 
-      // Show banner if no rules and not dismissed
-      if (rules.length === 0 && !dismissed.bannerDismissed) {
+      // Show banner if no groups and not dismissed
+      if (groups.length === 0 && !dismissed.bannerDismissed) {
         document.getElementById('getStartedBanner').style.display = 'block';
       }
     } catch (error) {
