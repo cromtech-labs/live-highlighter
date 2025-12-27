@@ -15,7 +15,6 @@
         "src/shared/storage.js",
         "src/content/content.js"
       ],
-      "css": ["src/content/content.css"],
       "run_at": "document_idle",
       "all_frames": true
     }

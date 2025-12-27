@@ -78,7 +78,9 @@
    */
   async function init()
   {
-    console.log('Live Highlighter: Content script initializing');
+    const isFrame = window.self !== window.top;
+    const frameInfo = isFrame ? ' [IFRAME]' : ' [MAIN]';
+    console.log(`Live Highlighter: Content script initializing${frameInfo}`);
 
     // Check browser compatibility
     if (!isHighlightAPISupported()) {
@@ -94,7 +96,13 @@
     // Flatten groups to rules for highlighting
     rules = flattenGroupsToRules(groups);
 
-    console.log(`Live Highlighter: Loaded ${groups.length} groups (${rules.length} words), enabled: ${enabled}`);
+    console.log(`Live Highlighter${frameInfo}: Loaded ${groups.length} groups (${rules.length} words), enabled: ${enabled}`);
+
+    // Inject styles into the main document (for consistency with iframes)
+    // This ensures all documents use PRESET_COLOURS as the single source of truth
+    if (!document.getElementById('live-highlighter-styles')) {
+      injectStylesIntoDocument(document);
+    }
 
     if (enabled && rules.length > 0) {
       // Process the current page
@@ -158,6 +166,10 @@
     if (document.documentElement) {
       processNode(document.documentElement);
     }
+
+    // Also process same-origin iframes that were created with document.write()
+    // These don't get content scripts injected, so we need to process them from the parent
+    processSameOriginIframes();
   }
 
   /**
@@ -180,13 +192,15 @@
   /**
    * Process a DOM tree (regular or shadow)
    * @param {Node} root - The root node to process
+   * @param {Document} doc - The document context (for accessing CSS.highlights)
    */
-  function processNodeDOM(root)
+  function processNodeDOM(root, doc = document)
   {
     if (!root) return;
 
-    // Create a TreeWalker to find all text nodes
-    const walker = document.createTreeWalker(
+    // Use the document that owns this root node to create the TreeWalker
+    const ownerDoc = root.ownerDocument || doc;
+    const walker = ownerDoc.createTreeWalker(
       root,
       NodeFilter.SHOW_TEXT,
       {
@@ -218,10 +232,10 @@
       textNodes.push(currentNode);
     }
 
-    // Process each text node
+    // Process each text node with the correct document context
     textNodes.forEach(textNode =>
     {
-      highlightTextNode(textNode);
+      highlightTextNode(textNode, ownerDoc);
     });
   }
 
@@ -257,13 +271,82 @@
   }
 
   /**
+   * Process same-origin iframes that don't get content scripts injected
+   * This handles iframes created with document.write() which don't trigger content script injection
+   */
+  function processSameOriginIframes()
+  {
+    // Find all iframes in the document
+    const iframes = document.querySelectorAll('iframe');
+
+    iframes.forEach(iframe =>
+    {
+      try {
+        // Try to access the iframe's contentDocument
+        // This will throw if the iframe is cross-origin
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+
+        if (iframeDoc && iframeDoc.documentElement) {
+          // We can access it, so it's same-origin
+
+          // Inject CSS styles into the iframe if not already present
+          if (!iframeDoc.getElementById('live-highlighter-styles')) {
+            injectStylesIntoDocument(iframeDoc);
+          }
+
+          // Process the iframe's document with the correct document context
+          processNodeDOM(iframeDoc.documentElement, iframeDoc);
+          processShadowRoots(iframeDoc.documentElement);
+        }
+      } catch (e) {
+        // Cross-origin iframe - we can't access it, skip silently
+        // This is expected and normal for cross-origin iframes
+      }
+    });
+  }
+
+  /**
+   * Inject highlight CSS styles into a document
+   * @param {Document} doc - The document to inject styles into
+   */
+  function injectStylesIntoDocument(doc)
+  {
+    try {
+      // Create a style element
+      const styleEl = doc.createElement('style');
+      styleEl.id = 'live-highlighter-styles';
+
+      // Generate CSS from PRESET_COLOURS (single source of truth)
+      const cssRules = LiveHighlighter.PRESET_COLOURS.map(color => {
+        const highlightName = LiveHighlighter.getHighlightName(color.hex);
+        return `::highlight(${highlightName}) { background-color: ${color.hex}; color: ${color.textColor}; }`;
+      }).join('\n        ');
+
+      styleEl.textContent = `/* Live Highlighter - CSS Custom Highlight API Styles */\n        ${cssRules}`;
+
+      // Append to the document head
+      (doc.head || doc.documentElement).appendChild(styleEl);
+    } catch (e) {
+      console.error('Live Highlighter: Failed to inject styles', e);
+    }
+  }
+
+  /**
    * Highlight matches in a single text node using CSS Highlight API
    * @param {Text} textNode - The text node to process
+   * @param {Document} doc - The document context (for accessing CSS.highlights)
    */
-  function highlightTextNode(textNode)
+  function highlightTextNode(textNode, doc = document)
   {
     const text = textNode.textContent;
     if (!text) return;
+
+    // Get the CSS object from the document's window
+    const cssHighlights = doc.defaultView?.CSS?.highlights;
+    if (!cssHighlights) {
+      console.warn('Live Highlighter: CSS Highlight API not available in this document context');
+      return;
+    }
 
     // Track all matches and their positions
     const matches = [];
@@ -305,12 +388,12 @@
     // If no matches found, nothing to do
     if (matches.length === 0) return;
 
-    // Create Range objects for each match and add to CSS.highlights
+    // Create Range objects for each match and add to the document's CSS.highlights
     matches.forEach(match =>
     {
       try {
-        // Create a Range for this match
-        const range = new Range();
+        // Create a Range for this match using the document's window context
+        const range = doc.createRange();
         range.setStart(textNode, match.start);
         range.setEnd(textNode, match.end);
 
@@ -322,16 +405,17 @@
         }
 
         // Get or create the Highlight object for this color
-        let highlight = CSS.highlights.get(highlightName);
+        let highlight = cssHighlights.get(highlightName);
         if (!highlight) {
-          highlight = new Highlight();
-          CSS.highlights.set(highlightName, highlight);
+          // Use the document's window to create the Highlight
+          highlight = new doc.defaultView.Highlight();
+          cssHighlights.set(highlightName, highlight);
         }
 
         // Add this range to the highlight
         highlight.add(range);
 
-        // Cache the range for future updates
+        // Cache the range for future updates (note: cross-document ranges might cause issues)
         if (!rangeCache.has(highlightName)) {
           rangeCache.set(highlightName, new Set());
         }
@@ -472,6 +556,8 @@
 
       debounceTimer = setTimeout(() =>
       {
+        let hasNewIframes = false;
+
         // Process each mutation
         mutations.forEach(mutation =>
         {
@@ -483,11 +569,27 @@
 
             if (node.nodeType === Node.ELEMENT_NODE) {
               processNode(node);
+
+              // Check if this is an iframe or contains iframes
+              if (node.tagName === 'IFRAME') {
+                hasNewIframes = true;
+              } else if (node.querySelectorAll) {
+                const iframes = node.querySelectorAll('iframe');
+                if (iframes.length > 0) {
+                  hasNewIframes = true;
+                }
+              }
             } else if (node.nodeType === Node.TEXT_NODE) {
               highlightTextNode(node);
             }
           });
         });
+
+        // If new iframes were added, process them after a delay to allow document.write() to complete
+        if (hasNewIframes) {
+          setTimeout(() => processSameOriginIframes(), 100);
+          setTimeout(() => processSameOriginIframes(), 500);
+        }
       }, MUTATION_DEBOUNCE_MS);
     });
 
@@ -596,23 +698,6 @@
   } else {
     // DOM is already ready
     init();
-  }
-
-  // Special handling for iframes created with document.write() or programmatically
-  // These iframes may not have content when the script first loads
-  if (window.self !== window.top) {
-    // We're in an iframe - retry after delays to catch late-loading content
-    setTimeout(() => {
-      if (enabled && rules.length > 0) {
-        highlightPage();
-      }
-    }, 500);
-
-    setTimeout(() => {
-      if (enabled && rules.length > 0) {
-        highlightPage();
-      }
-    }, 1500);
   }
 
   console.log('Live Highlighter: Content script loaded');
