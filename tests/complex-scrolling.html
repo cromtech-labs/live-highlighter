@@ -5,6 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Complex Scrolling Test - Live Highlighter</title>
     <style>
+      :root {
+        --bg-page: #f5f5f5;
+        --bg-card: #ffffff;
+        --bg-subtle: #f8f9fa;
+        --text-primary: #202124;
+        --text-secondary: #5f6368;
+        --accent: #1a73e8;
+        --border: #dadce0;
+        --shadow: rgba(0, 0, 0, 0.1);
+      }
+
+      [data-theme="dark"] {
+        --bg-page: #202124;
+        --bg-card: #292a2d;
+        --bg-subtle: #3c4043;
+        --text-primary: #e8eaed;
+        --text-secondary: #9aa0a6;
+        --accent: #8ab4f8;
+        --border: #5f6368;
+        --shadow: rgba(0, 0, 0, 0.3);
+      }
+
       * {
         margin: 0;
         padding: 0;
@@ -13,9 +35,10 @@
 
       body {
         font-family: "Segoe UI", Roboto, sans-serif;
-        background: #f5f5f5;
+        background: var(--bg-page);
         overflow: hidden;
         height: 100vh;
+        transition: background-color 0.3s, color 0.3s;
       }
 
       /* Azure DevOps-like layout */
@@ -35,6 +58,7 @@
         align-items: center;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         z-index: 100;
+        position: relative;
       }
       .top-nav h1 {
         font-size: 16px;
@@ -51,23 +75,24 @@
       /* Left sidebar */
       .sidebar {
         width: 250px;
-        background: white;
-        border-right: 1px solid #dadce0;
+        background: var(--bg-card);
+        border-right: 1px solid var(--border);
         overflow-y: auto;
         flex-shrink: 0;
       }
       .sidebar-item {
         padding: 12px 20px;
-        border-bottom: 1px solid #f0f0f0;
+        border-bottom: 1px solid var(--border);
         cursor: pointer;
         transition: background 0.2s;
+        color: var(--text-primary);
       }
       .sidebar-item:hover {
-        background: #f8f9fa;
+        background: var(--bg-subtle);
       }
       .sidebar-item.active {
         background: #e8f4fd;
-        border-left: 3px solid #1a73e8;
+        border-left: 3px solid var(--accent);
         padding-left: 17px;
       }
 
@@ -81,16 +106,16 @@
 
       /* Toolbar */
       .toolbar {
-        background: white;
+        background: var(--bg-card);
         padding: 12px 20px;
-        border-bottom: 1px solid #dadce0;
+        border-bottom: 1px solid var(--border);
         display: flex;
         gap: 10px;
         align-items: center;
       }
       .toolbar button {
         padding: 6px 16px;
-        background: #1a73e8;
+        background: var(--accent);
         color: white;
         border: none;
         border-radius: 4px;
@@ -99,6 +124,9 @@
       }
       .toolbar button:hover {
         background: #1557b0;
+      }
+      .toolbar span {
+        color: var(--text-secondary);
       }
 
       /* Split panes (like Azure DevOps work items) */
@@ -110,14 +138,14 @@
 
       .left-pane {
         flex: 1;
-        background: white;
+        background: var(--bg-card);
         overflow-y: auto;
-        border-right: 1px solid #dadce0;
+        border-right: 1px solid var(--border);
       }
 
       .right-pane {
         width: 400px;
-        background: white;
+        background: var(--bg-card);
         overflow-y: auto;
         display: flex;
         flex-direction: column;
@@ -127,18 +155,18 @@
       .card {
         margin: 20px;
         padding: 20px;
-        background: white;
-        border: 1px solid #dadce0;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
         border-radius: 4px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 1px 3px var(--shadow);
       }
       .card h3 {
-        color: #202124;
+        color: var(--text-primary);
         margin-bottom: 15px;
         font-size: 16px;
       }
       .card p {
-        color: #5f6368;
+        color: var(--text-secondary);
         line-height: 1.6;
         margin-bottom: 10px;
       }
@@ -153,32 +181,33 @@
       td {
         padding: 12px;
         text-align: left;
-        border-bottom: 1px solid #dadce0;
+        border-bottom: 1px solid var(--border);
+        color: var(--text-primary);
       }
       th {
-        background: #f8f9fa;
-        color: #202124;
+        background: var(--bg-subtle);
+        color: var(--text-primary);
         font-weight: 500;
         position: sticky;
         top: 0;
         z-index: 10;
       }
       tbody tr:hover {
-        background: #f8f9fa;
+        background: var(--bg-subtle);
       }
 
       /* Details panel sections */
       .details-section {
         padding: 20px;
-        border-bottom: 1px solid #dadce0;
+        border-bottom: 1px solid var(--border);
       }
       .details-section h4 {
-        color: #202124;
+        color: var(--text-primary);
         margin-bottom: 10px;
         font-size: 14px;
       }
       .details-section p {
-        color: #5f6368;
+        color: var(--text-secondary);
         font-size: 13px;
         line-height: 1.5;
       }
@@ -187,7 +216,7 @@
       .nested-scroll {
         max-height: 200px;
         overflow-y: auto;
-        background: #f8f9fa;
+        background: var(--bg-subtle);
         padding: 10px;
         border-radius: 4px;
         margin-top: 10px;
@@ -214,6 +243,25 @@
         background: #fef7e0;
         color: #e37400;
       }
+
+      .theme-toggle {
+        position: absolute;
+        top: 8px;
+        right: 30px;
+        background: var(--bg-subtle);
+        border: 1px solid var(--text-secondary);
+        color: var(--text-primary);
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s;
+      }
+      .theme-toggle:hover {
+        background: var(--accent);
+        color: white;
+        border-color: var(--accent);
+      }
     </style>
   </head>
   <body>
@@ -221,6 +269,7 @@
       <!-- Top navigation -->
       <div class="top-nav">
         <h1>Live Highlighter - Complex Scrolling Test (Azure DevOps-like)</h1>
+        <button class="theme-toggle" id="themeToggle">🌙 Dark Mode</button>
       </div>
 
       <div class="main-container">
@@ -243,7 +292,7 @@
             <button>New Error</button>
             <button>Filter by Tags</button>
             <button>Export Data</button>
-            <span style="margin-left: auto; color: #5f6368; font-size: 13px">
+            <span style="margin-left: auto; font-size: 13px">
               Showing 150 items
             </span>
           </div>
@@ -388,6 +437,27 @@
     </div>
 
     <script>
+      // Theme toggle functionality
+      const themeToggle = document.getElementById('themeToggle');
+      const html = document.documentElement;
+
+      // Load saved theme or default to light
+      const savedTheme = localStorage.getItem('test-theme') || 'light';
+      html.setAttribute('data-theme', savedTheme);
+      updateToggleButton(savedTheme);
+
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('test-theme', newTheme);
+        updateToggleButton(newTheme);
+      });
+
+      function updateToggleButton(theme) {
+        themeToggle.textContent = theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+      }
+
       // Generate work items table
       const workItems = [
         {

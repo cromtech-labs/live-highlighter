@@ -5,70 +5,120 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Virtual Scrolling Test - Live Highlighter</title>
     <style>
+      :root {
+        --bg-page: #f5f5f5;
+        --bg-card: #ffffff;
+        --bg-subtle: #f8f9fa;
+        --text-primary: #202124;
+        --text-secondary: #5f6368;
+        --accent: #1a73e8;
+        --border: #dadce0;
+        --shadow: rgba(0, 0, 0, 0.1);
+      }
+
+      [data-theme="dark"] {
+        --bg-page: #202124;
+        --bg-card: #292a2d;
+        --bg-subtle: #3c4043;
+        --text-primary: #e8eaed;
+        --text-secondary: #9aa0a6;
+        --accent: #8ab4f8;
+        --border: #5f6368;
+        --shadow: rgba(0, 0, 0, 0.3);
+      }
+
       body {
         font-family: "Segoe UI", Roboto, sans-serif;
         margin: 0;
         padding: 20px;
-        background: #f5f5f5;
+        background: var(--bg-page);
+        transition: background-color 0.3s, color 0.3s;
       }
       .header {
-        background: white;
+        background: var(--bg-card);
         padding: 30px;
         border-radius: 8px;
         margin-bottom: 20px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 8px var(--shadow);
+        position: relative;
       }
       h1 {
-        color: #1a73e8;
+        color: var(--accent);
         margin: 0 0 10px;
       }
+      .header p {
+        color: var(--text-primary);
+      }
+      .header strong {
+        color: var(--text-primary);
+      }
       .container {
-        background: white;
+        background: var(--bg-card);
         border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 8px var(--shadow);
         overflow: hidden;
       }
       .virtual-list {
         height: 600px;
         overflow-y: auto;
         position: relative;
-        border: 1px solid #dadce0;
+        border: 1px solid var(--border);
       }
       .virtual-content {
         position: relative;
       }
       .list-item {
         padding: 15px 20px;
-        border-bottom: 1px solid #dadce0;
+        border-bottom: 1px solid var(--border);
         position: absolute;
         left: 0;
         right: 0;
-        background: white;
+        background: var(--bg-card);
       }
       .list-item:hover {
-        background: #f8f9fa;
+        background: var(--bg-subtle);
       }
       .item-title {
         font-weight: 500;
-        color: #202124;
+        color: var(--text-primary);
         margin-bottom: 5px;
       }
       .item-desc {
-        color: #5f6368;
+        color: var(--text-secondary);
         font-size: 13px;
       }
       .stats {
         padding: 15px 20px;
-        background: #f8f9fa;
-        border-top: 1px solid #dadce0;
+        background: var(--bg-subtle);
+        border-top: 1px solid var(--border);
         font-size: 13px;
-        color: #5f6368;
+        color: var(--text-secondary);
+      }
+
+      .theme-toggle {
+        position: absolute;
+        top: 30px;
+        right: 30px;
+        background: var(--bg-subtle);
+        border: 1px solid var(--text-secondary);
+        color: var(--text-primary);
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s;
+      }
+      .theme-toggle:hover {
+        background: var(--accent);
+        color: white;
+        border-color: var(--accent);
       }
     </style>
   </head>
   <body>
     <div class="header">
       <h1>Virtual Scrolling Test</h1>
+      <button class="theme-toggle" id="themeToggle">🌙 Dark Mode</button>
       <p>
         This page implements virtual scrolling where DOM nodes are recycled as
         you scroll. Live Highlighter should re-highlight content as it becomes
@@ -90,6 +140,27 @@
     </div>
 
     <script>
+      // Theme toggle functionality
+      const themeToggle = document.getElementById('themeToggle');
+      const html = document.documentElement;
+
+      // Load saved theme or default to light
+      const savedTheme = localStorage.getItem('test-theme') || 'light';
+      html.setAttribute('data-theme', savedTheme);
+      updateToggleButton(savedTheme);
+
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('test-theme', newTheme);
+        updateToggleButton(newTheme);
+      });
+
+      function updateToggleButton(theme) {
+        themeToggle.textContent = theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+      }
+
       // Virtual scrolling implementation
       const ITEM_HEIGHT = 80;
       const TOTAL_ITEMS = 10000;
