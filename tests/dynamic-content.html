@@ -5,39 +5,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dynamic Content Test - Live Highlighter</title>
     <style>
+      :root {
+        --bg-page: #f5f5f5;
+        --bg-card: #ffffff;
+        --bg-subtle: #f8f9fa;
+        --text-primary: #202124;
+        --text-secondary: #5f6368;
+        --accent: #1a73e8;
+        --border: #dadce0;
+        --shadow: rgba(0, 0, 0, 0.1);
+      }
+
+      [data-theme="dark"] {
+        --bg-page: #202124;
+        --bg-card: #292a2d;
+        --bg-subtle: #3c4043;
+        --text-primary: #e8eaed;
+        --text-secondary: #9aa0a6;
+        --accent: #8ab4f8;
+        --border: #5f6368;
+        --shadow: rgba(0, 0, 0, 0.3);
+      }
+
       body {
         font-family: "Segoe UI", Roboto, sans-serif;
         max-width: 900px;
         margin: 0 auto;
         padding: 40px 20px;
-        background: #f5f5f5;
+        background: var(--bg-page);
+        transition: background-color 0.3s, color 0.3s;
       }
       .header {
-        background: white;
+        background: var(--bg-card);
         padding: 30px;
         border-radius: 8px;
         margin-bottom: 30px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 8px var(--shadow);
+        position: relative;
       }
       h1 {
-        color: #1a73e8;
+        color: var(--accent);
         margin: 0 0 10px;
       }
+      .header p {
+        color: var(--text-primary);
+      }
+      .header strong {
+        color: var(--text-primary);
+      }
       .test-section {
-        background: white;
+        background: var(--bg-card);
         padding: 30px;
         margin-bottom: 20px;
         border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 8px var(--shadow);
       }
       h2 {
-        color: #202124;
+        color: var(--text-primary);
         margin-top: 0;
       }
       button {
         padding: 10px 20px;
         margin: 5px;
-        background: #1a73e8;
+        background: var(--accent);
         color: white;
         border: none;
         border-radius: 4px;
@@ -56,14 +86,15 @@
       .content-area {
         margin-top: 20px;
         padding: 15px;
-        background: #f8f9fa;
+        background: var(--bg-subtle);
         border-radius: 4px;
         min-height: 100px;
+        color: var(--text-primary);
       }
       .log {
         margin-top: 10px;
         padding: 10px;
-        background: #f8f9fa;
+        background: var(--bg-subtle);
         border-radius: 4px;
         font-size: 12px;
         font-family: "Courier New", monospace;
@@ -72,13 +103,33 @@
       }
       .log-entry {
         padding: 3px 0;
-        color: #5f6368;
+        color: var(--text-secondary);
+      }
+
+      .theme-toggle {
+        position: absolute;
+        top: 30px;
+        right: 30px;
+        background: var(--bg-subtle);
+        border: 1px solid var(--text-secondary);
+        color: var(--text-primary);
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s;
+      }
+      .theme-toggle:hover {
+        background: var(--accent);
+        color: white;
+        border-color: var(--accent);
       }
     </style>
   </head>
   <body>
     <div class="header">
       <h1>Dynamic Content Test</h1>
+      <button class="theme-toggle" id="themeToggle">🌙 Dark Mode</button>
       <p>
         This page tests Live Highlighter's ability to highlight dynamically
         added, modified, and removed content.
@@ -134,6 +185,27 @@
     </div>
 
     <script>
+      // Theme toggle functionality
+      const themeToggle = document.getElementById('themeToggle');
+      const html = document.documentElement;
+
+      // Load saved theme or default to light
+      const savedTheme = localStorage.getItem('test-theme') || 'light';
+      html.setAttribute('data-theme', savedTheme);
+      updateToggleButton(savedTheme);
+
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('test-theme', newTheme);
+        updateToggleButton(newTheme);
+      });
+
+      function updateToggleButton(theme) {
+        themeToggle.textContent = theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+      }
+
       let updateInterval = null;
       let updateCount = 0;
 

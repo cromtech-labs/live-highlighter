@@ -14,13 +14,18 @@ const LiveHighlighter = (function ()
     // Preset colour options (free tier)
     // WCAG AA compliant colors optimized for light backgrounds with black text
     // Uses lighter tints for better readability and colorblind accessibility
+    // Material Design 100-300 shades verified for accessibility with black text
     PRESET_COLOURS: [
       { name: 'Yellow', hex: '#FFF59D', textColor: '#000000' },      // Light yellow - WCAG AA compliant
       { name: 'Orange', hex: '#FFCC80', textColor: '#000000' },      // Light orange - high contrast
       { name: 'Cyan', hex: '#80DEEA', textColor: '#000000' },        // Light cyan - distinct from yellow
       { name: 'Pink', hex: '#F48FB1', textColor: '#000000' },        // Light pink - colorblind friendly
       { name: 'Green', hex: '#A5D6A7', textColor: '#000000' },       // Light green - accessible
-      { name: 'Lavender', hex: '#CE93D8', textColor: '#000000' }     // Light purple - good contrast
+      { name: 'Lavender', hex: '#CE93D8', textColor: '#000000' },    // Light purple - good contrast
+      { name: 'Blue', hex: '#BBDEFB', textColor: '#000000' },        // Material Blue 100 - distinct from cyan
+      { name: 'Peach', hex: '#FFCCBC', textColor: '#000000' },       // Material Deep Orange 100 - distinct from orange
+      { name: 'Teal', hex: '#B2DFDB', textColor: '#000000' },        // Material Teal 100 - distinct blue-green
+      { name: 'Indigo', hex: '#C5CAE9', textColor: '#000000' }       // Material Indigo 100 - distinct blue-purple
     ],
 
     // Default group for new installs
@@ -48,6 +53,9 @@ const LiveHighlighter = (function ()
 
     // MutationObserver debounce delay (ms)
     MUTATION_DEBOUNCE_MS: 150,
+
+    // Notification auto-dismiss timeout (ms)
+    NOTIFICATION_TIMEOUT_MS: 10000,  // 10 seconds
 
     // Elements to skip when highlighting
     SKIP_ELEMENTS: ['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEXTAREA', 'INPUT', 'SELECT'],

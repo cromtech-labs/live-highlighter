@@ -5,7 +5,7 @@
   'use strict';
 
   // Access namespace
-  const { Storage, PRESET_COLOURS, MAX_GROUPS, MAX_WORDS_PER_GROUP, MAX_TOTAL_WORDS } = LiveHighlighter;
+  const { Storage, PRESET_COLOURS, MAX_GROUPS, MAX_WORDS_PER_GROUP, MAX_TOTAL_WORDS, NOTIFICATION_TIMEOUT_MS } = LiveHighlighter;
 
   // DOM elements
   let groupsList;
@@ -262,6 +262,13 @@
   {
     const wordCountSpan = groupElement.querySelector('.word-count');
     wordCountSpan.textContent = `${group.words.length} / ${MAX_WORDS_PER_GROUP} words`;
+
+    // Add visual warning when at limit
+    if (group.words.length >= MAX_WORDS_PER_GROUP) {
+      wordCountSpan.classList.add('at-limit');
+    } else {
+      wordCountSpan.classList.remove('at-limit');
+    }
   }
 
   function setupColorPicker(groupElement, group)
@@ -356,10 +363,25 @@
     const addWordInput = groupElement.querySelector('.add-word-input');
     const addWordBtn = groupElement.querySelector('.add-word-btn');
 
-    // Clear any existing event listeners by cloning the elements
+    // Check if group is at word limit
+    const atLimit = group.words.length >= MAX_WORDS_PER_GROUP;
+
+    // Clear any existing event listeners by cloning the button
     const newAddWordBtn = addWordBtn.cloneNode(true);
     addWordBtn.replaceWith(newAddWordBtn);
 
+    // Disable input and button if at limit
+    if (atLimit) {
+      addWordInput.disabled = true;
+      addWordInput.placeholder = `Maximum ${MAX_WORDS_PER_GROUP} words reached`;
+      newAddWordBtn.disabled = true;
+    } else {
+      addWordInput.disabled = false;
+      addWordInput.placeholder = 'Add words (comma/space separated, or use "quotes" for phrases)...';
+      newAddWordBtn.disabled = false;
+    }
+
+    // Add event listeners
     newAddWordBtn.addEventListener('click', async () =>
     {
       await handleAddWord(group.id, addWordInput.value);
@@ -530,16 +552,14 @@
     // Add each word
     let successCount = 0;
     let failedWords = [];
+    let skippedWords = [];
 
     for (const singleWord of words) {
       const canAdd = await Storage.canAddWord(groupId);
       if (!canAdd) {
-        const group = groups.find(g => g.id === groupId);
-        if (group && group.words.length >= MAX_WORDS_PER_GROUP) {
-          showNotification(`Maximum ${MAX_WORDS_PER_GROUP} words per group reached`, 'error');
-        } else {
-          showNotification(`Maximum ${MAX_TOTAL_WORDS} total words reached`, 'error');
-        }
+        // Track remaining words as skipped
+        const currentIndex = words.indexOf(singleWord);
+        skippedWords = words.slice(currentIndex);
         break; // Stop adding if limit reached
       }
 
@@ -554,17 +574,18 @@
     // Reload once after all additions
     await loadGroups();
 
-    // Show appropriate message
-    if (successCount > 0) {
-      if (successCount === 1) {
-        showNotification('Word added', 'success');
-      } else {
-        showNotification(`${successCount} words added`, 'success');
-      }
-    }
-
+    // Show error notifications only (success is implied by words appearing)
     if (failedWords.length > 0) {
       showNotification(`Failed to add: ${failedWords.join(', ')} (may be duplicates)`, 'error');
+    }
+
+    if (skippedWords.length > 0) {
+      const group = groups.find(g => g.id === groupId);
+      if (group && group.words.length >= MAX_WORDS_PER_GROUP) {
+        showNotification(`Limit reached. Skipped: ${skippedWords.join(', ')}`, 'error');
+      } else {
+        showNotification(`Total word limit reached. Skipped: ${skippedWords.join(', ')}`, 'error');
+      }
     }
   }
 
@@ -573,7 +594,6 @@
     const success = await Storage.removeWordFromGroup(groupId, word);
     if (success) {
       await loadGroups();
-      showNotification('Word removed', 'success');
     } else {
       showNotification('Failed to remove word', 'error');
     }
@@ -756,14 +776,62 @@
   // Notifications
   // ============================================================================
 
-  function showNotification(message, type = 'info')
+  function showNotification(message, type = 'info', persistent = false)
   {
-    // Simple console notification for now
-    // Could be enhanced with toast notifications
+    // Create toast notification
+    const container = document.getElementById('notificationContainer');
+    if (!container) return;
+
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+
+    // Icon based on type
+    const icon = document.createElement('div');
+    icon.className = 'notification-icon';
     if (type === 'error') {
-      console.error('Live Highlighter:', message);
+      icon.textContent = '⚠';
+    } else if (type === 'success') {
+      icon.textContent = '✓';
     } else {
-      console.log('Live Highlighter:', message);
+      icon.textContent = 'ℹ';
+    }
+
+    // Message
+    const messageEl = document.createElement('div');
+    messageEl.className = 'notification-message';
+    messageEl.textContent = message;
+
+    // Close button
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'notification-close';
+    closeBtn.innerHTML = '×';
+    closeBtn.setAttribute('aria-label', 'Close notification');
+
+    // Assemble notification
+    notification.appendChild(icon);
+    notification.appendChild(messageEl);
+    notification.appendChild(closeBtn);
+
+    // Add to container
+    container.appendChild(notification);
+
+    // Close button handler
+    const closeNotification = () =>
+    {
+      notification.classList.add('hiding');
+      setTimeout(() =>
+      {
+        if (notification.parentElement) {
+          notification.parentElement.removeChild(notification);
+        }
+      }, 300); // Match animation duration
+    };
+
+    closeBtn.addEventListener('click', closeNotification);
+
+    // Auto-dismiss notifications unless marked as persistent
+    if (!persistent) {
+      setTimeout(closeNotification, NOTIFICATION_TIMEOUT_MS);
     }
   }
 
