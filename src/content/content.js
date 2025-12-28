@@ -44,7 +44,7 @@
    * Flatten groups into a flat array of word-color mappings
    * This maintains compatibility with existing highlighting logic
    * @param {Array} groups - Array of group objects
-   * @returns {Array} Flat array of {text, colour, textColor, enabled, order} objects
+   * @returns {Array} Flat array of {text, colour, textColor, enabled, order, matchWholeWord, caseSensitive} objects
    */
   function flattenGroupsToRules(groups)
   {
@@ -61,7 +61,9 @@
           colour: group.colour,
           textColor: group.textColor,
           enabled: true,
-          order: group.order  // Inherit priority from group
+          order: group.order,  // Inherit priority from group
+          matchWholeWord: group.matchWholeWord || false,  // Default to false for backward compatibility
+          caseSensitive: group.caseSensitive || false     // Default to false for backward compatibility
         });
       });
     });
@@ -351,20 +353,44 @@
     // Track all matches and their positions
     const matches = [];
 
+    // Helper function to check if a character is a word boundary
+    const isWordBoundary = (text, index) => {
+      if (index < 0 || index >= text.length) return true;  // Start/end of text is a boundary
+      const char = text[index];
+      return !/\w/.test(char);  // Non-word characters are boundaries
+    };
+
     // Check each rule in priority order (rules are already sorted by order field)
     for (const rule of rules) {
       if (!rule.enabled) continue;
 
       const searchText = rule.text;
-      const lowerText = text.toLowerCase();
-      const lowerSearch = searchText.toLowerCase();
+      const caseSensitive = rule.caseSensitive || false;
+      const matchWholeWord = rule.matchWholeWord || false;
+
+      // Conditionally convert to lowercase based on case sensitivity option
+      const compareText = caseSensitive ? text : text.toLowerCase();
+      const compareSearch = caseSensitive ? searchText : searchText.toLowerCase();
 
       let startIndex = 0;
       while (true) {
-        const index = lowerText.indexOf(lowerSearch, startIndex);
+        const index = compareText.indexOf(compareSearch, startIndex);
         if (index === -1) break;
 
         const endIndex = index + searchText.length;
+
+        // Check word boundaries if matchWholeWord is enabled
+        let isValidMatch = true;
+        if (matchWholeWord) {
+          const beforeIsWord = !isWordBoundary(text, index - 1);
+          const afterIsWord = !isWordBoundary(text, endIndex);
+          isValidMatch = !beforeIsWord && !afterIsWord;  // Both must be boundaries
+        }
+
+        if (!isValidMatch) {
+          startIndex = index + 1;
+          continue;
+        }
 
         // Check if this position is already covered by a higher priority rule
         const isOverlapping = matches.some(m =>

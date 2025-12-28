@@ -979,6 +979,36 @@ header {
   color: var(--danger-color);
 }
 
+/* Match Options Section */
+.match-options {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+  padding: 8px 0;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.match-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.match-option input[type="checkbox"] {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+
+.match-option:hover {
+  color: var(--text-primary);
+}
+
 /* Add Word Section */
 .add-word-section {
   display: flex;
