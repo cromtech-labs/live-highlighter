@@ -95,7 +95,7 @@
       groupsList.style.display = 'none';
     } else {
       emptyState.style.display = 'none';
-      groupsList.style.display = 'block';
+      groupsList.style.display = 'flex';
 
       // Sort groups by order
       const sortedGroups = [...groups].sort((a, b) => a.order - b.order);
