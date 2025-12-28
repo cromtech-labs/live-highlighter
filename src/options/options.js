@@ -395,6 +395,25 @@
         addWordInput.value = '';
       }
     });
+
+    // Setup match option checkboxes
+    const matchWholeWordCheckbox = groupElement.querySelector('.match-whole-word-checkbox');
+    const caseSensitiveCheckbox = groupElement.querySelector('.case-sensitive-checkbox');
+
+    // Set initial checkbox state (default to false for backward compatibility)
+    matchWholeWordCheckbox.checked = group.matchWholeWord || false;
+    caseSensitiveCheckbox.checked = group.caseSensitive || false;
+
+    // Handle checkbox changes
+    matchWholeWordCheckbox.addEventListener('change', async () =>
+    {
+      await handleMatchOptionChange(group.id, 'matchWholeWord', matchWholeWordCheckbox.checked);
+    });
+
+    caseSensitiveCheckbox.addEventListener('change', async () =>
+    {
+      await handleMatchOptionChange(group.id, 'caseSensitive', caseSensitiveCheckbox.checked);
+    });
   }
 
   function createWordChip(groupId, word)
@@ -528,6 +547,23 @@
       }
     } else {
       showNotification('Failed to toggle group', 'error');
+      await loadGroups();  // Revert
+    }
+  }
+
+  async function handleMatchOptionChange(groupId, option, value)
+  {
+    const updates = { [option]: value };
+    const success = await Storage.updateGroup(groupId, updates);
+
+    if (success) {
+      // Update local state
+      const group = groups.find(g => g.id === groupId);
+      if (group) {
+        group[option] = value;
+      }
+    } else {
+      showNotification('Failed to update match option', 'error');
       await loadGroups();  // Revert
     }
   }

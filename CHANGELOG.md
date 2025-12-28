@@ -4,6 +4,25 @@ All notable changes to Live Highlighter will be documented in this file.
 
 ---
 
+## [0.5.0] - 2025-12-28
+
+### Added
+- **Whole word matching option** - New "Match whole words only" checkbox per group to match complete words instead of partial matches (e.g., "error" won't match "errors")
+- **Case sensitive matching option** - New "Case sensitive" checkbox per group to enable exact case matching (e.g., "Error" won't match "error")
+- **Match options UI** - Added checkbox controls in expanded group section with clear labels and styling
+
+### Changed
+- **Group schema updated** - Added `matchWholeWord` and `caseSensitive` boolean fields to group objects (default: false for backward compatibility)
+- **Highlighting algorithm enhanced** - Word boundary detection using regex for whole word matching, conditional case sensitivity
+- **Storage validation** - Updated group validation to include new match option fields
+
+### Technical
+- Updated `flattenGroupsToRules` to pass through match options from groups to individual rules
+- Enhanced `highlightTextNode` with word boundary checking and conditional case conversion
+- Added `isWordBoundary` helper function for accurate word boundary detection
+
+---
+
 ## [0.4.0] - 2025-12-28
 
 ### Added

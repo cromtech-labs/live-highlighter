@@ -3,13 +3,15 @@
 /**
  * Group object schema:
  * {
- *   id: string,        // UUID
- *   name: string,      // Group name (e.g., "Team Names")
- *   colour: string,    // Hex colour for all words in group
- *   textColor: string, // Text color for readability
- *   enabled: boolean,  // Per-group toggle
- *   order: number,     // Priority (lower = higher priority)
- *   words: string[]    // Array of words to highlight
+ *   id: string,             // UUID
+ *   name: string,           // Group name (e.g., "Team Names")
+ *   colour: string,         // Hex colour for all words in group
+ *   textColor: string,      // Text color for readability
+ *   enabled: boolean,       // Per-group toggle
+ *   order: number,          // Priority (lower = higher priority)
+ *   words: string[],        // Array of words to highlight
+ *   matchWholeWord: boolean,// Match whole words only (default: false)
+ *   caseSensitive: boolean  // Case sensitive matching (default: false)
  * }
  */
 
@@ -223,7 +225,9 @@ LiveHighlighter.Storage = (function ()
           textColor: DEFAULT_GROUP.textColor,
           enabled: DEFAULT_GROUP.enabled,
           order: 0,
-          words: [...DEFAULT_GROUP.words]
+          words: [...DEFAULT_GROUP.words],
+          matchWholeWord: false,
+          caseSensitive: false
         };
 
         await chrome.storage.local.set({
@@ -288,7 +292,9 @@ LiveHighlighter.Storage = (function ()
         textColor: textColor,
         enabled: true,
         order: groups.length,  // Add to end
-        words: []  // Start with empty words array
+        words: [],  // Start with empty words array
+        matchWholeWord: false,  // Default: partial matching
+        caseSensitive: false    // Default: case-insensitive
       };
 
       groups.push(newGroup);
@@ -319,7 +325,7 @@ LiveHighlighter.Storage = (function ()
       }
 
       // Whitelist allowed fields to prevent id tampering
-      const allowedFields = ['name', 'colour', 'textColor', 'enabled', 'order', 'words'];
+      const allowedFields = ['name', 'colour', 'textColor', 'enabled', 'order', 'words', 'matchWholeWord', 'caseSensitive'];
       const validUpdates = {};
 
       for (const field of allowedFields) {
@@ -356,6 +362,16 @@ LiveHighlighter.Storage = (function ()
 
       if (validUpdates.words !== undefined && !isValidWordsArray(validUpdates.words)) {
         console.warn('Live Highlighter: Invalid words array in update');
+        return false;
+      }
+
+      if (validUpdates.matchWholeWord !== undefined && typeof validUpdates.matchWholeWord !== 'boolean') {
+        console.warn('Live Highlighter: Invalid matchWholeWord value in update');
+        return false;
+      }
+
+      if (validUpdates.caseSensitive !== undefined && typeof validUpdates.caseSensitive !== 'boolean') {
+        console.warn('Live Highlighter: Invalid caseSensitive value in update');
         return false;
       }
 
