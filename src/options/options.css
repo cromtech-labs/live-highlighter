@@ -179,6 +179,7 @@ body {
     transform: translateX(400px);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
@@ -190,6 +191,7 @@ body {
     transform: translateX(0);
     opacity: 1;
   }
+
   to {
     transform: translateX(400px);
     opacity: 0;
@@ -741,7 +743,7 @@ header {
 .groups-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 /* Group Item */
@@ -749,7 +751,7 @@ header {
   background: var(--bg-white);
   border: 1px solid var(--border-color);
   border-radius: var(--radius);
-  overflow: visible;
+  overflow: visible; /* must be visible to show dropdowns */
   transition: box-shadow 0.2s, border-color 0.2s;
 }
 
@@ -772,14 +774,20 @@ header {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px;
+  padding: 12px 20px;
   background: var(--bg-light);
-  cursor: default;
+  cursor: pointer;
   user-select: none;
+  transition: background-color 0.2s, box-shadow 0.2s, transform 0.1s;
 }
 
 .group-header:hover {
-  background: var(--border-color);
+  background: var(--bg-subtle);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.group-header:active {
+  transform: scale(0.995);
 }
 
 /* Make only the empty areas clickable for expansion */
@@ -875,18 +883,33 @@ header {
   cursor: pointer;
   padding: 4px;
   color: var(--text-secondary);
-  transition: transform 0.2s, color 0.2s;
+  transition: transform 0.2s ease, color 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  transform: rotate(-90deg);
 }
 
-.expand-btn:hover {
+.expand-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.group-header:hover .expand-btn {
   color: var(--text-primary);
 }
 
 .expand-btn.expanded {
-  transform: rotate(180deg);
+  transform: rotate(0deg);
+}
+
+.expand-btn:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 .group-actions {
@@ -897,7 +920,7 @@ header {
 
 /* Group Words Section */
 .group-words {
-  padding: 12px;
+  padding: 12px 20px;
   background: var(--bg-white);
   border-top: 1px solid var(--border-color);
 }
@@ -1034,11 +1057,12 @@ header {
   }
 
   .group-header {
-    background-color: #202124;
+    background-color: #292A2D;
   }
 
   .group-header:hover {
     background-color: #3C4043;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   }
 
   .group-name-display {

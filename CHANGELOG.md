@@ -4,6 +4,24 @@ All notable changes to Live Highlighter will be documented in this file.
 
 ---
 
+## [0.4.0] - 2025-12-28
+
+### Added
+- **Horizontal padding in groups** - Added 20px left/right padding inside group headers and word sections for better content spacing
+- **Vertical spacing between groups** - Added 16px gap between groups for improved visual separation and readability
+- **Clickable group headers** - Entire group header is now clickable with visual affordances (hover states, pointer cursor)
+
+### Changed
+- **Chevron icon repositioned** - Moved expand/collapse chevron to left side of group header for better UX consistency
+- **Improved color distinction** - Replaced Lime with Teal and Purple with Indigo for better visual differentiation between highlight colors
+
+### Fixed
+- **Container corner overflow** - Fixed rounded corners being cut off on group items
+- **Flexbox layout bug** - Fixed JavaScript display property override that prevented gap spacing from working
+- **Edge spacing** - Groups no longer extend flush to container edges
+
+---
+
 ## [0.3.0] - 2025-12-28
 
 ### Added
