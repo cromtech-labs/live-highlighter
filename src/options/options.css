@@ -179,6 +179,7 @@ body {
     transform: translateX(400px);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
@@ -190,6 +191,7 @@ body {
     transform: translateX(0);
     opacity: 1;
   }
+
   to {
     transform: translateX(400px);
     opacity: 0;
@@ -749,7 +751,7 @@ header {
   background: var(--bg-white);
   border: 1px solid var(--border-color);
   border-radius: var(--radius);
-  overflow: hidden;
+  overflow: visible; /* must be visible to show dropdowns */
   transition: box-shadow 0.2s, border-color 0.2s;
 }
 
