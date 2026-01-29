@@ -64,12 +64,10 @@
         toggleSlider.classList.remove('active');
       }
 
-      // Get groups and count words
+      // Get groups and count enabled vs total
       const groups = await Storage.getGroups();
       const enabledGroups = groups.filter(g => g.enabled);
-      const totalWords = groups.reduce((sum, g) => sum + g.words.length, 0);
-      const enabledWords = enabledGroups.reduce((sum, g) => sum + g.words.length, 0);
-      ruleCountSpan.textContent = `${enabledWords} / ${totalWords}`;
+      ruleCountSpan.textContent = `${enabledGroups.length} / ${groups.length}`;
 
       // Get highlight count from active tab
       await getHighlightCount();
