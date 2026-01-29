@@ -172,5 +172,14 @@
   },
   "notifFailedReorder": {
     "message": "Error al reordenar grupos"
+  },
+  "confirmDeleteGroup": {
+    "message": "¿Eliminar este grupo y todas sus palabras?"
+  },
+  "placeholderMaxWordsReached": {
+    "message": "Máximo de $1 palabras alcanzado"
+  },
+  "closeNotification": {
+    "message": "Cerrar notificación"
   }
 }

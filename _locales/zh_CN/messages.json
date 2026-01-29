@@ -172,5 +172,14 @@
   },
   "notifFailedReorder": {
     "message": "重新排序失败"
+  },
+  "confirmDeleteGroup": {
+    "message": "删除此分组及其所有词汇？"
+  },
+  "placeholderMaxWordsReached": {
+    "message": "已达到最大 $1 个词汇"
+  },
+  "closeNotification": {
+    "message": "关闭通知"
   }
 }

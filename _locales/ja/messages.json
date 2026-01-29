@@ -172,5 +172,14 @@
   },
   "notifFailedReorder": {
     "message": "並べ替えに失敗しました"
+  },
+  "confirmDeleteGroup": {
+    "message": "このグループとすべての単語を削除しますか？"
+  },
+  "placeholderMaxWordsReached": {
+    "message": "最大 $1 単語に達しました"
+  },
+  "closeNotification": {
+    "message": "通知を閉じる"
   }
 }

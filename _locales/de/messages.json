@@ -172,5 +172,14 @@
   },
   "notifFailedReorder": {
     "message": "Neuordnung fehlgeschlagen"
+  },
+  "confirmDeleteGroup": {
+    "message": "Diese Gruppe und alle Wörter löschen?"
+  },
+  "placeholderMaxWordsReached": {
+    "message": "Maximum von $1 Wörtern erreicht"
+  },
+  "closeNotification": {
+    "message": "Benachrichtigung schließen"
   }
 }

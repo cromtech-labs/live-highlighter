@@ -270,7 +270,7 @@
   function updateGroupWordCount(groupElement, group)
   {
     const wordCountSpan = groupElement.querySelector('.word-count');
-    wordCountSpan.textContent = `${group.words.length} / ${MAX_WORDS_PER_GROUP} words`;
+    wordCountSpan.textContent = `${group.words.length} / ${MAX_WORDS_PER_GROUP} ${msg('words')}`;
 
     // Add visual warning when at limit
     if (group.words.length >= MAX_WORDS_PER_GROUP) {
@@ -382,11 +382,11 @@
     // Disable input and button if at limit
     if (atLimit) {
       addWordInput.disabled = true;
-      addWordInput.placeholder = `Maximum ${MAX_WORDS_PER_GROUP} words reached`;
+      addWordInput.placeholder = msg('placeholderMaxWordsReached', [MAX_WORDS_PER_GROUP.toString()]);
       newAddWordBtn.disabled = true;
     } else {
       addWordInput.disabled = false;
-      addWordInput.placeholder = 'Add words (comma/space separated, or use "quotes" for phrases)...';
+      addWordInput.placeholder = msg('addWordsPlaceholder');
       newAddWordBtn.disabled = false;
     }
 
@@ -462,7 +462,8 @@
       await loadGroups();
       showNotification(msg('notifGroupAdded'), 'success');
 
-      // Auto-expand the new group
+      // Auto-expand the new group and track it
+      expandedGroupIds.add(newGroup.id);
       setTimeout(() =>
       {
         const newGroupElement = document.querySelector(`[data-group-id="${newGroup.id}"]`);
@@ -473,8 +474,16 @@
           expandBtn.classList.add('expanded');
 
           // Focus on group name input
-          const nameInput = newGroupElement.querySelector('.group-name');
-          nameInput.select();
+          const nameInput = newGroupElement.querySelector('.group-name-input');
+          if (nameInput) {
+            nameInput.style.display = 'inline-block';
+            const nameDisplay = newGroupElement.querySelector('.group-name-display');
+            const editBtn = newGroupElement.querySelector('.edit-name-btn');
+            if (nameDisplay) nameDisplay.style.display = 'none';
+            if (editBtn) editBtn.style.display = 'none';
+            nameInput.focus();
+            nameInput.select();
+          }
         }
       }, 100);
     } else {
@@ -484,7 +493,7 @@
 
   async function handleDeleteGroup(groupId)
   {
-    if (confirm('Delete this group and all its words?')) {
+    if (confirm(msg('confirmDeleteGroup'))) {
       const success = await Storage.deleteGroup(groupId);
       if (success) {
         await loadGroups();
@@ -853,7 +862,7 @@
     const closeBtn = document.createElement('button');
     closeBtn.className = 'notification-close';
     closeBtn.innerHTML = '×';
-    closeBtn.setAttribute('aria-label', 'Close notification');
+    closeBtn.setAttribute('aria-label', msg('closeNotification'));
 
     // Assemble notification
     notification.appendChild(icon);

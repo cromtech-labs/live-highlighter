@@ -242,5 +242,20 @@
   "notifFailedReorder": {
     "message": "Failed to reorder groups",
     "description": "Error notification"
+  },
+  "confirmDeleteGroup": {
+    "message": "Delete this group and all its words?",
+    "description": "Confirmation dialog when deleting a group"
+  },
+  "placeholderMaxWordsReached": {
+    "message": "Maximum $1 words reached",
+    "description": "Placeholder when word limit is reached",
+    "placeholders": {
+      "1": { "content": "$1" }
+    }
+  },
+  "closeNotification": {
+    "message": "Close notification",
+    "description": "Aria label for notification close button"
   }
 }

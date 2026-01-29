@@ -172,5 +172,14 @@
   },
   "notifFailedReorder": {
     "message": "Échec de la réorganisation"
+  },
+  "confirmDeleteGroup": {
+    "message": "Supprimer ce groupe et tous ses mots ?"
+  },
+  "placeholderMaxWordsReached": {
+    "message": "Maximum de $1 mots atteint"
+  },
+  "closeNotification": {
+    "message": "Fermer la notification"
   }
 }
