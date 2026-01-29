@@ -4,6 +4,21 @@ All notable changes to Live Highlighter will be documented in this file.
 
 ---
 
+## [0.6.0] - 2025-01-29
+
+### Changed
+- **Options page updates** - Cleaner, modern layout with improved visual hierarchy
+- **Popup terminology** - Updated to use "Groups" consistently
+  - "Manage Rules" → "Manage Groups"
+  - "Highlighting" → "Highlighting Enabled" (matches options page)
+  - Welcome banner updated to reference "groups" instead of "rules"
+- **Popup status section** - Simplified styling with cleaner divider-based layout
+
+### Fixed
+- **Popup groups count bug** - "Groups Active" now correctly shows group count (e.g., "5 / 7") instead of incorrectly displaying word count
+
+---
+
 ## [0.5.0] - 2025-12-28
 
 ### Added

@@ -920,21 +920,39 @@ header {
 
 /* Group Words Section */
 .group-words {
-  padding: 12px 20px;
+  padding: 20px;
   background: var(--bg-white);
   border-top: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Section Labels */
+.section-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+/* Words Section */
+.words-section {
+  /* No background or border - clean look */
 }
 
 .words-list {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: 12px;
   min-height: 32px;
 }
 
 .words-list:empty::before {
-  content: 'No words yet. Add words below.';
+  content: 'No words added yet';
   color: var(--text-tertiary);
   font-size: 13px;
   font-style: italic;
@@ -982,11 +1000,9 @@ header {
 /* Match Options Section */
 .match-options {
   display: flex;
-  gap: 16px;
-  margin-bottom: 12px;
-  padding: 8px 0;
+  gap: 20px;
+  padding-top: 16px;
   border-top: 1px solid var(--border-color);
-  border-bottom: 1px solid var(--border-color);
 }
 
 .match-option {
@@ -1011,24 +1027,30 @@ header {
 
 /* Add Word Section */
 .add-word-section {
+  /* No background or border - clean look */
+}
+
+.add-word-input-row {
   display: flex;
   gap: 8px;
 }
 
 .add-word-input {
   flex: 1;
-  padding: 6px 12px;
+  padding: 10px 14px;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
-  font-size: 13px;
-  background: var(--bg-white);
+  font-size: 14px;
+  background: var(--bg-light);
   color: var(--text-primary);
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
 }
 
 .add-word-input:focus {
   outline: none;
   border-color: var(--primary-color);
+  background: var(--bg-white);
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
 }
 
 .add-word-input::placeholder {
@@ -1042,13 +1064,13 @@ header {
 }
 
 .add-word-btn {
-  padding: 6px 16px;
+  padding: 10px 20px;
   background: var(--primary-color);
   color: white;
   border: none;
   border-radius: var(--radius-sm);
   cursor: pointer;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   transition: background-color 0.2s;
 }
@@ -1131,7 +1153,16 @@ header {
     border-color: #5F6368;
   }
 
+  .add-word-input:focus {
+    background-color: #292A2D;
+    box-shadow: 0 0 0 3px rgba(138, 180, 248, 0.15);
+  }
+
   .add-word-input::placeholder {
+    color: #9AA0A6;
+  }
+
+  .section-label {
     color: #9AA0A6;
   }
 }

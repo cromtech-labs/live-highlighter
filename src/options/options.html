@@ -178,7 +178,23 @@
         </div>
 
         <div class="group-words" style="display: none;">
-          <div class="words-list"></div>
+          <div class="add-word-section">
+            <label class="section-label">Add new words</label>
+            <div class="add-word-input-row">
+              <input
+                type="text"
+                class="add-word-input"
+                placeholder='Type words separated by commas or spaces, use "quotes" for phrases'
+                maxlength="500"
+              />
+              <button class="add-word-btn">Add</button>
+            </div>
+          </div>
+
+          <div class="words-section">
+            <label class="section-label">Words in this group</label>
+            <div class="words-list"></div>
+          </div>
 
           <div class="match-options">
             <label class="match-option">
@@ -189,16 +205,6 @@
               <input type="checkbox" class="case-sensitive-checkbox" />
               <span>Case sensitive</span>
             </label>
-          </div>
-
-          <div class="add-word-section">
-            <input
-              type="text"
-              class="add-word-input"
-              placeholder='Add words (comma/space separated, or use "quotes" for phrases)...'
-              maxlength="500"
-            />
-            <button class="add-word-btn">Add</button>
           </div>
         </div>
       </div>
