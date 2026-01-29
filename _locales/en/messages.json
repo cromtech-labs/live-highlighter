@@ -162,5 +162,85 @@
   "optionsTitle": {
     "message": "Live Highlighter - Options",
     "description": "Options page title"
+  },
+  "notifGroupAdded": {
+    "message": "Group added",
+    "description": "Notification when group is added"
+  },
+  "notifGroupDeleted": {
+    "message": "Group deleted",
+    "description": "Notification when group is deleted"
+  },
+  "notifColorUpdated": {
+    "message": "Color updated",
+    "description": "Notification when color is changed"
+  },
+  "notifMaxGroupsReached": {
+    "message": "Maximum $1 groups reached",
+    "description": "Error when max groups limit hit",
+    "placeholders": {
+      "1": { "content": "$1" }
+    }
+  },
+  "notifFailedAddGroup": {
+    "message": "Failed to add group",
+    "description": "Error notification"
+  },
+  "notifFailedDeleteGroup": {
+    "message": "Failed to delete group",
+    "description": "Error notification"
+  },
+  "notifGroupNameEmpty": {
+    "message": "Group name cannot be empty",
+    "description": "Error notification"
+  },
+  "notifFailedUpdateName": {
+    "message": "Failed to update group name",
+    "description": "Error notification"
+  },
+  "notifFailedUpdateColor": {
+    "message": "Failed to update color",
+    "description": "Error notification"
+  },
+  "notifFailedToggleGroup": {
+    "message": "Failed to toggle group",
+    "description": "Error notification"
+  },
+  "notifFailedUpdateMatch": {
+    "message": "Failed to update match option",
+    "description": "Error notification"
+  },
+  "notifFailedAddWords": {
+    "message": "Failed to add: $1 (may be duplicates)",
+    "description": "Error when words fail to add",
+    "placeholders": {
+      "1": { "content": "$1" }
+    }
+  },
+  "notifLimitReached": {
+    "message": "Limit reached. Skipped: $1",
+    "description": "Error when group word limit reached",
+    "placeholders": {
+      "1": { "content": "$1" }
+    }
+  },
+  "notifTotalLimitReached": {
+    "message": "Total word limit reached. Skipped: $1",
+    "description": "Error when total word limit reached",
+    "placeholders": {
+      "1": { "content": "$1" }
+    }
+  },
+  "notifFailedRemoveWord": {
+    "message": "Failed to remove word",
+    "description": "Error notification"
+  },
+  "notifFailedUpdateSetting": {
+    "message": "Failed to update setting",
+    "description": "Error notification"
+  },
+  "notifFailedReorder": {
+    "message": "Failed to reorder groups",
+    "description": "Error notification"
   }
 }

@@ -121,5 +121,56 @@
   },
   "optionsTitle": {
     "message": "Live Highlighter - Options"
+  },
+  "notifGroupAdded": {
+    "message": "Groupe ajouté"
+  },
+  "notifGroupDeleted": {
+    "message": "Groupe supprimé"
+  },
+  "notifColorUpdated": {
+    "message": "Couleur mise à jour"
+  },
+  "notifMaxGroupsReached": {
+    "message": "Maximum de $1 groupes atteint"
+  },
+  "notifFailedAddGroup": {
+    "message": "Échec de l'ajout du groupe"
+  },
+  "notifFailedDeleteGroup": {
+    "message": "Échec de la suppression"
+  },
+  "notifGroupNameEmpty": {
+    "message": "Le nom du groupe ne peut pas être vide"
+  },
+  "notifFailedUpdateName": {
+    "message": "Échec de la mise à jour du nom"
+  },
+  "notifFailedUpdateColor": {
+    "message": "Échec de la mise à jour de la couleur"
+  },
+  "notifFailedToggleGroup": {
+    "message": "Échec du basculement"
+  },
+  "notifFailedUpdateMatch": {
+    "message": "Échec de la mise à jour"
+  },
+  "notifFailedAddWords": {
+    "message": "Échec: $1 (peut-être des doublons)"
+  },
+  "notifLimitReached": {
+    "message": "Limite atteinte. Ignorés: $1"
+  },
+  "notifTotalLimitReached": {
+    "message": "Limite totale atteinte. Ignorés: $1"
+  },
+  "notifFailedRemoveWord": {
+    "message": "Échec de la suppression du mot"
+  },
+  "notifFailedUpdateSetting": {
+    "message": "Échec de la mise à jour"
+  },
+  "notifFailedReorder": {
+    "message": "Échec de la réorganisation"
   }
 }

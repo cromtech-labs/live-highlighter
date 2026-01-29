@@ -121,5 +121,56 @@
   },
   "optionsTitle": {
     "message": "Live Highlighter - 选项"
+  },
+  "notifGroupAdded": {
+    "message": "分组已添加"
+  },
+  "notifGroupDeleted": {
+    "message": "分组已删除"
+  },
+  "notifColorUpdated": {
+    "message": "颜色已更新"
+  },
+  "notifMaxGroupsReached": {
+    "message": "已达到最大 $1 个分组"
+  },
+  "notifFailedAddGroup": {
+    "message": "添加分组失败"
+  },
+  "notifFailedDeleteGroup": {
+    "message": "删除分组失败"
+  },
+  "notifGroupNameEmpty": {
+    "message": "分组名称不能为空"
+  },
+  "notifFailedUpdateName": {
+    "message": "更新名称失败"
+  },
+  "notifFailedUpdateColor": {
+    "message": "更新颜色失败"
+  },
+  "notifFailedToggleGroup": {
+    "message": "切换分组失败"
+  },
+  "notifFailedUpdateMatch": {
+    "message": "更新选项失败"
+  },
+  "notifFailedAddWords": {
+    "message": "添加失败: $1 (可能是重复)"
+  },
+  "notifLimitReached": {
+    "message": "已达上限。跳过: $1"
+  },
+  "notifTotalLimitReached": {
+    "message": "已达总上限。跳过: $1"
+  },
+  "notifFailedRemoveWord": {
+    "message": "删除词汇失败"
+  },
+  "notifFailedUpdateSetting": {
+    "message": "更新设置失败"
+  },
+  "notifFailedReorder": {
+    "message": "重新排序失败"
   }
 }

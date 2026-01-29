@@ -121,5 +121,56 @@
   },
   "optionsTitle": {
     "message": "Live Highlighter - Opções"
+  },
+  "notifGroupAdded": {
+    "message": "Grupo adicionado"
+  },
+  "notifGroupDeleted": {
+    "message": "Grupo excluído"
+  },
+  "notifColorUpdated": {
+    "message": "Cor atualizada"
+  },
+  "notifMaxGroupsReached": {
+    "message": "Máximo de $1 grupos atingido"
+  },
+  "notifFailedAddGroup": {
+    "message": "Falha ao adicionar grupo"
+  },
+  "notifFailedDeleteGroup": {
+    "message": "Falha ao excluir grupo"
+  },
+  "notifGroupNameEmpty": {
+    "message": "O nome do grupo não pode estar vazio"
+  },
+  "notifFailedUpdateName": {
+    "message": "Falha ao atualizar nome"
+  },
+  "notifFailedUpdateColor": {
+    "message": "Falha ao atualizar cor"
+  },
+  "notifFailedToggleGroup": {
+    "message": "Falha ao alternar grupo"
+  },
+  "notifFailedUpdateMatch": {
+    "message": "Falha ao atualizar opção"
+  },
+  "notifFailedAddWords": {
+    "message": "Falha ao adicionar: $1 (podem ser duplicados)"
+  },
+  "notifLimitReached": {
+    "message": "Limite atingido. Ignorados: $1"
+  },
+  "notifTotalLimitReached": {
+    "message": "Limite total atingido. Ignorados: $1"
+  },
+  "notifFailedRemoveWord": {
+    "message": "Falha ao remover palavra"
+  },
+  "notifFailedUpdateSetting": {
+    "message": "Falha ao atualizar configuração"
+  },
+  "notifFailedReorder": {
+    "message": "Falha ao reordenar grupos"
   }
 }

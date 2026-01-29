@@ -5,7 +5,10 @@
   'use strict';
 
   // Access namespace
-  const { Storage, PRESET_COLOURS, MAX_GROUPS, MAX_WORDS_PER_GROUP, MAX_TOTAL_WORDS, NOTIFICATION_TIMEOUT_MS } = LiveHighlighter;
+  const { Storage, PRESET_COLOURS, MAX_GROUPS, MAX_WORDS_PER_GROUP, MAX_TOTAL_WORDS, NOTIFICATION_TIMEOUT_MS, i18n } = LiveHighlighter;
+
+  // Helper for translated messages
+  const msg = (key, substitutions) => i18n.getMessage(key, substitutions);
 
   // DOM elements
   let groupsList;
@@ -446,7 +449,7 @@
   async function handleAddGroup()
   {
     if (groups.length >= MAX_GROUPS) {
-      showNotification(`Maximum ${MAX_GROUPS} groups reached`, 'error');
+      showNotification(msg('notifMaxGroupsReached', [MAX_GROUPS.toString()]), 'error');
       return;
     }
 
@@ -457,7 +460,7 @@
     const newGroup = await Storage.addGroup(`Group ${groups.length + 1}`, nextColor);
     if (newGroup) {
       await loadGroups();
-      showNotification('Group added', 'success');
+      showNotification(msg('notifGroupAdded'), 'success');
 
       // Auto-expand the new group
       setTimeout(() =>
@@ -475,7 +478,7 @@
         }
       }, 100);
     } else {
-      showNotification('Failed to add group', 'error');
+      showNotification(msg('notifFailedAddGroup'), 'error');
     }
   }
 
@@ -485,9 +488,9 @@
       const success = await Storage.deleteGroup(groupId);
       if (success) {
         await loadGroups();
-        showNotification('Group deleted', 'success');
+        showNotification(msg('notifGroupDeleted'), 'success');
       } else {
-        showNotification('Failed to delete group', 'error');
+        showNotification(msg('notifFailedDeleteGroup'), 'error');
       }
     }
   }
@@ -495,7 +498,7 @@
   async function handleGroupNameChange(groupId, newName)
   {
     if (!newName || !newName.trim()) {
-      showNotification('Group name cannot be empty', 'error');
+      showNotification(msg('notifGroupNameEmpty'), 'error');
       await loadGroups();  // Revert
       return;
     }
@@ -513,7 +516,7 @@
         }
       }
     } else {
-      showNotification('Failed to update group name', 'error');
+      showNotification(msg('notifFailedUpdateName'), 'error');
       await loadGroups();  // Revert
     }
   }
@@ -528,9 +531,9 @@
 
     if (success) {
       await loadGroups();
-      showNotification('Color updated', 'success');
+      showNotification(msg('notifColorUpdated'), 'success');
     } else {
-      showNotification('Failed to update color', 'error');
+      showNotification(msg('notifFailedUpdateColor'), 'error');
     }
   }
 
@@ -555,7 +558,7 @@
         }
       }
     } else {
-      showNotification('Failed to toggle group', 'error');
+      showNotification(msg('notifFailedToggleGroup'), 'error');
       await loadGroups();  // Revert
     }
   }
@@ -572,7 +575,7 @@
         group[option] = value;
       }
     } else {
-      showNotification('Failed to update match option', 'error');
+      showNotification(msg('notifFailedUpdateMatch'), 'error');
       await loadGroups();  // Revert
     }
   }
@@ -621,15 +624,15 @@
 
     // Show error notifications only (success is implied by words appearing)
     if (failedWords.length > 0) {
-      showNotification(`Failed to add: ${failedWords.join(', ')} (may be duplicates)`, 'error');
+      showNotification(msg('notifFailedAddWords', [failedWords.join(', ')]), 'error');
     }
 
     if (skippedWords.length > 0) {
       const group = groups.find(g => g.id === groupId);
       if (group && group.words.length >= MAX_WORDS_PER_GROUP) {
-        showNotification(`Limit reached. Skipped: ${skippedWords.join(', ')}`, 'error');
+        showNotification(msg('notifLimitReached', [skippedWords.join(', ')]), 'error');
       } else {
-        showNotification(`Total word limit reached. Skipped: ${skippedWords.join(', ')}`, 'error');
+        showNotification(msg('notifTotalLimitReached', [skippedWords.join(', ')]), 'error');
       }
     }
   }
@@ -640,7 +643,7 @@
     if (success) {
       await loadGroups();
     } else {
-      showNotification('Failed to remove word', 'error');
+      showNotification(msg('notifFailedRemoveWord'), 'error');
     }
   }
 
@@ -664,7 +667,7 @@
         toggleSlider.classList.remove('active');
       }
     } else {
-      showNotification('Failed to update setting', 'error');
+      showNotification(msg('notifFailedUpdateSetting'), 'error');
     }
   }
 
@@ -751,7 +754,7 @@
       if (success) {
         await loadGroups();
       } else {
-        showNotification('Failed to reorder groups', 'error');
+        showNotification(msg('notifFailedReorder'), 'error');
         await loadGroups();  // Revert
       }
     });

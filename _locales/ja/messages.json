@@ -121,5 +121,56 @@
   },
   "optionsTitle": {
     "message": "Live Highlighter - オプション"
+  },
+  "notifGroupAdded": {
+    "message": "グループを追加しました"
+  },
+  "notifGroupDeleted": {
+    "message": "グループを削除しました"
+  },
+  "notifColorUpdated": {
+    "message": "色を更新しました"
+  },
+  "notifMaxGroupsReached": {
+    "message": "最大 $1 グループに達しました"
+  },
+  "notifFailedAddGroup": {
+    "message": "グループの追加に失敗しました"
+  },
+  "notifFailedDeleteGroup": {
+    "message": "グループの削除に失敗しました"
+  },
+  "notifGroupNameEmpty": {
+    "message": "グループ名を入力してください"
+  },
+  "notifFailedUpdateName": {
+    "message": "名前の更新に失敗しました"
+  },
+  "notifFailedUpdateColor": {
+    "message": "色の更新に失敗しました"
+  },
+  "notifFailedToggleGroup": {
+    "message": "グループの切り替えに失敗しました"
+  },
+  "notifFailedUpdateMatch": {
+    "message": "オプションの更新に失敗しました"
+  },
+  "notifFailedAddWords": {
+    "message": "追加失敗: $1 (重複の可能性)"
+  },
+  "notifLimitReached": {
+    "message": "上限に達しました。スキップ: $1"
+  },
+  "notifTotalLimitReached": {
+    "message": "総数上限に達しました。スキップ: $1"
+  },
+  "notifFailedRemoveWord": {
+    "message": "単語の削除に失敗しました"
+  },
+  "notifFailedUpdateSetting": {
+    "message": "設定の更新に失敗しました"
+  },
+  "notifFailedReorder": {
+    "message": "並べ替えに失敗しました"
   }
 }

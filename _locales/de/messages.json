@@ -121,5 +121,56 @@
   },
   "optionsTitle": {
     "message": "Live Highlighter - Optionen"
+  },
+  "notifGroupAdded": {
+    "message": "Gruppe hinzugefügt"
+  },
+  "notifGroupDeleted": {
+    "message": "Gruppe gelöscht"
+  },
+  "notifColorUpdated": {
+    "message": "Farbe aktualisiert"
+  },
+  "notifMaxGroupsReached": {
+    "message": "Maximum von $1 Gruppen erreicht"
+  },
+  "notifFailedAddGroup": {
+    "message": "Gruppe konnte nicht hinzugefügt werden"
+  },
+  "notifFailedDeleteGroup": {
+    "message": "Gruppe konnte nicht gelöscht werden"
+  },
+  "notifGroupNameEmpty": {
+    "message": "Gruppenname darf nicht leer sein"
+  },
+  "notifFailedUpdateName": {
+    "message": "Name konnte nicht aktualisiert werden"
+  },
+  "notifFailedUpdateColor": {
+    "message": "Farbe konnte nicht aktualisiert werden"
+  },
+  "notifFailedToggleGroup": {
+    "message": "Gruppe konnte nicht umgeschaltet werden"
+  },
+  "notifFailedUpdateMatch": {
+    "message": "Option konnte nicht aktualisiert werden"
+  },
+  "notifFailedAddWords": {
+    "message": "Fehler: $1 (möglicherweise Duplikate)"
+  },
+  "notifLimitReached": {
+    "message": "Limit erreicht. Übersprungen: $1"
+  },
+  "notifTotalLimitReached": {
+    "message": "Gesamtlimit erreicht. Übersprungen: $1"
+  },
+  "notifFailedRemoveWord": {
+    "message": "Wort konnte nicht entfernt werden"
+  },
+  "notifFailedUpdateSetting": {
+    "message": "Einstellung konnte nicht aktualisiert werden"
+  },
+  "notifFailedReorder": {
+    "message": "Neuordnung fehlgeschlagen"
   }
 }
