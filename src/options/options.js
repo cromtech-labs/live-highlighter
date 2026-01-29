@@ -457,7 +457,7 @@
     const nextColorIndex = groups.length % PRESET_COLOURS.length;
     const nextColor = PRESET_COLOURS[nextColorIndex].hex;
 
-    const newGroup = await Storage.addGroup(`Group ${groups.length + 1}`, nextColor);
+    const newGroup = await Storage.addGroup(msg('defaultGroupName', [(groups.length + 1).toString()]), nextColor);
     if (newGroup) {
       await loadGroups();
       showNotification(msg('notifGroupAdded'), 'success');

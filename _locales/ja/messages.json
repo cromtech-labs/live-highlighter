@@ -181,5 +181,14 @@
   },
   "closeNotification": {
     "message": "通知を閉じる"
+  },
+  "statusError": {
+    "message": "エラー"
+  },
+  "statusNotAvailable": {
+    "message": "N/A"
+  },
+  "defaultGroupName": {
+    "message": "グループ $1"
   }
 }

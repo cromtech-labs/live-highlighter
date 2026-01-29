@@ -181,5 +181,14 @@
   },
   "closeNotification": {
     "message": "Fechar notificação"
+  },
+  "statusError": {
+    "message": "Erro"
+  },
+  "statusNotAvailable": {
+    "message": "N/D"
+  },
+  "defaultGroupName": {
+    "message": "Grupo $1"
   }
 }

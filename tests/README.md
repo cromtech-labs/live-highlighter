@@ -258,7 +258,7 @@ Create 10 groups with 20 words each following the setup instructions in the test
 
 ## Testing Internationalization (i18n)
 
-The extension supports 7 languages: English, Spanish, Portuguese (Brazil), French, German, Chinese (Simplified), and Japanese.
+The extension supports 8 languages: English, Spanish, Portuguese (Brazil), French, German, Chinese (Simplified), Japanese, and Korean.
 
 ### Running Chrome in Different Languages
 
@@ -281,6 +281,9 @@ The extension supports 7 languages: English, Spanish, Portuguese (Brazil), Frenc
 
 # Japanese
 "chrome.exe" --lang=ja
+
+# Korean
+"chrome.exe" --lang=ko
 ```
 
 ### What to Test
@@ -306,6 +309,7 @@ The extension supports 7 languages: English, Spanish, Portuguese (Brazil), Frenc
 | Portuguese (Brazil) | pt-BR | `_locales/pt_BR/` |
 | Chinese (Simplified) | zh-CN | `_locales/zh_CN/` |
 | Japanese | ja | `_locales/ja/` |
+| Korean | ko | `_locales/ko/` |
 
 ---
 

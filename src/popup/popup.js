@@ -5,7 +5,10 @@
   'use strict';
 
   // Access namespace
-  const { Storage } = LiveHighlighter;
+  const { Storage, i18n } = LiveHighlighter;
+
+  // Helper for translated messages
+  const msg = (key, substitutions) => i18n.getMessage(key, substitutions);
 
   // DOM elements
   let globalToggle;
@@ -77,8 +80,8 @@
 
     } catch (error) {
       console.error('Live Highlighter: Error loading status', error);
-      ruleCountSpan.textContent = 'Error';
-      highlightCountSpan.textContent = 'Error';
+      ruleCountSpan.textContent = msg('statusError');
+      highlightCountSpan.textContent = msg('statusError');
     }
   }
 
@@ -89,13 +92,13 @@
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
       if (!tab || !tab.id) {
-        highlightCountSpan.textContent = 'N/A';
+        highlightCountSpan.textContent = msg('statusNotAvailable');
         return;
       }
 
       // Check if we can access this tab (some tabs like chrome:// are restricted)
       if (tab.url && (tab.url.startsWith('chrome://') || tab.url.startsWith('chrome-extension://'))) {
-        highlightCountSpan.textContent = 'N/A';
+        highlightCountSpan.textContent = msg('statusNotAvailable');
         return;
       }
 
@@ -153,7 +156,7 @@
 
     } catch (error) {
       console.error('Live Highlighter: Error getting highlight count', error);
-      highlightCountSpan.textContent = 'Error';
+      highlightCountSpan.textContent = msg('statusError');
     }
   }
 
@@ -184,11 +187,11 @@
           getHighlightCount();
         }, 500); // Give content script time to update
       } else {
-        alert('Failed to update setting. Please try again.');
+        alert(msg('notifFailedUpdateSetting'));
       }
     } catch (error) {
       console.error('Live Highlighter: Error toggling', error);
-      alert('Failed to update setting. Please try again.');
+      alert(msg('notifFailedUpdateSetting'));
     }
   }
 

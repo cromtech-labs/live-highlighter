@@ -257,5 +257,20 @@
   "closeNotification": {
     "message": "Close notification",
     "description": "Aria label for notification close button"
+  },
+  "statusError": {
+    "message": "Error",
+    "description": "Error status text"
+  },
+  "statusNotAvailable": {
+    "message": "N/A",
+    "description": "Not available status text"
+  },
+  "defaultGroupName": {
+    "message": "Group $1",
+    "description": "Default name for new groups",
+    "placeholders": {
+      "1": { "content": "$1" }
+    }
   }
 }

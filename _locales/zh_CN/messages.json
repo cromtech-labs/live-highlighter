@@ -181,5 +181,14 @@
   },
   "closeNotification": {
     "message": "关闭通知"
+  },
+  "statusError": {
+    "message": "错误"
+  },
+  "statusNotAvailable": {
+    "message": "不可用"
+  },
+  "defaultGroupName": {
+    "message": "分组 $1"
   }
 }
