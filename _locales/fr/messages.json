@@ -1,0 +1,125 @@
+{
+  "appName": {
+    "message": "Live Highlighter"
+  },
+  "appDescription": {
+    "message": "Arrêtez de chercher. Commencez à voir. Mettez en évidence les mots importants avec des couleurs. Ne manquez jamais ce qui compte sur n'importe quelle page"
+  },
+  "tagline": {
+    "message": "Surlignez ce qui compte, instantanément"
+  },
+  "highlightingEnabled": {
+    "message": "Surlignage Activé"
+  },
+  "groupsActive": {
+    "message": "Groupes Actifs"
+  },
+  "highlightsOnPage": {
+    "message": "Surlignages sur la Page"
+  },
+  "manageGroups": {
+    "message": "Gérer les Groupes"
+  },
+  "addGroup": {
+    "message": "Ajouter un Groupe"
+  },
+  "welcomeTitle": {
+    "message": "Bienvenue sur Live Highlighter !"
+  },
+  "welcomeMessage": {
+    "message": "Créez votre premier groupe de surlignage pour commencer"
+  },
+  "groups": {
+    "message": "groupes"
+  },
+  "words": {
+    "message": "mots"
+  },
+  "noGroupsYet": {
+    "message": "Pas encore de groupes"
+  },
+  "noGroupsMessage": {
+    "message": "Cliquez sur \"Ajouter un Groupe\" pour créer votre premier groupe"
+  },
+  "howToUse": {
+    "message": "Comment utiliser"
+  },
+  "helpAddGroup": {
+    "message": "Cliquez sur \"Ajouter un Groupe\" pour créer un nouveau groupe de surlignage"
+  },
+  "helpAddWords": {
+    "message": "Cliquez sur un groupe pour le développer, puis ajoutez des mots à surligner"
+  },
+  "helpPriority": {
+    "message": "Faites glisser les groupes pour les réorganiser - les groupes supérieurs ont la priorité en cas de chevauchement"
+  },
+  "helpEdit": {
+    "message": "Cliquez sur le nom ou la couleur du groupe pour modifier - les changements sont sauvegardés automatiquement"
+  },
+  "helpToggle": {
+    "message": "Utilisez l'interrupteur sur chaque groupe pour l'activer/désactiver"
+  },
+  "helpDelete": {
+    "message": "Cliquez sur le bouton × pour supprimer un groupe ou un mot"
+  },
+  "helpAddGroupLabel": {
+    "message": "Ajouter un groupe :"
+  },
+  "helpAddWordsLabel": {
+    "message": "Ajouter des mots :"
+  },
+  "helpPriorityLabel": {
+    "message": "Priorité :"
+  },
+  "helpEditLabel": {
+    "message": "Modifier :"
+  },
+  "helpToggleLabel": {
+    "message": "Basculer :"
+  },
+  "helpDeleteLabel": {
+    "message": "Supprimer :"
+  },
+  "dragToReorder": {
+    "message": "Glisser pour réorganiser"
+  },
+  "clickToExpand": {
+    "message": "Cliquer pour développer/réduire"
+  },
+  "editGroupName": {
+    "message": "Modifier le nom du groupe"
+  },
+  "deleteGroup": {
+    "message": "Supprimer le groupe"
+  },
+  "removeWord": {
+    "message": "Supprimer le mot"
+  },
+  "matchWholeWords": {
+    "message": "Mots entiers uniquement"
+  },
+  "caseSensitive": {
+    "message": "Sensible à la casse"
+  },
+  "addNewWords": {
+    "message": "Ajouter de nouveaux mots"
+  },
+  "wordsInGroup": {
+    "message": "Mots dans ce groupe"
+  },
+  "addWordsPlaceholder": {
+    "message": "Tapez des mots séparés par des virgules ou espaces, utilisez des \"guillemets\" pour les phrases"
+  },
+  "add": {
+    "message": "Ajouter"
+  },
+  "groupNamePlaceholder": {
+    "message": "Nom du groupe..."
+  },
+  "noWordsYet": {
+    "message": "Pas encore de mots"
+  },
+  "optionsTitle": {
+    "message": "Live Highlighter - Options"
+  }
+}

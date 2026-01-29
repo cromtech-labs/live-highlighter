@@ -1,0 +1,125 @@
+{
+  "appName": {
+    "message": "Live Highlighter"
+  },
+  "appDescription": {
+    "message": "検索をやめて、見つけ始めましょう。重要な言葉を色でハイライト表示。どのウェブページでも大切な情報を見逃しません"
+  },
+  "tagline": {
+    "message": "大切な言葉を、すぐにハイライト"
+  },
+  "highlightingEnabled": {
+    "message": "ハイライト有効"
+  },
+  "groupsActive": {
+    "message": "アクティブなグループ"
+  },
+  "highlightsOnPage": {
+    "message": "ページ内のハイライト"
+  },
+  "manageGroups": {
+    "message": "グループを管理"
+  },
+  "addGroup": {
+    "message": "グループを追加"
+  },
+  "welcomeTitle": {
+    "message": "Live Highlighter へようこそ！"
+  },
+  "welcomeMessage": {
+    "message": "最初のハイライトグループを作成して始めましょう"
+  },
+  "groups": {
+    "message": "グループ"
+  },
+  "words": {
+    "message": "単語"
+  },
+  "noGroupsYet": {
+    "message": "グループがありません"
+  },
+  "noGroupsMessage": {
+    "message": "「グループを追加」をクリックして最初のグループを作成"
+  },
+  "howToUse": {
+    "message": "使い方"
+  },
+  "helpAddGroup": {
+    "message": "「グループを追加」をクリックして新しいハイライトグループを作成"
+  },
+  "helpAddWords": {
+    "message": "グループをクリックして展開し、ハイライトする単語を追加"
+  },
+  "helpPriority": {
+    "message": "グループをドラッグして並べ替え - テキストが重複する場合、上のグループが優先"
+  },
+  "helpEdit": {
+    "message": "グループ名または色をクリックして編集 - 変更は自動保存"
+  },
+  "helpToggle": {
+    "message": "各グループのスイッチで有効/無効を切り替え"
+  },
+  "helpDelete": {
+    "message": "× ボタンをクリックしてグループまたは単語を削除"
+  },
+  "helpAddGroupLabel": {
+    "message": "グループ追加："
+  },
+  "helpAddWordsLabel": {
+    "message": "単語追加："
+  },
+  "helpPriorityLabel": {
+    "message": "優先度："
+  },
+  "helpEditLabel": {
+    "message": "編集："
+  },
+  "helpToggleLabel": {
+    "message": "切替："
+  },
+  "helpDeleteLabel": {
+    "message": "削除："
+  },
+  "dragToReorder": {
+    "message": "ドラッグして並べ替え"
+  },
+  "clickToExpand": {
+    "message": "クリックで展開/折りたたみ"
+  },
+  "editGroupName": {
+    "message": "グループ名を編集"
+  },
+  "deleteGroup": {
+    "message": "グループを削除"
+  },
+  "removeWord": {
+    "message": "単語を削除"
+  },
+  "matchWholeWords": {
+    "message": "完全一致のみ"
+  },
+  "caseSensitive": {
+    "message": "大文字小文字を区別"
+  },
+  "addNewWords": {
+    "message": "新しい単語を追加"
+  },
+  "wordsInGroup": {
+    "message": "このグループの単語"
+  },
+  "addWordsPlaceholder": {
+    "message": "単語をカンマまたはスペースで区切って入力、フレーズは\"引用符\"で囲む"
+  },
+  "add": {
+    "message": "追加"
+  },
+  "groupNamePlaceholder": {
+    "message": "グループ名..."
+  },
+  "noWordsYet": {
+    "message": "単語がありません"
+  },
+  "optionsTitle": {
+    "message": "Live Highlighter - オプション"
+  }
+}

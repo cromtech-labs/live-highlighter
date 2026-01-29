@@ -1,0 +1,125 @@
+{
+  "appName": {
+    "message": "Live Highlighter"
+  },
+  "appDescription": {
+    "message": "Pare de procurar. Comece a ver. Destaque palavras importantes com cores. Nunca perca o que importa em qualquer página"
+  },
+  "tagline": {
+    "message": "Destaque o que importa, instantaneamente"
+  },
+  "highlightingEnabled": {
+    "message": "Destaque Ativado"
+  },
+  "groupsActive": {
+    "message": "Grupos Ativos"
+  },
+  "highlightsOnPage": {
+    "message": "Destaques na Página"
+  },
+  "manageGroups": {
+    "message": "Gerenciar Grupos"
+  },
+  "addGroup": {
+    "message": "Adicionar Grupo"
+  },
+  "welcomeTitle": {
+    "message": "Bem-vindo ao Live Highlighter!"
+  },
+  "welcomeMessage": {
+    "message": "Crie seu primeiro grupo de destaque para começar"
+  },
+  "groups": {
+    "message": "grupos"
+  },
+  "words": {
+    "message": "palavras"
+  },
+  "noGroupsYet": {
+    "message": "Sem grupos ainda"
+  },
+  "noGroupsMessage": {
+    "message": "Clique em \"Adicionar Grupo\" para criar seu primeiro grupo"
+  },
+  "howToUse": {
+    "message": "Como usar"
+  },
+  "helpAddGroup": {
+    "message": "Clique em \"Adicionar Grupo\" para criar um novo grupo de destaque"
+  },
+  "helpAddWords": {
+    "message": "Clique em um grupo para expandir, depois adicione palavras para destacar"
+  },
+  "helpPriority": {
+    "message": "Arraste os grupos para reordenar - grupos superiores têm prioridade quando o texto se sobrepõe"
+  },
+  "helpEdit": {
+    "message": "Clique no nome do grupo ou cor para editar - as alterações são salvas automaticamente"
+  },
+  "helpToggle": {
+    "message": "Use o interruptor em cada grupo para ativá-lo/desativá-lo"
+  },
+  "helpDelete": {
+    "message": "Clique no botão × para remover um grupo ou palavra"
+  },
+  "helpAddGroupLabel": {
+    "message": "Adicionar grupo:"
+  },
+  "helpAddWordsLabel": {
+    "message": "Adicionar palavras:"
+  },
+  "helpPriorityLabel": {
+    "message": "Prioridade:"
+  },
+  "helpEditLabel": {
+    "message": "Editar:"
+  },
+  "helpToggleLabel": {
+    "message": "Alternar:"
+  },
+  "helpDeleteLabel": {
+    "message": "Excluir:"
+  },
+  "dragToReorder": {
+    "message": "Arraste para reordenar"
+  },
+  "clickToExpand": {
+    "message": "Clique para expandir/recolher"
+  },
+  "editGroupName": {
+    "message": "Editar nome do grupo"
+  },
+  "deleteGroup": {
+    "message": "Excluir grupo"
+  },
+  "removeWord": {
+    "message": "Remover palavra"
+  },
+  "matchWholeWords": {
+    "message": "Apenas palavras inteiras"
+  },
+  "caseSensitive": {
+    "message": "Diferenciar maiúsculas"
+  },
+  "addNewWords": {
+    "message": "Adicionar novas palavras"
+  },
+  "wordsInGroup": {
+    "message": "Palavras neste grupo"
+  },
+  "addWordsPlaceholder": {
+    "message": "Digite palavras separadas por vírgulas ou espaços, use \"aspas\" para frases"
+  },
+  "add": {
+    "message": "Adicionar"
+  },
+  "groupNamePlaceholder": {
+    "message": "Nome do grupo..."
+  },
+  "noWordsYet": {
+    "message": "Sem palavras ainda"
+  },
+  "optionsTitle": {
+    "message": "Live Highlighter - Opções"
+  }
+}

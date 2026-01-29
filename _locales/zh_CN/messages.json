@@ -1,0 +1,125 @@
+{
+  "appName": {
+    "message": "Live Highlighter"
+  },
+  "appDescription": {
+    "message": "停止搜索，开始发现。用颜色高亮显示重要词汇，在任何网页上都不会错过重要内容"
+  },
+  "tagline": {
+    "message": "即时高亮重要内容"
+  },
+  "highlightingEnabled": {
+    "message": "高亮已启用"
+  },
+  "groupsActive": {
+    "message": "活动分组"
+  },
+  "highlightsOnPage": {
+    "message": "页面高亮数"
+  },
+  "manageGroups": {
+    "message": "管理分组"
+  },
+  "addGroup": {
+    "message": "添加分组"
+  },
+  "welcomeTitle": {
+    "message": "欢迎使用 Live Highlighter！"
+  },
+  "welcomeMessage": {
+    "message": "创建您的第一个高亮分组以开始使用"
+  },
+  "groups": {
+    "message": "分组"
+  },
+  "words": {
+    "message": "词汇"
+  },
+  "noGroupsYet": {
+    "message": "暂无分组"
+  },
+  "noGroupsMessage": {
+    "message": "点击「添加分组」创建您的第一个分组"
+  },
+  "howToUse": {
+    "message": "使用说明"
+  },
+  "helpAddGroup": {
+    "message": "点击「添加分组」创建新的高亮分组"
+  },
+  "helpAddWords": {
+    "message": "点击分组展开，然后添加要高亮的词汇"
+  },
+  "helpPriority": {
+    "message": "拖动分组重新排序 - 文本重叠时，靠前的分组优先级更高"
+  },
+  "helpEdit": {
+    "message": "点击分组名称或颜色进行编辑 - 更改会自动保存"
+  },
+  "helpToggle": {
+    "message": "使用每个分组上的开关来启用/禁用它"
+  },
+  "helpDelete": {
+    "message": "点击 × 按钮删除分组或词汇"
+  },
+  "helpAddGroupLabel": {
+    "message": "添加分组："
+  },
+  "helpAddWordsLabel": {
+    "message": "添加词汇："
+  },
+  "helpPriorityLabel": {
+    "message": "优先级："
+  },
+  "helpEditLabel": {
+    "message": "编辑："
+  },
+  "helpToggleLabel": {
+    "message": "切换："
+  },
+  "helpDeleteLabel": {
+    "message": "删除："
+  },
+  "dragToReorder": {
+    "message": "拖动重新排序"
+  },
+  "clickToExpand": {
+    "message": "点击展开/折叠"
+  },
+  "editGroupName": {
+    "message": "编辑分组名称"
+  },
+  "deleteGroup": {
+    "message": "删除分组"
+  },
+  "removeWord": {
+    "message": "移除词汇"
+  },
+  "matchWholeWords": {
+    "message": "仅匹配完整词汇"
+  },
+  "caseSensitive": {
+    "message": "区分大小写"
+  },
+  "addNewWords": {
+    "message": "添加新词汇"
+  },
+  "wordsInGroup": {
+    "message": "此分组中的词汇"
+  },
+  "addWordsPlaceholder": {
+    "message": "输入词汇，用逗号或空格分隔，使用\"引号\"输入短语"
+  },
+  "add": {
+    "message": "添加"
+  },
+  "groupNamePlaceholder": {
+    "message": "分组名称..."
+  },
+  "noWordsYet": {
+    "message": "暂无词汇"
+  },
+  "optionsTitle": {
+    "message": "Live Highlighter - 选项"
+  }
+}

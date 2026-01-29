@@ -33,6 +33,9 @@
   {
     console.log('Live Highlighter: Options page initializing');
 
+    // Apply translations
+    LiveHighlighter.i18n.applyTranslations();
+
     // Get DOM elements
     groupsList = document.getElementById('groupsList');
     emptyState = document.getElementById('emptyState');
@@ -131,6 +134,9 @@
   {
     const template = groupTemplate.content.cloneNode(true);
     const groupItem = template.querySelector('.group-item');
+
+    // Apply translations to cloned template
+    LiveHighlighter.i18n.applyTranslations(groupItem);
 
     // Set group ID
     groupItem.dataset.groupId = group.id;
@@ -420,6 +426,9 @@
   {
     const template = wordChipTemplate.content.cloneNode(true);
     const chip = template.querySelector('.word-chip');
+
+    // Apply translations to cloned template
+    LiveHighlighter.i18n.applyTranslations(chip);
 
     chip.dataset.word = word;
     chip.querySelector('.word-text').textContent = word;

@@ -1,0 +1,125 @@
+{
+  "appName": {
+    "message": "Live Highlighter"
+  },
+  "appDescription": {
+    "message": "Deja de buscar. Empieza a ver. Resalta palabras importantes con colores. Nunca pierdas lo que importa en cualquier página web"
+  },
+  "tagline": {
+    "message": "Resalta lo que importa, al instante"
+  },
+  "highlightingEnabled": {
+    "message": "Resaltado Activado"
+  },
+  "groupsActive": {
+    "message": "Grupos Activos"
+  },
+  "highlightsOnPage": {
+    "message": "Resaltados en Página"
+  },
+  "manageGroups": {
+    "message": "Gestionar Grupos"
+  },
+  "addGroup": {
+    "message": "Añadir Grupo"
+  },
+  "welcomeTitle": {
+    "message": "¡Bienvenido a Live Highlighter!"
+  },
+  "welcomeMessage": {
+    "message": "Crea tu primer grupo de resaltado para comenzar"
+  },
+  "groups": {
+    "message": "grupos"
+  },
+  "words": {
+    "message": "palabras"
+  },
+  "noGroupsYet": {
+    "message": "Sin grupos aún"
+  },
+  "noGroupsMessage": {
+    "message": "Haz clic en \"Añadir Grupo\" para crear tu primer grupo"
+  },
+  "howToUse": {
+    "message": "Cómo usar"
+  },
+  "helpAddGroup": {
+    "message": "Haz clic en \"Añadir Grupo\" para crear un nuevo grupo de resaltado"
+  },
+  "helpAddWords": {
+    "message": "Haz clic en un grupo para expandirlo, luego añade palabras para resaltar"
+  },
+  "helpPriority": {
+    "message": "Arrastra los grupos para reordenar - los grupos superiores tienen prioridad cuando el texto se superpone"
+  },
+  "helpEdit": {
+    "message": "Haz clic en el nombre del grupo o color para editar - los cambios se guardan automáticamente"
+  },
+  "helpToggle": {
+    "message": "Usa el interruptor en cada grupo para activarlo/desactivarlo"
+  },
+  "helpDelete": {
+    "message": "Haz clic en el botón × para eliminar un grupo o palabra"
+  },
+  "helpAddGroupLabel": {
+    "message": "Añadir grupo:"
+  },
+  "helpAddWordsLabel": {
+    "message": "Añadir palabras:"
+  },
+  "helpPriorityLabel": {
+    "message": "Prioridad:"
+  },
+  "helpEditLabel": {
+    "message": "Editar:"
+  },
+  "helpToggleLabel": {
+    "message": "Activar:"
+  },
+  "helpDeleteLabel": {
+    "message": "Eliminar:"
+  },
+  "dragToReorder": {
+    "message": "Arrastra para reordenar"
+  },
+  "clickToExpand": {
+    "message": "Clic para expandir/colapsar"
+  },
+  "editGroupName": {
+    "message": "Editar nombre del grupo"
+  },
+  "deleteGroup": {
+    "message": "Eliminar grupo"
+  },
+  "removeWord": {
+    "message": "Eliminar palabra"
+  },
+  "matchWholeWords": {
+    "message": "Solo palabras completas"
+  },
+  "caseSensitive": {
+    "message": "Distinguir mayúsculas"
+  },
+  "addNewWords": {
+    "message": "Añadir nuevas palabras"
+  },
+  "wordsInGroup": {
+    "message": "Palabras en este grupo"
+  },
+  "addWordsPlaceholder": {
+    "message": "Escribe palabras separadas por comas o espacios, usa \"comillas\" para frases"
+  },
+  "add": {
+    "message": "Añadir"
+  },
+  "groupNamePlaceholder": {
+    "message": "Nombre del grupo..."
+  },
+  "noWordsYet": {
+    "message": "Sin palabras aún"
+  },
+  "optionsTitle": {
+    "message": "Live Highlighter - Opciones"
+  }
+}

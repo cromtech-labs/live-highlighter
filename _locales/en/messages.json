@@ -1,0 +1,166 @@
+{
+  "appName": {
+    "message": "Live Highlighter",
+    "description": "Extension name"
+  },
+  "appDescription": {
+    "message": "Stop searching. Start seeing. Make important words pop with colour highlights. Never miss what matters on any webpage",
+    "description": "Extension description for Chrome Web Store"
+  },
+  "tagline": {
+    "message": "Highlight what matters, instantly",
+    "description": "Short tagline shown in header"
+  },
+  "highlightingEnabled": {
+    "message": "Highlighting Enabled",
+    "description": "Toggle label for enabling/disabling highlighting"
+  },
+  "groupsActive": {
+    "message": "Groups Active",
+    "description": "Status label showing active groups count"
+  },
+  "highlightsOnPage": {
+    "message": "Highlights on Page",
+    "description": "Status label showing highlight count on current page"
+  },
+  "manageGroups": {
+    "message": "Manage Groups",
+    "description": "Button to open options page"
+  },
+  "addGroup": {
+    "message": "Add Group",
+    "description": "Button to add a new highlight group"
+  },
+  "welcomeTitle": {
+    "message": "Welcome to Live Highlighter!",
+    "description": "Welcome banner title"
+  },
+  "welcomeMessage": {
+    "message": "Create your first highlight group to get started",
+    "description": "Welcome banner message"
+  },
+  "groups": {
+    "message": "groups",
+    "description": "Label for group count"
+  },
+  "words": {
+    "message": "words",
+    "description": "Label for word count"
+  },
+  "noGroupsYet": {
+    "message": "No groups yet",
+    "description": "Empty state title"
+  },
+  "noGroupsMessage": {
+    "message": "Click \"Add Group\" to create your first highlight group",
+    "description": "Empty state message"
+  },
+  "howToUse": {
+    "message": "How to use",
+    "description": "Help section title"
+  },
+  "helpAddGroup": {
+    "message": "Click \"Add Group\" to create a new highlight group",
+    "description": "Help text for adding groups"
+  },
+  "helpAddWords": {
+    "message": "Click a group to expand it, then add words to highlight",
+    "description": "Help text for adding words"
+  },
+  "helpPriority": {
+    "message": "Drag groups to reorder - higher groups have priority when text overlaps",
+    "description": "Help text for priority"
+  },
+  "helpEdit": {
+    "message": "Click on group name or color to edit - changes save automatically",
+    "description": "Help text for editing"
+  },
+  "helpToggle": {
+    "message": "Use the switch on each group to enable/disable it",
+    "description": "Help text for toggling"
+  },
+  "helpDelete": {
+    "message": "Click the × button to remove a group or word",
+    "description": "Help text for deleting"
+  },
+  "helpAddGroupLabel": {
+    "message": "Add a group:",
+    "description": "Help label"
+  },
+  "helpAddWordsLabel": {
+    "message": "Add words:",
+    "description": "Help label"
+  },
+  "helpPriorityLabel": {
+    "message": "Priority:",
+    "description": "Help label"
+  },
+  "helpEditLabel": {
+    "message": "Edit:",
+    "description": "Help label"
+  },
+  "helpToggleLabel": {
+    "message": "Toggle:",
+    "description": "Help label"
+  },
+  "helpDeleteLabel": {
+    "message": "Delete:",
+    "description": "Help label"
+  },
+  "dragToReorder": {
+    "message": "Drag to reorder",
+    "description": "Tooltip for drag handle"
+  },
+  "clickToExpand": {
+    "message": "Click to expand/collapse",
+    "description": "Tooltip for expand button"
+  },
+  "editGroupName": {
+    "message": "Edit group name",
+    "description": "Tooltip for edit name button"
+  },
+  "deleteGroup": {
+    "message": "Delete group",
+    "description": "Tooltip for delete button"
+  },
+  "removeWord": {
+    "message": "Remove word",
+    "description": "Tooltip for remove word button"
+  },
+  "matchWholeWords": {
+    "message": "Match whole words only",
+    "description": "Checkbox label for whole word matching"
+  },
+  "caseSensitive": {
+    "message": "Case sensitive",
+    "description": "Checkbox label for case sensitivity"
+  },
+  "addNewWords": {
+    "message": "Add new words",
+    "description": "Section label for add words input"
+  },
+  "wordsInGroup": {
+    "message": "Words in this group",
+    "description": "Section label for word list"
+  },
+  "addWordsPlaceholder": {
+    "message": "Type words separated by commas or spaces, use \"quotes\" for phrases",
+    "description": "Placeholder text for add words input"
+  },
+  "add": {
+    "message": "Add",
+    "description": "Add button text"
+  },
+  "groupNamePlaceholder": {
+    "message": "Group name...",
+    "description": "Placeholder for group name input"
+  },
+  "noWordsYet": {
+    "message": "No words added yet",
+    "description": "Empty state for word list"
+  },
+  "optionsTitle": {
+    "message": "Live Highlighter - Options",
+    "description": "Options page title"
+  }
+}

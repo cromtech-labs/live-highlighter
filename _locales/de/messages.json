@@ -1,0 +1,125 @@
+{
+  "appName": {
+    "message": "Live Highlighter"
+  },
+  "appDescription": {
+    "message": "Hör auf zu suchen. Fang an zu sehen. Hebe wichtige Wörter mit Farben hervor. Verpasse nie wieder, was wichtig ist auf jeder Webseite"
+  },
+  "tagline": {
+    "message": "Hebe hervor, was zählt, sofort"
+  },
+  "highlightingEnabled": {
+    "message": "Hervorhebung Aktiviert"
+  },
+  "groupsActive": {
+    "message": "Aktive Gruppen"
+  },
+  "highlightsOnPage": {
+    "message": "Hervorhebungen auf Seite"
+  },
+  "manageGroups": {
+    "message": "Gruppen Verwalten"
+  },
+  "addGroup": {
+    "message": "Gruppe Hinzufügen"
+  },
+  "welcomeTitle": {
+    "message": "Willkommen bei Live Highlighter!"
+  },
+  "welcomeMessage": {
+    "message": "Erstelle deine erste Hervorhebungsgruppe um zu beginnen"
+  },
+  "groups": {
+    "message": "Gruppen"
+  },
+  "words": {
+    "message": "Wörter"
+  },
+  "noGroupsYet": {
+    "message": "Noch keine Gruppen"
+  },
+  "noGroupsMessage": {
+    "message": "Klicke auf \"Gruppe Hinzufügen\" um deine erste Gruppe zu erstellen"
+  },
+  "howToUse": {
+    "message": "Anleitung"
+  },
+  "helpAddGroup": {
+    "message": "Klicke auf \"Gruppe Hinzufügen\" um eine neue Hervorhebungsgruppe zu erstellen"
+  },
+  "helpAddWords": {
+    "message": "Klicke auf eine Gruppe um sie zu erweitern, dann füge Wörter zum Hervorheben hinzu"
+  },
+  "helpPriority": {
+    "message": "Ziehe Gruppen zum Neuordnen - höhere Gruppen haben Priorität bei Textüberlappung"
+  },
+  "helpEdit": {
+    "message": "Klicke auf Gruppennamen oder Farbe zum Bearbeiten - Änderungen werden automatisch gespeichert"
+  },
+  "helpToggle": {
+    "message": "Benutze den Schalter an jeder Gruppe zum Aktivieren/Deaktivieren"
+  },
+  "helpDelete": {
+    "message": "Klicke auf × um eine Gruppe oder ein Wort zu löschen"
+  },
+  "helpAddGroupLabel": {
+    "message": "Gruppe hinzufügen:"
+  },
+  "helpAddWordsLabel": {
+    "message": "Wörter hinzufügen:"
+  },
+  "helpPriorityLabel": {
+    "message": "Priorität:"
+  },
+  "helpEditLabel": {
+    "message": "Bearbeiten:"
+  },
+  "helpToggleLabel": {
+    "message": "Umschalten:"
+  },
+  "helpDeleteLabel": {
+    "message": "Löschen:"
+  },
+  "dragToReorder": {
+    "message": "Ziehen zum Neuordnen"
+  },
+  "clickToExpand": {
+    "message": "Klicken zum Erweitern/Reduzieren"
+  },
+  "editGroupName": {
+    "message": "Gruppenname bearbeiten"
+  },
+  "deleteGroup": {
+    "message": "Gruppe löschen"
+  },
+  "removeWord": {
+    "message": "Wort entfernen"
+  },
+  "matchWholeWords": {
+    "message": "Nur ganze Wörter"
+  },
+  "caseSensitive": {
+    "message": "Groß-/Kleinschreibung"
+  },
+  "addNewWords": {
+    "message": "Neue Wörter hinzufügen"
+  },
+  "wordsInGroup": {
+    "message": "Wörter in dieser Gruppe"
+  },
+  "addWordsPlaceholder": {
+    "message": "Wörter durch Kommas oder Leerzeichen getrennt eingeben, \"Anführungszeichen\" für Phrasen"
+  },
+  "add": {
+    "message": "Hinzufügen"
+  },
+  "groupNamePlaceholder": {
+    "message": "Gruppenname..."
+  },
+  "noWordsYet": {
+    "message": "Noch keine Wörter"
+  },
+  "optionsTitle": {
+    "message": "Live Highlighter - Optionen"
+  }
+}

@@ -22,6 +22,9 @@
   {
     console.log('Live Highlighter: Popup initializing');
 
+    // Apply translations
+    LiveHighlighter.i18n.applyTranslations();
+
     // Get DOM elements
     globalToggle = document.getElementById('globalToggle');
     ruleCountSpan = document.getElementById('ruleCount');
