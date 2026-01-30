@@ -3,73 +3,73 @@
     "message": "Live Highlighter"
   },
   "appDescription": {
-    "message": "検索をやめて、見つけ始めましょう。重要な言葉を色でハイライト表示。どのウェブページでも大切な情報を見逃しません"
+    "message": "探す手間をなくそう。気になるキーワードを自動でハイライト表示。どのページでも大事な情報がすぐ見つかる"
   },
   "tagline": {
-    "message": "大切な言葉を、すぐにハイライト"
+    "message": "キーワードを自動ハイライト"
   },
   "highlightingEnabled": {
-    "message": "ハイライト有効"
+    "message": "ハイライトON"
   },
   "groupsActive": {
-    "message": "アクティブなグループ"
+    "message": "有効なグループ"
   },
   "highlightsOnPage": {
-    "message": "ページ内のハイライト"
+    "message": "このページ"
   },
   "manageGroups": {
-    "message": "グループを管理"
+    "message": "グループ管理"
   },
   "addGroup": {
-    "message": "グループを追加"
+    "message": "新規グループ"
   },
   "welcomeTitle": {
     "message": "Live Highlighter へようこそ！"
   },
   "welcomeMessage": {
-    "message": "最初のハイライトグループを作成して始めましょう"
+    "message": "まずはグループを作ってみましょう"
   },
   "groups": {
     "message": "グループ"
   },
   "words": {
-    "message": "単語"
+    "message": "キーワード"
   },
   "noGroupsYet": {
     "message": "グループがありません"
   },
   "noGroupsMessage": {
-    "message": "「グループを追加」をクリックして最初のグループを作成"
+    "message": "「新規グループ」をクリックして始めましょう"
   },
   "howToUse": {
     "message": "使い方"
   },
   "helpAddGroup": {
-    "message": "「グループを追加」をクリックして新しいハイライトグループを作成"
+    "message": "「新規グループ」でグループを作成"
   },
   "helpAddWords": {
-    "message": "グループをクリックして展開し、ハイライトする単語を追加"
+    "message": "グループを開いて、ハイライトしたいキーワードを追加"
   },
   "helpPriority": {
-    "message": "グループをドラッグして並べ替え - テキストが重複する場合、上のグループが優先"
+    "message": "ドラッグで並べ替え。上のグループが優先されます"
   },
   "helpEdit": {
-    "message": "グループ名または色をクリックして編集 - 変更は自動保存"
+    "message": "名前や色をクリックして編集。自動保存されます"
   },
   "helpToggle": {
-    "message": "各グループのスイッチで有効/無効を切り替え"
+    "message": "スイッチでグループのオン/オフを切り替え"
   },
   "helpDelete": {
-    "message": "× ボタンをクリックしてグループまたは単語を削除"
+    "message": "×をクリックでグループやキーワードを削除"
   },
   "helpAddGroupLabel": {
-    "message": "グループ追加："
+    "message": "作成："
   },
   "helpAddWordsLabel": {
-    "message": "単語追加："
+    "message": "追加："
   },
   "helpPriorityLabel": {
-    "message": "優先度："
+    "message": "並び順："
   },
   "helpEditLabel": {
     "message": "編集："
@@ -81,34 +81,34 @@
     "message": "削除："
   },
   "dragToReorder": {
-    "message": "ドラッグして並べ替え"
+    "message": "ドラッグで並べ替え"
   },
   "clickToExpand": {
-    "message": "クリックで展開/折りたたみ"
+    "message": "クリックで開閉"
   },
   "editGroupName": {
-    "message": "グループ名を編集"
+    "message": "名前を変更"
   },
   "deleteGroup": {
     "message": "グループを削除"
   },
   "removeWord": {
-    "message": "単語を削除"
+    "message": "削除"
   },
   "matchWholeWords": {
     "message": "完全一致のみ"
   },
   "caseSensitive": {
-    "message": "大文字小文字を区別"
+    "message": "大文字/小文字を区別"
   },
   "addNewWords": {
-    "message": "新しい単語を追加"
+    "message": "キーワードを追加"
   },
   "wordsInGroup": {
-    "message": "このグループの単語"
+    "message": "登録済みのキーワード"
   },
   "addWordsPlaceholder": {
-    "message": "単語をカンマまたはスペースで区切って入力、フレーズは\"引用符\"で囲む"
+    "message": "カンマかスペースで区切って入力。フレーズは \"引用符\" で囲む"
   },
   "add": {
     "message": "追加"
@@ -117,78 +117,78 @@
     "message": "グループ名..."
   },
   "noWordsYet": {
-    "message": "単語がありません"
+    "message": "キーワードがありません"
   },
   "optionsTitle": {
-    "message": "Live Highlighter - オプション"
+    "message": "Live Highlighter - 設定"
   },
   "notifGroupAdded": {
-    "message": "グループを追加しました"
+    "message": "グループを作成しました"
   },
   "notifGroupDeleted": {
-    "message": "グループを削除しました"
+    "message": "削除しました"
   },
   "notifColorUpdated": {
-    "message": "色を更新しました"
+    "message": "色を変更しました"
   },
   "notifMaxGroupsReached": {
-    "message": "最大 $1 グループに達しました"
+    "message": "グループは最大$1個まで"
   },
   "notifFailedAddGroup": {
-    "message": "グループの追加に失敗しました"
+    "message": "グループを作成できませんでした"
   },
   "notifFailedDeleteGroup": {
-    "message": "グループの削除に失敗しました"
+    "message": "削除できませんでした"
   },
   "notifGroupNameEmpty": {
-    "message": "グループ名を入力してください"
+    "message": "名前を入力してください"
   },
   "notifFailedUpdateName": {
-    "message": "名前の更新に失敗しました"
+    "message": "名前を変更できませんでした"
   },
   "notifFailedUpdateColor": {
-    "message": "色の更新に失敗しました"
+    "message": "色を変更できませんでした"
   },
   "notifFailedToggleGroup": {
-    "message": "グループの切り替えに失敗しました"
+    "message": "エラーが発生しました。もう一度お試しください"
   },
   "notifFailedUpdateMatch": {
-    "message": "オプションの更新に失敗しました"
+    "message": "保存できませんでした"
   },
   "notifFailedAddWords": {
-    "message": "追加失敗: $1 (重複の可能性)"
+    "message": "追加できませんでした：$1（重複の可能性あり）"
   },
   "notifLimitReached": {
-    "message": "上限に達しました。スキップ: $1"
+    "message": "上限に達しました。スキップ：$1"
   },
   "notifTotalLimitReached": {
-    "message": "総数上限に達しました。スキップ: $1"
+    "message": "総数の上限に達しました。スキップ：$1"
   },
   "notifFailedRemoveWord": {
-    "message": "単語の削除に失敗しました"
+    "message": "削除できませんでした"
   },
   "notifFailedUpdateSetting": {
-    "message": "設定の更新に失敗しました"
+    "message": "保存できませんでした"
   },
   "notifFailedReorder": {
-    "message": "並べ替えに失敗しました"
+    "message": "並べ替えできませんでした"
   },
   "confirmDeleteGroup": {
-    "message": "このグループとすべての単語を削除しますか？"
+    "message": "このグループを削除しますか？キーワードもすべて消えます"
   },
   "placeholderMaxWordsReached": {
-    "message": "最大 $1 単語に達しました"
+    "message": "キーワードは最大$1個まで"
   },
   "closeNotification": {
-    "message": "通知を閉じる"
+    "message": "閉じる"
   },
   "statusError": {
     "message": "エラー"
   },
   "statusNotAvailable": {
-    "message": "N/A"
+    "message": "-"
   },
   "defaultGroupName": {
-    "message": "グループ $1"
+    "message": "グループ$1"
   }
 }

@@ -3,31 +3,31 @@
     "message": "Live Highlighter"
   },
   "appDescription": {
-    "message": "Pare de procurar. Comece a ver. Destaque palavras importantes com cores. Nunca perca o que importa em qualquer página"
+    "message": "Chega de procurar, comece a encontrar. Destaque automaticamente suas palavras-chave em qualquer página"
   },
   "tagline": {
-    "message": "Destaque o que importa, instantaneamente"
+    "message": "Suas palavras-chave, sempre visíveis"
   },
   "highlightingEnabled": {
-    "message": "Destaque Ativado"
+    "message": "Destaque ativo"
   },
   "groupsActive": {
-    "message": "Grupos Ativos"
+    "message": "Grupos ativos"
   },
   "highlightsOnPage": {
-    "message": "Destaques na Página"
+    "message": "Nesta página"
   },
   "manageGroups": {
-    "message": "Gerenciar Grupos"
+    "message": "Gerenciar grupos"
   },
   "addGroup": {
-    "message": "Adicionar Grupo"
+    "message": "Novo grupo"
   },
   "welcomeTitle": {
     "message": "Bem-vindo ao Live Highlighter!"
   },
   "welcomeMessage": {
-    "message": "Crie seu primeiro grupo de destaque para começar"
+    "message": "Crie seu primeiro grupo para começar"
   },
   "groups": {
     "message": "grupos"
@@ -36,64 +36,64 @@
     "message": "palavras"
   },
   "noGroupsYet": {
-    "message": "Sem grupos ainda"
+    "message": "Nenhum grupo ainda"
   },
   "noGroupsMessage": {
-    "message": "Clique em \"Adicionar Grupo\" para criar seu primeiro grupo"
+    "message": "Clique em «Novo grupo» para criar o primeiro"
   },
   "howToUse": {
-    "message": "Como usar"
+    "message": "Como funciona"
   },
   "helpAddGroup": {
-    "message": "Clique em \"Adicionar Grupo\" para criar um novo grupo de destaque"
+    "message": "Clique em «Novo grupo» para criar um grupo"
   },
   "helpAddWords": {
-    "message": "Clique em um grupo para expandir, depois adicione palavras para destacar"
+    "message": "Abra um grupo e adicione as palavras que quer destacar"
   },
   "helpPriority": {
-    "message": "Arraste os grupos para reordenar - grupos superiores têm prioridade quando o texto se sobrepõe"
+    "message": "Arraste para ordenar. Os de cima têm prioridade"
   },
   "helpEdit": {
-    "message": "Clique no nome do grupo ou cor para editar - as alterações são salvas automaticamente"
+    "message": "Clique no nome ou cor para editar. Salva automaticamente"
   },
   "helpToggle": {
-    "message": "Use o interruptor em cada grupo para ativá-lo/desativá-lo"
+    "message": "Use o botão para ativar ou desativar cada grupo"
   },
   "helpDelete": {
-    "message": "Clique no botão × para remover um grupo ou palavra"
+    "message": "Clique no × para excluir um grupo ou palavra"
   },
   "helpAddGroupLabel": {
-    "message": "Adicionar grupo:"
+    "message": "Criar:"
   },
   "helpAddWordsLabel": {
-    "message": "Adicionar palavras:"
+    "message": "Adicionar:"
   },
   "helpPriorityLabel": {
-    "message": "Prioridade:"
+    "message": "Ordem:"
   },
   "helpEditLabel": {
     "message": "Editar:"
   },
   "helpToggleLabel": {
-    "message": "Alternar:"
+    "message": "Ligar/Desligar:"
   },
   "helpDeleteLabel": {
     "message": "Excluir:"
   },
   "dragToReorder": {
-    "message": "Arraste para reordenar"
+    "message": "Arraste para ordenar"
   },
   "clickToExpand": {
-    "message": "Clique para expandir/recolher"
+    "message": "Clique para abrir/fechar"
   },
   "editGroupName": {
-    "message": "Editar nome do grupo"
+    "message": "Renomear"
   },
   "deleteGroup": {
     "message": "Excluir grupo"
   },
   "removeWord": {
-    "message": "Remover palavra"
+    "message": "Remover"
   },
   "matchWholeWords": {
     "message": "Apenas palavras inteiras"
@@ -102,13 +102,13 @@
     "message": "Diferenciar maiúsculas"
   },
   "addNewWords": {
-    "message": "Adicionar novas palavras"
+    "message": "Adicionar palavras"
   },
   "wordsInGroup": {
     "message": "Palavras neste grupo"
   },
   "addWordsPlaceholder": {
-    "message": "Digite palavras separadas por vírgulas ou espaços, use \"aspas\" para frases"
+    "message": "Digite palavras separadas por vírgula ou espaço. Use \"aspas\" para frases"
   },
   "add": {
     "message": "Adicionar"
@@ -117,76 +117,76 @@
     "message": "Nome do grupo..."
   },
   "noWordsYet": {
-    "message": "Sem palavras ainda"
+    "message": "Nenhuma palavra ainda"
   },
   "optionsTitle": {
-    "message": "Live Highlighter - Opções"
+    "message": "Live Highlighter - Configurações"
   },
   "notifGroupAdded": {
-    "message": "Grupo adicionado"
+    "message": "Grupo criado"
   },
   "notifGroupDeleted": {
     "message": "Grupo excluído"
   },
   "notifColorUpdated": {
-    "message": "Cor atualizada"
+    "message": "Cor alterada"
   },
   "notifMaxGroupsReached": {
-    "message": "Máximo de $1 grupos atingido"
+    "message": "Máximo de $1 grupos"
   },
   "notifFailedAddGroup": {
-    "message": "Falha ao adicionar grupo"
+    "message": "Não foi possível criar o grupo"
   },
   "notifFailedDeleteGroup": {
-    "message": "Falha ao excluir grupo"
+    "message": "Não foi possível excluir"
   },
   "notifGroupNameEmpty": {
-    "message": "O nome do grupo não pode estar vazio"
+    "message": "Digite um nome"
   },
   "notifFailedUpdateName": {
-    "message": "Falha ao atualizar nome"
+    "message": "Não foi possível renomear"
   },
   "notifFailedUpdateColor": {
-    "message": "Falha ao atualizar cor"
+    "message": "Não foi possível alterar a cor"
   },
   "notifFailedToggleGroup": {
-    "message": "Falha ao alternar grupo"
+    "message": "Algo deu errado, tente de novo"
   },
   "notifFailedUpdateMatch": {
-    "message": "Falha ao atualizar opção"
+    "message": "Não foi possível salvar"
   },
   "notifFailedAddWords": {
-    "message": "Falha ao adicionar: $1 (podem ser duplicados)"
+    "message": "Não adicionadas: $1 (talvez já existam)"
   },
   "notifLimitReached": {
-    "message": "Limite atingido. Ignorados: $1"
+    "message": "Limite atingido. Pulamos: $1"
   },
   "notifTotalLimitReached": {
-    "message": "Limite total atingido. Ignorados: $1"
+    "message": "Limite total atingido. Pulamos: $1"
   },
   "notifFailedRemoveWord": {
-    "message": "Falha ao remover palavra"
+    "message": "Não foi possível remover a palavra"
   },
   "notifFailedUpdateSetting": {
-    "message": "Falha ao atualizar configuração"
+    "message": "Não foi possível salvar"
   },
   "notifFailedReorder": {
-    "message": "Falha ao reordenar grupos"
+    "message": "Não foi possível reordenar"
   },
   "confirmDeleteGroup": {
     "message": "Excluir este grupo e todas as palavras?"
   },
   "placeholderMaxWordsReached": {
-    "message": "Máximo de $1 palavras atingido"
+    "message": "Máximo de $1 palavras"
   },
   "closeNotification": {
-    "message": "Fechar notificação"
+    "message": "Fechar"
   },
   "statusError": {
     "message": "Erro"
   },
   "statusNotAvailable": {
-    "message": "N/D"
+    "message": "-"
   },
   "defaultGroupName": {
     "message": "Grupo $1"

@@ -3,112 +3,112 @@
     "message": "Live Highlighter"
   },
   "appDescription": {
-    "message": "검색을 멈추고, 발견을 시작하세요. 중요한 단어를 색상으로 강조 표시하여 어떤 웹페이지에서도 중요한 내용을 놓치지 마세요"
+    "message": "더 이상 찾느라 시간 낭비하지 마세요. 중요한 키워드를 자동으로 하이라이트해서 한눈에 찾을 수 있어요"
   },
   "tagline": {
-    "message": "중요한 내용을 즉시 강조"
+    "message": "키워드 자동 하이라이트"
   },
   "highlightingEnabled": {
-    "message": "강조 표시 활성화"
+    "message": "하이라이트 켜짐"
   },
   "groupsActive": {
     "message": "활성 그룹"
   },
   "highlightsOnPage": {
-    "message": "페이지 내 강조"
+    "message": "이 페이지"
   },
   "manageGroups": {
     "message": "그룹 관리"
   },
   "addGroup": {
-    "message": "그룹 추가"
+    "message": "새 그룹"
   },
   "welcomeTitle": {
-    "message": "Live Highlighter에 오신 것을 환영합니다!"
+    "message": "Live Highlighter에 오신 것을 환영해요!"
   },
   "welcomeMessage": {
-    "message": "첫 번째 강조 그룹을 만들어 시작하세요"
+    "message": "첫 번째 그룹을 만들어 시작해 보세요"
   },
   "groups": {
     "message": "그룹"
   },
   "words": {
-    "message": "단어"
+    "message": "키워드"
   },
   "noGroupsYet": {
-    "message": "그룹이 없습니다"
+    "message": "아직 그룹이 없어요"
   },
   "noGroupsMessage": {
-    "message": "「그룹 추가」를 클릭하여 첫 번째 그룹을 만드세요"
+    "message": "「새 그룹」을 눌러서 시작하세요"
   },
   "howToUse": {
-    "message": "사용 방법"
+    "message": "사용법"
   },
   "helpAddGroup": {
-    "message": "「그룹 추가」를 클릭하여 새 강조 그룹을 만드세요"
+    "message": "「새 그룹」을 눌러서 그룹을 만드세요"
   },
   "helpAddWords": {
-    "message": "그룹을 클릭하여 확장한 후 강조할 단어를 추가하세요"
+    "message": "그룹을 열고 하이라이트할 키워드를 추가하세요"
   },
   "helpPriority": {
-    "message": "그룹을 드래그하여 순서 변경 - 텍스트가 겹칠 때 위쪽 그룹이 우선"
+    "message": "드래그로 순서 변경. 위에 있을수록 우선순위가 높아요"
   },
   "helpEdit": {
-    "message": "그룹 이름이나 색상을 클릭하여 편집 - 변경사항은 자동 저장됩니다"
+    "message": "이름이나 색상을 클릭해서 수정. 자동 저장돼요"
   },
   "helpToggle": {
-    "message": "각 그룹의 스위치로 활성화/비활성화 전환"
+    "message": "스위치로 그룹을 켜거나 끌 수 있어요"
   },
   "helpDelete": {
-    "message": "× 버튼을 클릭하여 그룹 또는 단어 삭제"
+    "message": "×를 눌러서 그룹이나 키워드를 삭제하세요"
   },
   "helpAddGroupLabel": {
-    "message": "그룹 추가:"
+    "message": "만들기:"
   },
   "helpAddWordsLabel": {
-    "message": "단어 추가:"
+    "message": "추가:"
   },
   "helpPriorityLabel": {
-    "message": "우선순위:"
+    "message": "순서:"
   },
   "helpEditLabel": {
-    "message": "편집:"
+    "message": "수정:"
   },
   "helpToggleLabel": {
-    "message": "전환:"
+    "message": "켜기/끄기:"
   },
   "helpDeleteLabel": {
     "message": "삭제:"
   },
   "dragToReorder": {
-    "message": "드래그하여 순서 변경"
+    "message": "드래그로 순서 변경"
   },
   "clickToExpand": {
-    "message": "클릭하여 확장/축소"
+    "message": "클릭해서 열기/닫기"
   },
   "editGroupName": {
-    "message": "그룹 이름 편집"
+    "message": "이름 변경"
   },
   "deleteGroup": {
     "message": "그룹 삭제"
   },
   "removeWord": {
-    "message": "단어 삭제"
+    "message": "삭제"
   },
   "matchWholeWords": {
-    "message": "전체 단어만 일치"
+    "message": "정확히 일치하는 단어만"
   },
   "caseSensitive": {
     "message": "대소문자 구분"
   },
   "addNewWords": {
-    "message": "새 단어 추가"
+    "message": "키워드 추가"
   },
   "wordsInGroup": {
-    "message": "이 그룹의 단어"
+    "message": "등록된 키워드"
   },
   "addWordsPlaceholder": {
-    "message": "쉼표 또는 공백으로 단어 구분, 구문은 \"따옴표\"로 입력"
+    "message": "쉼표나 공백으로 구분해서 입력. 문구는 \"따옴표\"로 감싸세요"
   },
   "add": {
     "message": "추가"
@@ -117,76 +117,76 @@
     "message": "그룹 이름..."
   },
   "noWordsYet": {
-    "message": "단어가 없습니다"
+    "message": "아직 키워드가 없어요"
   },
   "optionsTitle": {
-    "message": "Live Highlighter - 옵션"
+    "message": "Live Highlighter - 설정"
   },
   "notifGroupAdded": {
-    "message": "그룹이 추가되었습니다"
+    "message": "그룹을 만들었어요"
   },
   "notifGroupDeleted": {
-    "message": "그룹이 삭제되었습니다"
+    "message": "삭제했어요"
   },
   "notifColorUpdated": {
-    "message": "색상이 업데이트되었습니다"
+    "message": "색상을 변경했어요"
   },
   "notifMaxGroupsReached": {
-    "message": "최대 $1개 그룹에 도달했습니다"
+    "message": "그룹은 최대 $1개까지"
   },
   "notifFailedAddGroup": {
-    "message": "그룹 추가 실패"
+    "message": "그룹을 만들 수 없었어요"
   },
   "notifFailedDeleteGroup": {
-    "message": "그룹 삭제 실패"
+    "message": "삭제할 수 없었어요"
   },
   "notifGroupNameEmpty": {
-    "message": "그룹 이름을 입력하세요"
+    "message": "이름을 입력해 주세요"
   },
   "notifFailedUpdateName": {
-    "message": "이름 업데이트 실패"
+    "message": "이름을 변경할 수 없었어요"
   },
   "notifFailedUpdateColor": {
-    "message": "색상 업데이트 실패"
+    "message": "색상을 변경할 수 없었어요"
   },
   "notifFailedToggleGroup": {
-    "message": "그룹 전환 실패"
+    "message": "문제가 생겼어요. 다시 시도해 주세요"
   },
   "notifFailedUpdateMatch": {
-    "message": "옵션 업데이트 실패"
+    "message": "저장할 수 없었어요"
   },
   "notifFailedAddWords": {
-    "message": "추가 실패: $1 (중복일 수 있음)"
+    "message": "추가 실패: $1 (중복일 수 있어요)"
   },
   "notifLimitReached": {
-    "message": "한도에 도달했습니다. 건너뜀: $1"
+    "message": "한도에 도달했어요. 건너뜀: $1"
   },
   "notifTotalLimitReached": {
-    "message": "총 한도에 도달했습니다. 건너뜀: $1"
+    "message": "전체 한도에 도달했어요. 건너뜀: $1"
   },
   "notifFailedRemoveWord": {
-    "message": "단어 삭제 실패"
+    "message": "삭제할 수 없었어요"
   },
   "notifFailedUpdateSetting": {
-    "message": "설정 업데이트 실패"
+    "message": "저장할 수 없었어요"
   },
   "notifFailedReorder": {
-    "message": "순서 변경 실패"
+    "message": "순서를 변경할 수 없었어요"
   },
   "confirmDeleteGroup": {
-    "message": "이 그룹과 모든 단어를 삭제하시겠습니까?"
+    "message": "이 그룹을 삭제할까요? 키워드도 모두 사라져요"
   },
   "placeholderMaxWordsReached": {
-    "message": "최대 $1개 단어에 도달했습니다"
+    "message": "키워드는 최대 $1개까지"
   },
   "closeNotification": {
-    "message": "알림 닫기"
+    "message": "닫기"
   },
   "statusError": {
     "message": "오류"
   },
   "statusNotAvailable": {
-    "message": "N/A"
+    "message": "-"
   },
   "defaultGroupName": {
     "message": "그룹 $1"
