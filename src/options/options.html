@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Live Highlighter - Options</title>
+    <title data-i18n="optionsTitle">Live Highlighter - Options</title>
     <link rel="stylesheet" href="options.css" />
   </head>
   <body>
@@ -18,8 +18,8 @@
                 class="logo"
               />
               <div>
-                <h1>Live Highlighter</h1>
-                <p class="tagline">Highlight what matters, instantly</p>
+                <h1 data-i18n="appName">Live Highlighter</h1>
+                <p class="tagline" data-i18n="tagline">Highlight what matters, instantly</p>
               </div>
             </div>
           </div>
@@ -27,7 +27,7 @@
             <div class="toggle-container">
               <div class="toggle-label" id="globalToggle">
                 <span class="toggle-slider"></span>
-                <span class="toggle-text">Highlighting Enabled</span>
+                <span class="toggle-text" data-i18n="highlightingEnabled">Highlighting Enabled</span>
               </div>
             </div>
           </div>
@@ -37,9 +37,9 @@
       <main>
         <div class="controls-bar">
           <div class="limits-display">
-            <span id="groupCount">0</span> / <span id="maxGroups">10</span> groups
+            <span id="groupCount">0</span> / <span id="maxGroups">10</span> <span data-i18n="groups">groups</span>
             <span class="separator">•</span>
-            <span id="totalWordCount">0</span> / <span id="maxTotalWords">200</span> words
+            <span id="totalWordCount">0</span> / <span id="maxTotalWords">200</span> <span data-i18n="words">words</span>
           </div>
           <button id="addGroupBtn" class="btn btn-primary">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
@@ -47,7 +47,7 @@
                 d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"
               />
             </svg>
-            Add Group
+            <span data-i18n="addGroup">Add Group</span>
           </button>
         </div>
 
@@ -62,36 +62,33 @@
                 stroke-linecap="round"
               />
             </svg>
-            <h3>No groups yet</h3>
-            <p>Click "Add Group" to create your first highlight group</p>
+            <h3 data-i18n="noGroupsYet">No groups yet</h3>
+            <p data-i18n="noGroupsMessage">Click "Add Group" to create your first highlight group</p>
           </div>
 
           <div id="groupsList" class="groups-list"></div>
         </div>
 
         <div class="help-section">
-          <h3>How to use</h3>
+          <h3 data-i18n="howToUse">How to use</h3>
           <ul>
             <li>
-              <strong>Add a group:</strong> Click "Add Group" to create a new highlight group
+              <strong data-i18n="helpAddGroupLabel">Add a group:</strong> <span data-i18n="helpAddGroup">Click "Add Group" to create a new highlight group</span>
             </li>
             <li>
-              <strong>Add words:</strong> Click a group to expand it, then add words to highlight
+              <strong data-i18n="helpAddWordsLabel">Add words:</strong> <span data-i18n="helpAddWords">Click a group to expand it, then add words to highlight</span>
             </li>
             <li>
-              <strong>Priority:</strong> Drag groups to reorder - higher groups
-              have priority when text overlaps
+              <strong data-i18n="helpPriorityLabel">Priority:</strong> <span data-i18n="helpPriority">Drag groups to reorder - higher groups have priority when text overlaps</span>
             </li>
             <li>
-              <strong>Edit:</strong> Click on group name or color to edit - changes
-              save automatically
+              <strong data-i18n="helpEditLabel">Edit:</strong> <span data-i18n="helpEdit">Click on group name or color to edit - changes save automatically</span>
             </li>
             <li>
-              <strong>Toggle:</strong> Use the switch on each group to
-              enable/disable it
+              <strong data-i18n="helpToggleLabel">Toggle:</strong> <span data-i18n="helpToggle">Use the switch on each group to enable/disable it</span>
             </li>
             <li>
-              <strong>Delete:</strong> Click the × button to remove a group or word
+              <strong data-i18n="helpDeleteLabel">Delete:</strong> <span data-i18n="helpDelete">Click the × button to remove a group or word</span>
             </li>
           </ul>
         </div>
@@ -105,7 +102,7 @@
     <template id="groupTemplate">
       <div class="group-item" draggable="true" data-group-id="">
         <div class="group-header">
-          <div class="drag-handle" title="Drag to reorder">
+          <div class="drag-handle" data-i18n-title="dragToReorder" title="Drag to reorder">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
               <circle cx="4" cy="4" r="1.5" />
               <circle cx="4" cy="8" r="1.5" />
@@ -116,7 +113,7 @@
             </svg>
           </div>
 
-          <button class="expand-btn" title="Click to expand/collapse">
+          <button class="expand-btn" data-i18n-title="clickToExpand" title="Click to expand/collapse">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
               <path d="M4 6l4 4 4-4z" />
             </svg>
@@ -130,11 +127,12 @@
               <input
                 type="text"
                 class="group-name-input"
+                data-i18n-placeholder="groupNamePlaceholder"
                 placeholder="Group name..."
                 maxlength="50"
                 style="display: none;"
               />
-              <button class="edit-name-btn" title="Edit group name">
+              <button class="edit-name-btn" data-i18n-title="editGroupName" title="Edit group name">
                 <svg width="14" height="14" viewBox="0 0 512 512" fill="currentColor">
                   <path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"/>
                 </svg>
@@ -156,7 +154,7 @@
               <div class="color-dropdown"></div>
             </div>
 
-            <span class="word-count">0 / 20 words</span>
+            <span class="word-count">0 / 20 <span data-i18n="words">words</span></span>
           </div>
 
           <div class="group-actions">
@@ -164,7 +162,7 @@
               <span class="toggle-slider small"></span>
             </div>
 
-            <button class="btn-icon delete-group-btn" title="Delete group">
+            <button class="btn-icon delete-group-btn" data-i18n-title="deleteGroup" title="Delete group">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                 <path
                   d="M2 2l12 12M14 2L2 14"
@@ -179,31 +177,33 @@
 
         <div class="group-words" style="display: none;">
           <div class="add-word-section">
-            <label class="section-label">Add new words</label>
+            <label class="section-label" data-i18n="addNewWords">Add new words</label>
             <div class="add-word-input-row">
               <input
                 type="text"
                 class="add-word-input"
+                data-i18n-placeholder="addWordsPlaceholder"
                 placeholder='Type words separated by commas or spaces, use "quotes" for phrases'
                 maxlength="500"
               />
-              <button class="add-word-btn">Add</button>
+              <button class="add-word-btn" data-i18n="add">Add</button>
             </div>
           </div>
 
           <div class="words-section">
-            <label class="section-label">Words in this group</label>
+            <label class="section-label" data-i18n="wordsInGroup">Words in this group</label>
             <div class="words-list"></div>
+            <div class="words-list-empty" data-i18n="noWordsYet">No words added yet</div>
           </div>
 
           <div class="match-options">
             <label class="match-option">
               <input type="checkbox" class="match-whole-word-checkbox" />
-              <span>Match whole words only</span>
+              <span data-i18n="matchWholeWords">Match whole words only</span>
             </label>
             <label class="match-option">
               <input type="checkbox" class="case-sensitive-checkbox" />
-              <span>Case sensitive</span>
+              <span data-i18n="caseSensitive">Case sensitive</span>
             </label>
           </div>
         </div>
@@ -214,12 +214,13 @@
     <template id="wordChipTemplate">
       <div class="word-chip" data-word="">
         <span class="word-text"></span>
-        <button class="remove-word-btn" title="Remove word">×</button>
+        <button class="remove-word-btn" data-i18n-title="removeWord" title="Remove word">×</button>
       </div>
     </template>
 
     <script src="../shared/constants.js"></script>
     <script src="../shared/storage.js"></script>
+    <script src="../shared/i18n.js"></script>
     <script src="options.js"></script>
   </body>
 </html>

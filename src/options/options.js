@@ -5,7 +5,10 @@
   'use strict';
 
   // Access namespace
-  const { Storage, PRESET_COLOURS, MAX_GROUPS, MAX_WORDS_PER_GROUP, MAX_TOTAL_WORDS, NOTIFICATION_TIMEOUT_MS } = LiveHighlighter;
+  const { Storage, PRESET_COLOURS, MAX_GROUPS, MAX_WORDS_PER_GROUP, MAX_TOTAL_WORDS, NOTIFICATION_TIMEOUT_MS, i18n } = LiveHighlighter;
+
+  // Helper for translated messages
+  const msg = (key, substitutions) => i18n.getMessage(key, substitutions);
 
   // DOM elements
   let groupsList;
@@ -32,6 +35,9 @@
   async function init()
   {
     console.log('Live Highlighter: Options page initializing');
+
+    // Apply translations
+    LiveHighlighter.i18n.applyTranslations();
 
     // Get DOM elements
     groupsList = document.getElementById('groupsList');
@@ -131,6 +137,9 @@
   {
     const template = groupTemplate.content.cloneNode(true);
     const groupItem = template.querySelector('.group-item');
+
+    // Apply translations to cloned template
+    LiveHighlighter.i18n.applyTranslations(groupItem);
 
     // Set group ID
     groupItem.dataset.groupId = group.id;
@@ -261,7 +270,7 @@
   function updateGroupWordCount(groupElement, group)
   {
     const wordCountSpan = groupElement.querySelector('.word-count');
-    wordCountSpan.textContent = `${group.words.length} / ${MAX_WORDS_PER_GROUP} words`;
+    wordCountSpan.textContent = `${group.words.length} / ${MAX_WORDS_PER_GROUP} ${msg('words')}`;
 
     // Add visual warning when at limit
     if (group.words.length >= MAX_WORDS_PER_GROUP) {
@@ -373,11 +382,11 @@
     // Disable input and button if at limit
     if (atLimit) {
       addWordInput.disabled = true;
-      addWordInput.placeholder = `Maximum ${MAX_WORDS_PER_GROUP} words reached`;
+      addWordInput.placeholder = msg('placeholderMaxWordsReached', [MAX_WORDS_PER_GROUP.toString()]);
       newAddWordBtn.disabled = true;
     } else {
       addWordInput.disabled = false;
-      addWordInput.placeholder = 'Add words (comma/space separated, or use "quotes" for phrases)...';
+      addWordInput.placeholder = msg('addWordsPlaceholder');
       newAddWordBtn.disabled = false;
     }
 
@@ -421,6 +430,9 @@
     const template = wordChipTemplate.content.cloneNode(true);
     const chip = template.querySelector('.word-chip');
 
+    // Apply translations to cloned template
+    LiveHighlighter.i18n.applyTranslations(chip);
+
     chip.dataset.word = word;
     chip.querySelector('.word-text').textContent = word;
 
@@ -437,7 +449,7 @@
   async function handleAddGroup()
   {
     if (groups.length >= MAX_GROUPS) {
-      showNotification(`Maximum ${MAX_GROUPS} groups reached`, 'error');
+      showNotification(msg('notifMaxGroupsReached', [MAX_GROUPS.toString()]), 'error');
       return;
     }
 
@@ -445,12 +457,13 @@
     const nextColorIndex = groups.length % PRESET_COLOURS.length;
     const nextColor = PRESET_COLOURS[nextColorIndex].hex;
 
-    const newGroup = await Storage.addGroup(`Group ${groups.length + 1}`, nextColor);
+    const newGroup = await Storage.addGroup(msg('defaultGroupName', [(groups.length + 1).toString()]), nextColor);
     if (newGroup) {
       await loadGroups();
-      showNotification('Group added', 'success');
+      showNotification(msg('notifGroupAdded'), 'success');
 
-      // Auto-expand the new group
+      // Auto-expand the new group and track it
+      expandedGroupIds.add(newGroup.id);
       setTimeout(() =>
       {
         const newGroupElement = document.querySelector(`[data-group-id="${newGroup.id}"]`);
@@ -461,24 +474,32 @@
           expandBtn.classList.add('expanded');
 
           // Focus on group name input
-          const nameInput = newGroupElement.querySelector('.group-name');
-          nameInput.select();
+          const nameInput = newGroupElement.querySelector('.group-name-input');
+          if (nameInput) {
+            nameInput.style.display = 'inline-block';
+            const nameDisplay = newGroupElement.querySelector('.group-name-display');
+            const editBtn = newGroupElement.querySelector('.edit-name-btn');
+            if (nameDisplay) nameDisplay.style.display = 'none';
+            if (editBtn) editBtn.style.display = 'none';
+            nameInput.focus();
+            nameInput.select();
+          }
         }
       }, 100);
     } else {
-      showNotification('Failed to add group', 'error');
+      showNotification(msg('notifFailedAddGroup'), 'error');
     }
   }
 
   async function handleDeleteGroup(groupId)
   {
-    if (confirm('Delete this group and all its words?')) {
+    if (confirm(msg('confirmDeleteGroup'))) {
       const success = await Storage.deleteGroup(groupId);
       if (success) {
         await loadGroups();
-        showNotification('Group deleted', 'success');
+        showNotification(msg('notifGroupDeleted'), 'success');
       } else {
-        showNotification('Failed to delete group', 'error');
+        showNotification(msg('notifFailedDeleteGroup'), 'error');
       }
     }
   }
@@ -486,7 +507,7 @@
   async function handleGroupNameChange(groupId, newName)
   {
     if (!newName || !newName.trim()) {
-      showNotification('Group name cannot be empty', 'error');
+      showNotification(msg('notifGroupNameEmpty'), 'error');
       await loadGroups();  // Revert
       return;
     }
@@ -504,7 +525,7 @@
         }
       }
     } else {
-      showNotification('Failed to update group name', 'error');
+      showNotification(msg('notifFailedUpdateName'), 'error');
       await loadGroups();  // Revert
     }
   }
@@ -519,9 +540,9 @@
 
     if (success) {
       await loadGroups();
-      showNotification('Color updated', 'success');
+      showNotification(msg('notifColorUpdated'), 'success');
     } else {
-      showNotification('Failed to update color', 'error');
+      showNotification(msg('notifFailedUpdateColor'), 'error');
     }
   }
 
@@ -546,7 +567,7 @@
         }
       }
     } else {
-      showNotification('Failed to toggle group', 'error');
+      showNotification(msg('notifFailedToggleGroup'), 'error');
       await loadGroups();  // Revert
     }
   }
@@ -563,7 +584,7 @@
         group[option] = value;
       }
     } else {
-      showNotification('Failed to update match option', 'error');
+      showNotification(msg('notifFailedUpdateMatch'), 'error');
       await loadGroups();  // Revert
     }
   }
@@ -612,15 +633,15 @@
 
     // Show error notifications only (success is implied by words appearing)
     if (failedWords.length > 0) {
-      showNotification(`Failed to add: ${failedWords.join(', ')} (may be duplicates)`, 'error');
+      showNotification(msg('notifFailedAddWords', [failedWords.join(', ')]), 'error');
     }
 
     if (skippedWords.length > 0) {
       const group = groups.find(g => g.id === groupId);
       if (group && group.words.length >= MAX_WORDS_PER_GROUP) {
-        showNotification(`Limit reached. Skipped: ${skippedWords.join(', ')}`, 'error');
+        showNotification(msg('notifLimitReached', [skippedWords.join(', ')]), 'error');
       } else {
-        showNotification(`Total word limit reached. Skipped: ${skippedWords.join(', ')}`, 'error');
+        showNotification(msg('notifTotalLimitReached', [skippedWords.join(', ')]), 'error');
       }
     }
   }
@@ -631,7 +652,7 @@
     if (success) {
       await loadGroups();
     } else {
-      showNotification('Failed to remove word', 'error');
+      showNotification(msg('notifFailedRemoveWord'), 'error');
     }
   }
 
@@ -655,7 +676,7 @@
         toggleSlider.classList.remove('active');
       }
     } else {
-      showNotification('Failed to update setting', 'error');
+      showNotification(msg('notifFailedUpdateSetting'), 'error');
     }
   }
 
@@ -742,7 +763,7 @@
       if (success) {
         await loadGroups();
       } else {
-        showNotification('Failed to reorder groups', 'error');
+        showNotification(msg('notifFailedReorder'), 'error');
         await loadGroups();  // Revert
       }
     });
@@ -841,7 +862,7 @@
     const closeBtn = document.createElement('button');
     closeBtn.className = 'notification-close';
     closeBtn.innerHTML = '×';
-    closeBtn.setAttribute('aria-label', 'Close notification');
+    closeBtn.setAttribute('aria-label', msg('closeNotification'));
 
     // Assemble notification
     notification.appendChild(icon);

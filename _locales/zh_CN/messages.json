@@ -1,0 +1,194 @@
+{
+  "appName": {
+    "message": "Live Highlighter"
+  },
+  "appDescription": {
+    "message": "再也不用费力找关键词了！自动高亮你关心的内容，重要信息一眼就能看到"
+  },
+  "tagline": {
+    "message": "关键词自动高亮，一眼找到重点"
+  },
+  "highlightingEnabled": {
+    "message": "高亮已开启"
+  },
+  "groupsActive": {
+    "message": "启用中"
+  },
+  "highlightsOnPage": {
+    "message": "本页匹配"
+  },
+  "manageGroups": {
+    "message": "管理分组"
+  },
+  "addGroup": {
+    "message": "新建分组"
+  },
+  "welcomeTitle": {
+    "message": "欢迎使用 Live Highlighter！"
+  },
+  "welcomeMessage": {
+    "message": "先创建一个分组试试吧"
+  },
+  "groups": {
+    "message": "个分组"
+  },
+  "words": {
+    "message": "个关键词"
+  },
+  "noGroupsYet": {
+    "message": "还没有分组"
+  },
+  "noGroupsMessage": {
+    "message": "点「新建分组」开始添加"
+  },
+  "howToUse": {
+    "message": "怎么用？"
+  },
+  "helpAddGroup": {
+    "message": "点「新建分组」创建一个高亮分组"
+  },
+  "helpAddWords": {
+    "message": "点击分组展开，添加你想高亮的关键词"
+  },
+  "helpPriority": {
+    "message": "拖动分组可以排序，排在前面的优先级更高"
+  },
+  "helpEdit": {
+    "message": "点名称或颜色可以修改，改完自动保存"
+  },
+  "helpToggle": {
+    "message": "用开关控制分组的开启/关闭"
+  },
+  "helpDelete": {
+    "message": "点 × 可以删除分组或关键词"
+  },
+  "helpAddGroupLabel": {
+    "message": "新建："
+  },
+  "helpAddWordsLabel": {
+    "message": "添加词："
+  },
+  "helpPriorityLabel": {
+    "message": "排序："
+  },
+  "helpEditLabel": {
+    "message": "修改："
+  },
+  "helpToggleLabel": {
+    "message": "开关："
+  },
+  "helpDeleteLabel": {
+    "message": "删除："
+  },
+  "dragToReorder": {
+    "message": "拖动排序"
+  },
+  "clickToExpand": {
+    "message": "点击展开/收起"
+  },
+  "editGroupName": {
+    "message": "改名"
+  },
+  "deleteGroup": {
+    "message": "删除分组"
+  },
+  "removeWord": {
+    "message": "删除"
+  },
+  "matchWholeWords": {
+    "message": "全词匹配"
+  },
+  "caseSensitive": {
+    "message": "区分大小写"
+  },
+  "addNewWords": {
+    "message": "添加关键词"
+  },
+  "wordsInGroup": {
+    "message": "已添加的关键词"
+  },
+  "addWordsPlaceholder": {
+    "message": "输入关键词，逗号或空格分隔，词组用 \"引号\" 包起来"
+  },
+  "add": {
+    "message": "添加"
+  },
+  "groupNamePlaceholder": {
+    "message": "输入分组名..."
+  },
+  "noWordsYet": {
+    "message": "还没添加关键词"
+  },
+  "optionsTitle": {
+    "message": "Live Highlighter 设置"
+  },
+  "notifGroupAdded": {
+    "message": "已添加"
+  },
+  "notifGroupDeleted": {
+    "message": "已删除"
+  },
+  "notifColorUpdated": {
+    "message": "颜色已更新"
+  },
+  "notifMaxGroupsReached": {
+    "message": "最多只能建 $1 个分组"
+  },
+  "notifFailedAddGroup": {
+    "message": "添加失败，请重试"
+  },
+  "notifFailedDeleteGroup": {
+    "message": "删除失败，请重试"
+  },
+  "notifGroupNameEmpty": {
+    "message": "名称不能为空"
+  },
+  "notifFailedUpdateName": {
+    "message": "改名失败"
+  },
+  "notifFailedUpdateColor": {
+    "message": "更新颜色失败"
+  },
+  "notifFailedToggleGroup": {
+    "message": "操作失败，请重试"
+  },
+  "notifFailedUpdateMatch": {
+    "message": "设置失败"
+  },
+  "notifFailedAddWords": {
+    "message": "添加失败：$1（可能重复了）"
+  },
+  "notifLimitReached": {
+    "message": "超出上限，已跳过：$1"
+  },
+  "notifTotalLimitReached": {
+    "message": "关键词总数到上限了，已跳过：$1"
+  },
+  "notifFailedRemoveWord": {
+    "message": "删除失败"
+  },
+  "notifFailedUpdateSetting": {
+    "message": "保存失败"
+  },
+  "notifFailedReorder": {
+    "message": "排序失败"
+  },
+  "confirmDeleteGroup": {
+    "message": "确定删除这个分组吗？里面的关键词也会一起删掉"
+  },
+  "placeholderMaxWordsReached": {
+    "message": "最多 $1 个关键词，已满"
+  },
+  "closeNotification": {
+    "message": "关闭"
+  },
+  "statusError": {
+    "message": "出错了"
+  },
+  "statusNotAvailable": {
+    "message": "-"
+  },
+  "defaultGroupName": {
+    "message": "分组 $1"
+  }
+}

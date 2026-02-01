@@ -256,6 +256,63 @@ Create 10 groups with 20 words each following the setup instructions in the test
 
 ---
 
+## Testing Internationalization (i18n)
+
+The extension supports 8 languages: English, Spanish, Portuguese (Brazil), French, German, Chinese (Simplified), Japanese, and Korean.
+
+### Running Chrome in Different Languages
+
+**Windows - Command Line:**
+```bash
+# Spanish
+"chrome.exe" --lang=es
+
+# French
+"chrome.exe" --lang=fr
+
+# German
+"chrome.exe" --lang=de
+
+# Portuguese (Brazil)
+"chrome.exe" --lang=pt-BR
+
+# Chinese (Simplified)
+"chrome.exe" --lang=zh-CN
+
+# Japanese
+"chrome.exe" --lang=ja
+
+# Korean
+"chrome.exe" --lang=ko
+```
+
+### What to Test
+
+1. **Popup page** - All labels and status text
+2. **Options page** - All UI elements including:
+   - Section headers
+   - Button labels
+   - Placeholder text
+   - Notification messages
+   - Confirmation dialogs
+   - Tooltips
+3. **Dynamic content** - Word counts, group counts
+
+### Supported Locale Codes
+
+| Language | Locale Code | Folder |
+|----------|-------------|--------|
+| English | en | `_locales/en/` |
+| Spanish | es | `_locales/es/` |
+| French | fr | `_locales/fr/` |
+| German | de | `_locales/de/` |
+| Portuguese (Brazil) | pt-BR | `_locales/pt_BR/` |
+| Chinese (Simplified) | zh-CN | `_locales/zh_CN/` |
+| Japanese | ja | `_locales/ja/` |
+| Korean | ko | `_locales/ko/` |
+
+---
+
 ## Adding New Tests
 
 When adding new test files:

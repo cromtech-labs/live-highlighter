@@ -951,11 +951,15 @@ header {
   min-height: 32px;
 }
 
-.words-list:empty::before {
-  content: 'No words added yet';
+.words-list-empty {
   color: var(--text-tertiary);
   font-size: 13px;
   font-style: italic;
+  display: none;
+}
+
+.words-list:empty + .words-list-empty {
+  display: block;
 }
 
 /* Word Chip */

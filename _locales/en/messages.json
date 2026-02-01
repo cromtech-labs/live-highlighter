@@ -1,0 +1,276 @@
+{
+  "appName": {
+    "message": "Live Highlighter",
+    "description": "Extension name"
+  },
+  "appDescription": {
+    "message": "Stop searching. Start seeing. Make important words pop with colour highlights. Never miss what matters on any webpage",
+    "description": "Extension description for Chrome Web Store"
+  },
+  "tagline": {
+    "message": "Highlight what matters, instantly",
+    "description": "Short tagline shown in header"
+  },
+  "highlightingEnabled": {
+    "message": "Highlighting Enabled",
+    "description": "Toggle label for enabling/disabling highlighting"
+  },
+  "groupsActive": {
+    "message": "Groups Active",
+    "description": "Status label showing active groups count"
+  },
+  "highlightsOnPage": {
+    "message": "Highlights on Page",
+    "description": "Status label showing highlight count on current page"
+  },
+  "manageGroups": {
+    "message": "Manage Groups",
+    "description": "Button to open options page"
+  },
+  "addGroup": {
+    "message": "Add Group",
+    "description": "Button to add a new highlight group"
+  },
+  "welcomeTitle": {
+    "message": "Welcome to Live Highlighter!",
+    "description": "Welcome banner title"
+  },
+  "welcomeMessage": {
+    "message": "Create your first highlight group to get started",
+    "description": "Welcome banner message"
+  },
+  "groups": {
+    "message": "groups",
+    "description": "Label for group count"
+  },
+  "words": {
+    "message": "words",
+    "description": "Label for word count"
+  },
+  "noGroupsYet": {
+    "message": "No groups yet",
+    "description": "Empty state title"
+  },
+  "noGroupsMessage": {
+    "message": "Click \"Add Group\" to create your first highlight group",
+    "description": "Empty state message"
+  },
+  "howToUse": {
+    "message": "How to use",
+    "description": "Help section title"
+  },
+  "helpAddGroup": {
+    "message": "Click \"Add Group\" to create a new highlight group",
+    "description": "Help text for adding groups"
+  },
+  "helpAddWords": {
+    "message": "Click a group to expand it, then add words to highlight",
+    "description": "Help text for adding words"
+  },
+  "helpPriority": {
+    "message": "Drag groups to reorder - higher groups have priority when text overlaps",
+    "description": "Help text for priority"
+  },
+  "helpEdit": {
+    "message": "Click on group name or color to edit - changes save automatically",
+    "description": "Help text for editing"
+  },
+  "helpToggle": {
+    "message": "Use the switch on each group to enable/disable it",
+    "description": "Help text for toggling"
+  },
+  "helpDelete": {
+    "message": "Click the × button to remove a group or word",
+    "description": "Help text for deleting"
+  },
+  "helpAddGroupLabel": {
+    "message": "Add a group:",
+    "description": "Help label"
+  },
+  "helpAddWordsLabel": {
+    "message": "Add words:",
+    "description": "Help label"
+  },
+  "helpPriorityLabel": {
+    "message": "Priority:",
+    "description": "Help label"
+  },
+  "helpEditLabel": {
+    "message": "Edit:",
+    "description": "Help label"
+  },
+  "helpToggleLabel": {
+    "message": "Toggle:",
+    "description": "Help label"
+  },
+  "helpDeleteLabel": {
+    "message": "Delete:",
+    "description": "Help label"
+  },
+  "dragToReorder": {
+    "message": "Drag to reorder",
+    "description": "Tooltip for drag handle"
+  },
+  "clickToExpand": {
+    "message": "Click to expand/collapse",
+    "description": "Tooltip for expand button"
+  },
+  "editGroupName": {
+    "message": "Edit group name",
+    "description": "Tooltip for edit name button"
+  },
+  "deleteGroup": {
+    "message": "Delete group",
+    "description": "Tooltip for delete button"
+  },
+  "removeWord": {
+    "message": "Remove word",
+    "description": "Tooltip for remove word button"
+  },
+  "matchWholeWords": {
+    "message": "Match whole words only",
+    "description": "Checkbox label for whole word matching"
+  },
+  "caseSensitive": {
+    "message": "Case sensitive",
+    "description": "Checkbox label for case sensitivity"
+  },
+  "addNewWords": {
+    "message": "Add new words",
+    "description": "Section label for add words input"
+  },
+  "wordsInGroup": {
+    "message": "Words in this group",
+    "description": "Section label for word list"
+  },
+  "addWordsPlaceholder": {
+    "message": "Type words separated by commas or spaces, use \"quotes\" for phrases",
+    "description": "Placeholder text for add words input"
+  },
+  "add": {
+    "message": "Add",
+    "description": "Add button text"
+  },
+  "groupNamePlaceholder": {
+    "message": "Group name...",
+    "description": "Placeholder for group name input"
+  },
+  "noWordsYet": {
+    "message": "No words added yet",
+    "description": "Empty state for word list"
+  },
+  "optionsTitle": {
+    "message": "Live Highlighter - Options",
+    "description": "Options page title"
+  },
+  "notifGroupAdded": {
+    "message": "Group added",
+    "description": "Notification when group is added"
+  },
+  "notifGroupDeleted": {
+    "message": "Group deleted",
+    "description": "Notification when group is deleted"
+  },
+  "notifColorUpdated": {
+    "message": "Color updated",
+    "description": "Notification when color is changed"
+  },
+  "notifMaxGroupsReached": {
+    "message": "Maximum $1 groups reached",
+    "description": "Error when max groups limit hit",
+    "placeholders": {
+      "1": { "content": "$1" }
+    }
+  },
+  "notifFailedAddGroup": {
+    "message": "Failed to add group",
+    "description": "Error notification"
+  },
+  "notifFailedDeleteGroup": {
+    "message": "Failed to delete group",
+    "description": "Error notification"
+  },
+  "notifGroupNameEmpty": {
+    "message": "Group name cannot be empty",
+    "description": "Error notification"
+  },
+  "notifFailedUpdateName": {
+    "message": "Failed to update group name",
+    "description": "Error notification"
+  },
+  "notifFailedUpdateColor": {
+    "message": "Failed to update color",
+    "description": "Error notification"
+  },
+  "notifFailedToggleGroup": {
+    "message": "Failed to toggle group",
+    "description": "Error notification"
+  },
+  "notifFailedUpdateMatch": {
+    "message": "Failed to update match option",
+    "description": "Error notification"
+  },
+  "notifFailedAddWords": {
+    "message": "Failed to add: $1 (may be duplicates)",
+    "description": "Error when words fail to add",
+    "placeholders": {
+      "1": { "content": "$1" }
+    }
+  },
+  "notifLimitReached": {
+    "message": "Limit reached. Skipped: $1",
+    "description": "Error when group word limit reached",
+    "placeholders": {
+      "1": { "content": "$1" }
+    }
+  },
+  "notifTotalLimitReached": {
+    "message": "Total word limit reached. Skipped: $1",
+    "description": "Error when total word limit reached",
+    "placeholders": {
+      "1": { "content": "$1" }
+    }
+  },
+  "notifFailedRemoveWord": {
+    "message": "Failed to remove word",
+    "description": "Error notification"
+  },
+  "notifFailedUpdateSetting": {
+    "message": "Failed to update setting",
+    "description": "Error notification"
+  },
+  "notifFailedReorder": {
+    "message": "Failed to reorder groups",
+    "description": "Error notification"
+  },
+  "confirmDeleteGroup": {
+    "message": "Delete this group and all its words?",
+    "description": "Confirmation dialog when deleting a group"
+  },
+  "placeholderMaxWordsReached": {
+    "message": "Maximum $1 words reached",
+    "description": "Placeholder when word limit is reached",
+    "placeholders": {
+      "1": { "content": "$1" }
+    }
+  },
+  "closeNotification": {
+    "message": "Close notification",
+    "description": "Aria label for notification close button"
+  },
+  "statusError": {
+    "message": "Error",
+    "description": "Error status text"
+  },
+  "statusNotAvailable": {
+    "message": "N/A",
+    "description": "Not available status text"
+  },
+  "defaultGroupName": {
+    "message": "Group $1",
+    "description": "Default name for new groups",
+    "placeholders": {
+      "1": { "content": "$1" }
+    }
+  }
+}

@@ -1,0 +1,194 @@
+{
+  "appName": {
+    "message": "Live Highlighter"
+  },
+  "appDescription": {
+    "message": "Schluss mit Suchen, fang an zu finden. Markiere automatisch deine wichtigen Begriffe auf jeder Webseite"
+  },
+  "tagline": {
+    "message": "Deine Stichwörter, sofort sichtbar"
+  },
+  "highlightingEnabled": {
+    "message": "Hervorhebung aktiv"
+  },
+  "groupsActive": {
+    "message": "Aktive Gruppen"
+  },
+  "highlightsOnPage": {
+    "message": "Auf dieser Seite"
+  },
+  "manageGroups": {
+    "message": "Gruppen verwalten"
+  },
+  "addGroup": {
+    "message": "Neue Gruppe"
+  },
+  "welcomeTitle": {
+    "message": "Willkommen bei Live Highlighter!"
+  },
+  "welcomeMessage": {
+    "message": "Erstelle deine erste Gruppe und leg los"
+  },
+  "groups": {
+    "message": "Gruppen"
+  },
+  "words": {
+    "message": "Wörter"
+  },
+  "noGroupsYet": {
+    "message": "Noch keine Gruppen"
+  },
+  "noGroupsMessage": {
+    "message": "Klick auf «Neue Gruppe» um loszulegen"
+  },
+  "howToUse": {
+    "message": "So funktioniert's"
+  },
+  "helpAddGroup": {
+    "message": "Klick auf «Neue Gruppe» um eine Gruppe zu erstellen"
+  },
+  "helpAddWords": {
+    "message": "Öffne eine Gruppe und füge Wörter hinzu, die markiert werden sollen"
+  },
+  "helpPriority": {
+    "message": "Ziehen zum Sortieren. Weiter oben = höhere Priorität"
+  },
+  "helpEdit": {
+    "message": "Klick auf Name oder Farbe zum Bearbeiten. Speichert automatisch"
+  },
+  "helpToggle": {
+    "message": "Mit dem Schalter kannst du Gruppen ein- und ausschalten"
+  },
+  "helpDelete": {
+    "message": "Klick auf × um eine Gruppe oder ein Wort zu löschen"
+  },
+  "helpAddGroupLabel": {
+    "message": "Erstellen:"
+  },
+  "helpAddWordsLabel": {
+    "message": "Hinzufügen:"
+  },
+  "helpPriorityLabel": {
+    "message": "Reihenfolge:"
+  },
+  "helpEditLabel": {
+    "message": "Bearbeiten:"
+  },
+  "helpToggleLabel": {
+    "message": "An/Aus:"
+  },
+  "helpDeleteLabel": {
+    "message": "Löschen:"
+  },
+  "dragToReorder": {
+    "message": "Ziehen zum Sortieren"
+  },
+  "clickToExpand": {
+    "message": "Klicken zum Öffnen/Schließen"
+  },
+  "editGroupName": {
+    "message": "Umbenennen"
+  },
+  "deleteGroup": {
+    "message": "Gruppe löschen"
+  },
+  "removeWord": {
+    "message": "Entfernen"
+  },
+  "matchWholeWords": {
+    "message": "Nur ganze Wörter"
+  },
+  "caseSensitive": {
+    "message": "Groß-/Kleinschreibung beachten"
+  },
+  "addNewWords": {
+    "message": "Wörter hinzufügen"
+  },
+  "wordsInGroup": {
+    "message": "Wörter in dieser Gruppe"
+  },
+  "addWordsPlaceholder": {
+    "message": "Wörter mit Komma oder Leerzeichen trennen. Für Phrasen \"Anführungszeichen\" nutzen"
+  },
+  "add": {
+    "message": "Hinzufügen"
+  },
+  "groupNamePlaceholder": {
+    "message": "Gruppenname..."
+  },
+  "noWordsYet": {
+    "message": "Noch keine Wörter"
+  },
+  "optionsTitle": {
+    "message": "Live Highlighter - Einstellungen"
+  },
+  "notifGroupAdded": {
+    "message": "Gruppe erstellt"
+  },
+  "notifGroupDeleted": {
+    "message": "Gruppe gelöscht"
+  },
+  "notifColorUpdated": {
+    "message": "Farbe geändert"
+  },
+  "notifMaxGroupsReached": {
+    "message": "Maximal $1 Gruppen"
+  },
+  "notifFailedAddGroup": {
+    "message": "Gruppe konnte nicht erstellt werden"
+  },
+  "notifFailedDeleteGroup": {
+    "message": "Löschen fehlgeschlagen"
+  },
+  "notifGroupNameEmpty": {
+    "message": "Bitte einen Namen eingeben"
+  },
+  "notifFailedUpdateName": {
+    "message": "Umbenennen fehlgeschlagen"
+  },
+  "notifFailedUpdateColor": {
+    "message": "Farbe konnte nicht geändert werden"
+  },
+  "notifFailedToggleGroup": {
+    "message": "Hat nicht geklappt, versuch's nochmal"
+  },
+  "notifFailedUpdateMatch": {
+    "message": "Speichern fehlgeschlagen"
+  },
+  "notifFailedAddWords": {
+    "message": "Nicht hinzugefügt: $1 (vielleicht Duplikate)"
+  },
+  "notifLimitReached": {
+    "message": "Limit erreicht. Übersprungen: $1"
+  },
+  "notifTotalLimitReached": {
+    "message": "Gesamtlimit erreicht. Übersprungen: $1"
+  },
+  "notifFailedRemoveWord": {
+    "message": "Wort konnte nicht entfernt werden"
+  },
+  "notifFailedUpdateSetting": {
+    "message": "Speichern fehlgeschlagen"
+  },
+  "notifFailedReorder": {
+    "message": "Sortieren fehlgeschlagen"
+  },
+  "confirmDeleteGroup": {
+    "message": "Diese Gruppe mit allen Wörtern löschen?"
+  },
+  "placeholderMaxWordsReached": {
+    "message": "Maximal $1 Wörter"
+  },
+  "closeNotification": {
+    "message": "Schließen"
+  },
+  "statusError": {
+    "message": "Fehler"
+  },
+  "statusNotAvailable": {
+    "message": "-"
+  },
+  "defaultGroupName": {
+    "message": "Gruppe $1"
+  }
+}

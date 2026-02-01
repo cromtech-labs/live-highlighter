@@ -4,6 +4,39 @@ All notable changes to Live Highlighter will be documented in this file.
 
 ---
 
+## [0.7.0] - 2025-01-29
+
+### Added
+- **Internationalization (i18n)** - Full translation support for 8 languages:
+  - English (en)
+  - Spanish (es)
+  - French (fr)
+  - German (de)
+  - Portuguese - Brazil (pt_BR)
+  - Chinese - Simplified (zh_CN)
+  - Japanese (ja)
+  - Korean (ko)
+- **i18n helper module** - New `src/shared/i18n.js` with `getMessage()` and `applyTranslations()` utilities
+- **Translated UI elements** - All user-facing text including:
+  - Labels and headers
+  - Button text
+  - Placeholder text
+  - Notification messages
+  - Confirmation dialogs
+  - Tooltips and aria-labels
+  - Dynamic content (word counts, group counts, default group names)
+
+### Fixed
+- **Group collapse bug** - Groups no longer collapse after adding words (fixed expandedGroupIds tracking for new groups)
+- **New group name input** - Fixed selector error when auto-focusing name input on new group creation
+
+### Technical
+- Added `default_locale: "en"` to manifest.json
+- HTML elements use `data-i18n`, `data-i18n-placeholder`, and `data-i18n-title` attributes
+- Manifest uses `__MSG_appName__` and `__MSG_appDescription__` placeholders
+
+---
+
 ## [0.6.0] - 2025-01-29
 
 ### Changed
