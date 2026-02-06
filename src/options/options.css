@@ -1029,6 +1029,29 @@ header {
   color: var(--text-primary);
 }
 
+.info-link {
+  display: inline-flex;
+  align-items: center;
+  color: var(--text-secondary);
+  opacity: 0.5;
+  transition: opacity 0.15s;
+  margin-left: 2px;
+}
+
+.info-link:hover {
+  opacity: 1;
+  color: var(--accent-color, #4a90d9);
+}
+
+.match-option.disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.match-option.disabled input[type="checkbox"] {
+  cursor: default;
+}
+
 /* Add Word Section */
 .add-word-section {
   /* No background or border - clean look */

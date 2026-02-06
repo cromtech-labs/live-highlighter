@@ -4,6 +4,31 @@ All notable changes to Live Highlighter will be documented in this file.
 
 ---
 
+## [0.8.0] - 2026-02-06
+
+### Added
+- **Regex matching** - New per-group "Regex" checkbox to use regular expressions for matching
+  - Supports full JavaScript regex syntax (alternation, character classes, quantifiers, etc.)
+  - Invalid regex patterns are silently skipped (no crashes)
+  - Zero-length matches are safely handled (no infinite loops)
+  - When enabled, "Match whole word" and "Case sensitive" checkboxes are disabled (these can be expressed within the regex itself)
+- **Regex info link** - Info icon next to the Regex checkbox linking to [regexr.com](https://regexr.com/) for learning/testing patterns
+- **Regex test page** - New `tests/regex.html` with comprehensive test cases for regex matching
+
+### Changed
+- **Match option labels** - "Match whole words only" shortened to "Match whole word" for consistency
+- **Checkbox order** - Reordered match options: Match whole word → Case sensitive → Regex
+
+### Technical
+- Added `useRegex` boolean field to group schema (default: false, backward compatible)
+- Updated `flattenGroupsToRules` to pass `useRegex` from groups to rules
+- Added regex matching branch in `highlightTextNode` alongside existing substring matching
+- Updated storage validation and `allowedFields` whitelist for `useRegex`
+- Added `useRegex` i18n string to all 8 locale files
+- Added `.match-option.disabled` CSS for greyed-out checkboxes
+
+---
+
 ## [0.7.0] - 2025-01-29
 
 ### Added

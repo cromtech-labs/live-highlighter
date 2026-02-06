@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Regex Matching Test - Live Highlighter</title>
+    <style>
+      :root {
+        --bg-page: #f5f5f5;
+        --bg-card: #ffffff;
+        --bg-subtle: #f8f9fa;
+        --bg-warning: #fff3e0;
+        --text-primary: #202124;
+        --text-secondary: #5f6368;
+        --accent: #1a73e8;
+        --accent-warning: #fb8c00;
+        --shadow: rgba(0, 0, 0, 0.1);
+      }
+
+      [data-theme="dark"] {
+        --bg-page: #202124;
+        --bg-card: #292a2d;
+        --bg-subtle: #3c4043;
+        --bg-warning: #3e2723;
+        --text-primary: #e8eaed;
+        --text-secondary: #9aa0a6;
+        --accent: #8ab4f8;
+        --accent-warning: #ffa726;
+        --shadow: rgba(0, 0, 0, 0.3);
+      }
+
+      body {
+        font-family: "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 40px 20px;
+        background: var(--bg-page);
+        color: var(--text-primary);
+        transition: background-color 0.3s, color 0.3s;
+      }
+      .header {
+        background: var(--bg-card);
+        padding: 30px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 8px var(--shadow);
+        position: relative;
+      }
+      h1 {
+        color: var(--accent);
+        margin: 0 0 10px;
+      }
+      .test-section {
+        background: var(--bg-card);
+        padding: 30px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px var(--shadow);
+      }
+      h2 {
+        color: var(--text-primary);
+        margin-top: 0;
+      }
+      .test-case {
+        padding: 15px;
+        background: var(--bg-subtle);
+        margin: 15px 0;
+        border-radius: 4px;
+        border-left: 4px solid var(--accent);
+      }
+      .label {
+        font-size: 12px;
+        color: var(--text-secondary);
+        font-weight: 500;
+        margin-bottom: 8px;
+      }
+      .priority-info {
+        background: var(--bg-warning);
+        padding: 15px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        border-left: 4px solid var(--accent-warning);
+      }
+      code {
+        background: var(--bg-subtle);
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: "Courier New", monospace;
+        font-size: 13px;
+        color: var(--text-primary);
+      }
+      .theme-toggle {
+        position: absolute;
+        top: 30px;
+        right: 30px;
+        background: var(--bg-subtle);
+        border: 1px solid var(--text-secondary);
+        color: var(--text-primary);
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s;
+      }
+      .theme-toggle:hover {
+        background: var(--accent);
+        color: white;
+        border-color: var(--accent);
+      }
+      .setup-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 10px 0;
+      }
+      .setup-table th, .setup-table td {
+        padding: 8px 12px;
+        text-align: left;
+        border-bottom: 1px solid var(--bg-subtle);
+      }
+      .setup-table th {
+        color: var(--text-secondary);
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <button class="theme-toggle" id="themeToggle">🌙 Dark Mode</button>
+      <h1>Regex Matching Test</h1>
+      <p>
+        This page tests the regex matching feature of Live Highlighter.
+        Create a group with the <strong>Regex</strong> checkbox enabled,
+        then verify that patterns match correctly.
+      </p>
+    </div>
+
+    <div class="test-section">
+      <h2>Setup Instructions</h2>
+      <div class="priority-info">
+        <p><strong>Create these groups</strong> in the extension options page.
+          For each group, check the <strong>Regex</strong> checkbox.</p>
+        <table class="setup-table">
+          <tr>
+            <th>Group</th>
+            <th>Color</th>
+            <th>Regex word to add</th>
+            <th>What it matches</th>
+          </tr>
+          <tr>
+            <td>Group 1</td>
+            <td>Yellow</td>
+            <td><code>err(or|eur)</code></td>
+            <td>"error" and "erreur"</td>
+          </tr>
+          <tr>
+            <td>Group 2</td>
+            <td>Green</td>
+            <td><code>\b\d{3}-\d{4}\b</code></td>
+            <td>Phone-like numbers: 555-1234</td>
+          </tr>
+          <tr>
+            <td>Group 3</td>
+            <td>Cyan</td>
+            <td><code>https?://\S+</code></td>
+            <td>URLs starting with http or https</td>
+          </tr>
+          <tr>
+            <td>Group 4</td>
+            <td>Pink</td>
+            <td><code>\b[A-Z]{2,5}-\d+\b</code></td>
+            <td>Issue IDs: JIRA-123, BUG-42</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2>Test Cases</h2>
+
+      <div class="test-case">
+        <div class="label">Case 1: Alternation - <code>err(or|eur)</code></div>
+        <p>An error occurred in the system. Une erreur est survenue. This is not an era or errand.</p>
+        <p><em>Expected: "error" and "erreur" highlighted yellow. "era" and "errand" not highlighted.</em></p>
+      </div>
+
+      <div class="test-case">
+        <div class="label">Case 2: Alternation in longer words</div>
+        <p>The errors were logged. Multiple erreurs detected. Errorless code is the goal.</p>
+        <p><em>Expected: "error" within "errors" and "erreur" within "erreurs" highlighted (partial match). "error" within "Errorless" highlighted.</em></p>
+      </div>
+
+      <div class="test-case">
+        <div class="label">Case 3: Digit patterns - <code>\b\d{3}-\d{4}\b</code></div>
+        <p>Call 555-1234 or 800-5678 for support. Reference number: 123-4567. Not a match: 55-123 or 1234-567.</p>
+        <p><em>Expected: "555-1234", "800-5678", and "123-4567" highlighted green. "55-123" and "1234-567" not highlighted.</em></p>
+      </div>
+
+      <div class="test-case">
+        <div class="label">Case 4: URL matching - <code>https?://\S+</code></div>
+        <p>Visit http://example.com or https://www.google.com/search?q=test for more info. Plain text like ftp://files.example.com should not match.</p>
+        <p><em>Expected: "http://example.com" and "https://www.google.com/search?q=test" highlighted cyan. The ftp URL not highlighted.</em></p>
+      </div>
+
+      <div class="test-case">
+        <div class="label">Case 5: Issue IDs - <code>\b[A-Z]{2,5}-\d+\b</code></div>
+        <p>Fix for JIRA-123 is ready. See also BUG-42 and FEAT-9901. Related: AB-1 is valid. Not a match: A-123 or TOOLONG-99.</p>
+        <p><em>Expected: "JIRA-123", "BUG-42", "FEAT-9901", and "AB-1" highlighted pink. "A-123" and "TOOLONG-99" not highlighted.</em></p>
+      </div>
+
+      <div class="test-case">
+        <div class="label">Case 6: Multiple regex matches in one sentence</div>
+        <p>Error JIRA-456: Call 555-0000 or visit https://status.example.com for the erreur details.</p>
+        <p><em>Expected: Multiple colors in one sentence - each pattern highlighted with its group color.</em></p>
+      </div>
+
+      <div class="test-case">
+        <div class="label">Case 7: No matches</div>
+        <p>This sentence contains no patterns that should be highlighted. Just plain ordinary text with nothing special.</p>
+        <p><em>Expected: No highlights at all.</em></p>
+      </div>
+
+      <div class="test-case">
+        <div class="label">Case 8: Adjacent and overlapping potential matches</div>
+        <p>error555-1234 error-5678 https://error.com/JIRA-789</p>
+        <p><em>Expected: Priority determines which group highlights overlapping regions. Higher-priority group wins.</em></p>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2>Edge Cases</h2>
+
+      <div class="test-case">
+        <div class="label">Case 9: Regex is case-sensitive by default</div>
+        <p>ERROR Error error ERROR Error error</p>
+        <p><em>Expected: Only lowercase "error" highlighted (regex without <code>i</code> flag is case-sensitive). The user can add <code>(?i)</code> or a separate pattern for other cases.</em></p>
+      </div>
+
+      <div class="test-case">
+        <div class="label">Case 10: Special regex characters in content</div>
+        <p>Price is $9.99 (not $10). Array[0] matches. The ratio is 3:1. Use C:\Users\path.</p>
+        <p><em>Expected: No crashes. Only text matching configured patterns gets highlighted.</em></p>
+      </div>
+
+      <div class="test-case">
+        <div class="label">Case 11: Invalid regex resilience</div>
+        <p>If a group has an invalid regex like <code>[unclosed</code> as a word, this text should still appear and other groups should still highlight normally. For example, error should still match from Group 1.</p>
+        <p><em>Expected: Invalid regex is silently skipped. Other rules still work. No console errors.</em></p>
+      </div>
+
+      <div class="test-case">
+        <div class="label">Case 12: Regex vs normal group priority</div>
+        <p>error handling failed with error code 500</p>
+        <p><em>Expected: If a normal (non-regex) group has "error" at higher priority than the regex group, the normal group's color wins.</em></p>
+      </div>
+
+      <div class="test-case">
+        <div class="label">Case 13: Empty/zero-length matches</div>
+        <p>A regex like <code>a*</code> could match zero-length strings. This should not cause an infinite loop. The page should remain responsive.</p>
+        <p><em>Expected: No freezing or infinite loops. Page stays responsive.</em></p>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2>Performance Test</h2>
+      <div class="test-case">
+        <div class="label">Case 14: High-density regex matches</div>
+        <p id="densePara"></p>
+        <p><em>Expected: All matches highlighted with acceptable performance.</em></p>
+      </div>
+    </div>
+
+    <script>
+      // Theme toggle functionality
+      const themeToggle = document.getElementById('themeToggle');
+      const html = document.documentElement;
+
+      const savedTheme = localStorage.getItem('test-theme') || 'light';
+      html.setAttribute('data-theme', savedTheme);
+      updateToggleButton(savedTheme);
+
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('test-theme', newTheme);
+        updateToggleButton(newTheme);
+      });
+
+      function updateToggleButton(theme) {
+        themeToggle.textContent = theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+      }
+
+      // Generate high-density paragraph with regex-matchable content
+      const items = [
+        "error occurred",
+        "call 555-1234",
+        "see JIRA-100",
+        "visit https://example.com",
+        "erreur found",
+        "dial 800-9999",
+        "fix BUG-77",
+        "check http://test.org",
+        "plain text here",
+        "no match this line",
+      ];
+      const densePara = document.getElementById("densePara");
+      let denseText = "";
+      for (let i = 0; i < 50; i++) {
+        denseText += items[i % items.length] + ". ";
+        if ((i + 1) % 10 === 0) denseText += "\n";
+      }
+      densePara.textContent = denseText;
+    </script>
+  </body>
+</html>

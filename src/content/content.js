@@ -44,7 +44,7 @@
    * Flatten groups into a flat array of word-color mappings
    * This maintains compatibility with existing highlighting logic
    * @param {Array} groups - Array of group objects
-   * @returns {Array} Flat array of {text, colour, textColor, enabled, order, matchWholeWord, caseSensitive} objects
+   * @returns {Array} Flat array of {text, colour, textColor, enabled, order, matchWholeWord, caseSensitive, useRegex} objects
    */
   function flattenGroupsToRules(groups)
   {
@@ -63,7 +63,8 @@
           enabled: true,
           order: group.order,  // Inherit priority from group
           matchWholeWord: group.matchWholeWord || false,  // Default to false for backward compatibility
-          caseSensitive: group.caseSensitive || false     // Default to false for backward compatibility
+          caseSensitive: group.caseSensitive || false,    // Default to false for backward compatibility
+          useRegex: group.useRegex || false               // Default to false for backward compatibility
         });
       });
     });
@@ -365,49 +366,89 @@
       if (!rule.enabled) continue;
 
       const searchText = rule.text;
-      const caseSensitive = rule.caseSensitive || false;
-      const matchWholeWord = rule.matchWholeWord || false;
 
-      // Conditionally convert to lowercase based on case sensitivity option
-      const compareText = caseSensitive ? text : text.toLowerCase();
-      const compareSearch = caseSensitive ? searchText : searchText.toLowerCase();
-
-      let startIndex = 0;
-      while (true) {
-        const index = compareText.indexOf(compareSearch, startIndex);
-        if (index === -1) break;
-
-        const endIndex = index + searchText.length;
-
-        // Check word boundaries if matchWholeWord is enabled
-        let isValidMatch = true;
-        if (matchWholeWord) {
-          const beforeIsWord = !isWordBoundary(text, index - 1);
-          const afterIsWord = !isWordBoundary(text, endIndex);
-          isValidMatch = !beforeIsWord && !afterIsWord;  // Both must be boundaries
-        }
-
-        if (!isValidMatch) {
-          startIndex = index + 1;
+      if (rule.useRegex) {
+        // Regex matching path
+        let regex;
+        try {
+          regex = new RegExp(searchText, 'g');
+        } catch (e) {
+          // Invalid regex pattern - skip this rule silently
           continue;
         }
 
-        // Check if this position is already covered by a higher priority rule
-        const isOverlapping = matches.some(m =>
-          (index >= m.start && index < m.end) ||
-          (endIndex > m.start && endIndex <= m.end) ||
-          (index <= m.start && endIndex >= m.end)
-        );
+        let match;
+        while ((match = regex.exec(text)) !== null) {
+          // Prevent infinite loops on zero-length matches
+          if (match[0].length === 0) {
+            regex.lastIndex++;
+            continue;
+          }
 
-        if (!isOverlapping) {
-          matches.push({
-            start: index,
-            end: endIndex,
-            rule: rule
-          });
+          const index = match.index;
+          const endIndex = index + match[0].length;
+
+          // Check if this position is already covered by a higher priority rule
+          const isOverlapping = matches.some(m =>
+            (index >= m.start && index < m.end) ||
+            (endIndex > m.start && endIndex <= m.end) ||
+            (index <= m.start && endIndex >= m.end)
+          );
+
+          if (!isOverlapping) {
+            matches.push({
+              start: index,
+              end: endIndex,
+              rule: rule
+            });
+          }
         }
+      } else {
+        // Standard substring matching path
+        const caseSensitive = rule.caseSensitive || false;
+        const matchWholeWord = rule.matchWholeWord || false;
 
-        startIndex = index + 1;
+        // Conditionally convert to lowercase based on case sensitivity option
+        const compareText = caseSensitive ? text : text.toLowerCase();
+        const compareSearch = caseSensitive ? searchText : searchText.toLowerCase();
+
+        let startIndex = 0;
+        while (true) {
+          const index = compareText.indexOf(compareSearch, startIndex);
+          if (index === -1) break;
+
+          const endIndex = index + searchText.length;
+
+          // Check word boundaries if matchWholeWord is enabled
+          let isValidMatch = true;
+          if (matchWholeWord) {
+            const beforeIsWord = !isWordBoundary(text, index - 1);
+            const afterIsWord = !isWordBoundary(text, endIndex);
+            isValidMatch = !beforeIsWord && !afterIsWord;  // Both must be boundaries
+          }
+
+          if (!isValidMatch) {
+            startIndex = index + 1;
+            continue;
+          }
+
+          // Check if this position is already covered by a higher priority rule
+          const isOverlapping = matches.some(m =>
+            (index >= m.start && index < m.end) ||
+            (endIndex > m.start && endIndex <= m.end) ||
+            (index <= m.start && endIndex >= m.end)
+          );
+
+          if (!isOverlapping) {
+            matches.push({
+              start: index,
+              end: endIndex,
+              rule: rule
+            });
+          }
+
+          startIndex = index + 1;
+        }
       }
     }
 

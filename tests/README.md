@@ -256,6 +256,26 @@ Create 10 groups with 20 words each following the setup instructions in the test
 
 ---
 
+### 9. `regex.html` - Regex Matching Test
+**Purpose:** Validate regex matching when the Regex checkbox is enabled on a group
+
+**Features:**
+- Alternation patterns: `err(or|eur)`
+- Digit patterns: `\b\d{3}-\d{4}\b`
+- URL matching: `https?://\S+`
+- Issue ID patterns: `\b[A-Z]{2,5}-\d+\b`
+- Edge cases: case sensitivity, invalid regex resilience, zero-length matches, priority with normal groups
+
+**What to test:**
+- Regex patterns match expected text
+- Invalid regex is silently skipped (no crashes)
+- Regex groups disable "Match whole word" and "Case sensitive" checkboxes
+- Priority still works between regex and non-regex groups
+- Zero-length match patterns don't cause infinite loops
+- Performance with high-density regex matches
+
+---
+
 ## Testing Internationalization (i18n)
 
 The extension supports 8 languages: English, Spanish, Portuguese (Brazil), French, German, Chinese (Simplified), Japanese, and Korean.

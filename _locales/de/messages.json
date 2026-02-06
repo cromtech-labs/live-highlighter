@@ -190,5 +190,8 @@
   },
   "defaultGroupName": {
     "message": "Gruppe $1"
+  },
+  "useRegex": {
+    "message": "Regex"
   }
 }
