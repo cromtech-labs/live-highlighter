@@ -302,6 +302,48 @@ main {
   color: var(--text-primary);
 }
 
+/* Navigation Controls */
+.nav-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 10px 0;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--text-primary);
+  transition: all 0.15s;
+}
+
+.nav-btn:hover {
+  background-color: var(--bg-light);
+  border-color: var(--text-secondary);
+}
+
+.nav-btn:active {
+  background-color: var(--border-color);
+}
+
+.nav-position {
+  font-size: 13px;
+  color: var(--text-secondary);
+  min-width: 50px;
+  text-align: center;
+  user-select: none;
+}
+
 /* Actions */
 .actions {
   margin-top: 16px;
@@ -365,6 +407,7 @@ footer {
    ============================================================================ */
 
 .btn:focus-visible,
+.nav-btn:focus-visible,
 .toggle-label:focus-within {
   outline: 2px solid var(--primary-color);
   outline-offset: 2px;

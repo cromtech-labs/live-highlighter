@@ -16,6 +16,10 @@
   let highlightCountSpan;
   let openOptionsBtn;
   let versionDiv;
+  let navControls;
+  let navPrev;
+  let navNext;
+  let navPosition;
 
   // ============================================================================
   // Initialization
@@ -34,6 +38,10 @@
     highlightCountSpan = document.getElementById('highlightCount');
     openOptionsBtn = document.getElementById('openOptionsBtn');
     versionDiv = document.getElementById('version');
+    navControls = document.getElementById('navControls');
+    navPrev = document.getElementById('navPrev');
+    navNext = document.getElementById('navNext');
+    navPosition = document.getElementById('navPosition');
 
     // Set version from manifest
     const manifest = chrome.runtime.getManifest();
@@ -48,6 +56,8 @@
     // Set up event listeners
     globalToggle.addEventListener('click', handleGlobalToggle);
     openOptionsBtn.addEventListener('click', handleOpenOptions);
+    navPrev.addEventListener('click', () => handleNavigate('prev'));
+    navNext.addEventListener('click', () => handleNavigate('next'));
     document.getElementById('createFirstRule').addEventListener('click', handleCreateFirstRule);
     document.getElementById('dismissBanner').addEventListener('click', handleDismissBanner);
 
@@ -115,7 +125,9 @@
             }
 
             let count = 0;
-            for (const highlight of CSS.highlights.values()) {
+            for (const [name, highlight] of CSS.highlights.entries()) {
+              // Skip the active navigation highlight from the count
+              if (name === 'lh-active') continue;
               count += highlight.size;
             }
             return count;
@@ -132,6 +144,14 @@
         });
 
         highlightCountSpan.textContent = totalCount;
+
+        // Show/hide navigation controls based on highlight count
+        if (totalCount > 0) {
+          navControls.style.display = 'flex';
+          updateNavigationState(tab.id);
+        } else {
+          navControls.style.display = 'none';
+        }
 
       } catch (error) {
         // If script execution fails, try the old message-based approach
@@ -199,6 +219,47 @@
   {
     // Open the options page
     chrome.runtime.openOptionsPage();
+  }
+
+  // ============================================================================
+  // Highlight Navigation
+  // ============================================================================
+
+  async function handleNavigate(direction)
+  {
+    try {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (!tab || !tab.id) return;
+
+      chrome.tabs.sendMessage(
+        tab.id,
+        { type: 'NAVIGATE_HIGHLIGHT', direction },
+        (response) =>
+        {
+          if (chrome.runtime.lastError || !response || !response.success) return;
+          navPosition.textContent = `${response.index} / ${response.total}`;
+        }
+      );
+    } catch (error) {
+      console.error('Live Highlighter: Error navigating', error);
+    }
+  }
+
+  function updateNavigationState(tabId)
+  {
+    chrome.tabs.sendMessage(
+      tabId,
+      { type: 'GET_NAVIGATION_STATE' },
+      (response) =>
+      {
+        if (chrome.runtime.lastError || !response || !response.success) return;
+        if (response.index > 0) {
+          navPosition.textContent = `${response.index} / ${response.total}`;
+        } else {
+          navPosition.textContent = `- / ${response.total}`;
+        }
+      }
+    );
   }
 
   // ============================================================================

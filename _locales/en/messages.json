@@ -276,5 +276,17 @@
   "useRegex": {
     "message": "Regex",
     "description": "Checkbox label for regex matching"
+  },
+  "navPrevious": {
+    "message": "Previous highlight",
+    "description": "Tooltip for previous highlight navigation button"
+  },
+  "navNext": {
+    "message": "Next highlight",
+    "description": "Tooltip for next highlight navigation button"
+  },
+  "navPositionTooltip": {
+    "message": "Current position",
+    "description": "Tooltip for navigation position indicator"
   }
 }

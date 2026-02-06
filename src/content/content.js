@@ -6,7 +6,8 @@
   'use strict';
 
   // Access namespace
-  const { Storage, SKIP_ELEMENTS, HIGHLIGHT_PREFIX, MUTATION_DEBOUNCE_MS } = LiveHighlighter;
+  const { Storage, SKIP_ELEMENTS, HIGHLIGHT_PREFIX, MUTATION_DEBOUNCE_MS,
+    ACTIVE_HIGHLIGHT_NAME, ACTIVE_HIGHLIGHT_COLOR, ACTIVE_HIGHLIGHT_TEXT_COLOR } = LiveHighlighter;
 
   // ============================================================================
   // State Management
@@ -22,6 +23,11 @@
   // Cache of Range objects per highlight name for quick updates
   // Map<highlightName, Set<Range>>
   const rangeCache = new Map();
+
+  // Navigation state
+  let navRanges = [];       // All ranges sorted in document order (main document only)
+  let navCurrentIndex = -1; // Current position (-1 = not navigating)
+  let navDirty = false;     // Flag to rebuild when highlights change
 
   // ============================================================================
   // Browser Compatibility Check
@@ -325,7 +331,10 @@
         return `::highlight(${highlightName}) { background-color: ${color.hex}; color: ${color.textColor}; }`;
       }).join('\n        ');
 
-      styleEl.textContent = `/* Live Highlighter - CSS Custom Highlight API Styles */\n        ${cssRules}`;
+      // Active highlight for navigation (painted on top)
+      const activeRule = `::highlight(${ACTIVE_HIGHLIGHT_NAME}) { background-color: ${ACTIVE_HIGHLIGHT_COLOR}; color: ${ACTIVE_HIGHLIGHT_TEXT_COLOR}; text-decoration: underline 3px #1A73E8; }`;
+
+      styleEl.textContent = `/* Live Highlighter - CSS Custom Highlight API Styles */\n        ${cssRules}\n        ${activeRule}`;
 
       // Append to the document head
       (doc.head || doc.documentElement).appendChild(styleEl);
@@ -487,6 +496,9 @@
           rangeCache.set(highlightName, new Set());
         }
         rangeCache.get(highlightName).add(range);
+
+        // Mark navigation list as dirty so it rebuilds on next navigate
+        navDirty = true;
       } catch (e) {
         // Range creation can fail on some edge cases, silently ignore
         console.debug('Live Highlighter: Failed to create range', e);
@@ -504,6 +516,9 @@
 
     // Clear the range cache
     rangeCache.clear();
+
+    // Reset navigation state
+    clearNavigation();
   }
 
   /**
@@ -513,7 +528,9 @@
   function countHighlights()
   {
     let count = 0;
-    for (const highlight of CSS.highlights.values()) {
+    for (const [name, highlight] of CSS.highlights.entries()) {
+      // Skip the active navigation highlight from the count
+      if (name === ACTIVE_HIGHLIGHT_NAME) continue;
       count += highlight.size;
     }
     return count;
@@ -686,9 +703,10 @@
       }
 
       // Re-highlight after scrolling stops (300ms debounce)
+      // Skip full re-highlight when actively navigating to preserve navigation state
       scrollTimer = setTimeout(() =>
       {
-        if (enabled && rules.length > 0) {
+        if (enabled && rules.length > 0 && navCurrentIndex < 0) {
           // With CSS Highlight API, we can just re-process the page
           // This is fast because we only create Range objects, no DOM manipulation
           highlightPage();
@@ -697,6 +715,139 @@
     }, { passive: true, capture: true });
 
     console.log('Live Highlighter: Scroll handler started');
+  }
+
+  // ============================================================================
+  // Highlight Navigation
+  // ============================================================================
+
+  /**
+   * Build a sorted list of all highlight ranges in the main document.
+   * Excludes iframe ranges since Range.compareBoundaryPoints throws across documents.
+   */
+  function buildNavigationList()
+  {
+    navRanges = [];
+
+    for (const rangeSet of rangeCache.values()) {
+      for (const range of rangeSet) {
+        // Only include ranges from the main document
+        try {
+          if (range.startContainer.ownerDocument === document) {
+            navRanges.push(range);
+          }
+        } catch (e) {
+          // Range may have been detached, skip it
+        }
+      }
+    }
+
+    // Sort ranges in document order
+    navRanges.sort((a, b) =>
+    {
+      try {
+        return a.compareBoundaryPoints(Range.START_TO_START, b);
+      } catch (e) {
+        return 0;
+      }
+    });
+
+    navCurrentIndex = -1;
+    navDirty = false;
+  }
+
+  /**
+   * Navigate to the next or previous highlight
+   * @param {'next'|'prev'} direction
+   * @returns {{ index: number, total: number }} 1-based index and total count
+   */
+  function navigateHighlight(direction)
+  {
+    if (navDirty || navRanges.length === 0) {
+      buildNavigationList();
+    }
+
+    if (navRanges.length === 0) {
+      return { index: 0, total: 0 };
+    }
+
+    if (direction === 'next') {
+      navCurrentIndex = (navCurrentIndex + 1) % navRanges.length;
+    } else {
+      navCurrentIndex = (navCurrentIndex - 1 + navRanges.length) % navRanges.length;
+    }
+
+    const range = navRanges[navCurrentIndex];
+    setActiveHighlight(range);
+    scrollToRange(range);
+
+    return { index: navCurrentIndex + 1, total: navRanges.length };
+  }
+
+  /**
+   * Set the active (focused) highlight for navigation
+   * @param {Range} range - The range to highlight as active
+   */
+  function setActiveHighlight(range)
+  {
+    try {
+      CSS.highlights.delete(ACTIVE_HIGHLIGHT_NAME);
+      const highlight = new Highlight(range);
+      highlight.priority = 1000; // Paint on top of regular highlights
+      CSS.highlights.set(ACTIVE_HIGHLIGHT_NAME, highlight);
+    } catch (e) {
+      console.debug('Live Highlighter: Failed to set active highlight', e);
+    }
+  }
+
+  /**
+   * Scroll the page to center the given range in the viewport
+   * @param {Range} range
+   */
+  function scrollToRange(range)
+  {
+    try {
+      const rect = range.getBoundingClientRect();
+      const scrollY = window.scrollY + rect.top - (window.innerHeight / 2) + (rect.height / 2);
+      const scrollX = window.scrollX + rect.left - (window.innerWidth / 2) + (rect.width / 2);
+      window.scrollTo({
+        top: scrollY,
+        left: scrollX,
+        behavior: 'smooth'
+      });
+    } catch (e) {
+      console.debug('Live Highlighter: Failed to scroll to range', e);
+    }
+  }
+
+  /**
+   * Get current navigation state
+   * @returns {{ index: number, total: number }}
+   */
+  function getNavigationState()
+  {
+    if (navDirty || navRanges.length === 0) {
+      buildNavigationList();
+    }
+    return {
+      index: navCurrentIndex >= 0 ? navCurrentIndex + 1 : 0,
+      total: navRanges.length
+    };
+  }
+
+  /**
+   * Clear navigation state
+   */
+  function clearNavigation()
+  {
+    navRanges = [];
+    navCurrentIndex = -1;
+    navDirty = false;
+    try {
+      CSS.highlights.delete(ACTIVE_HIGHLIGHT_NAME);
+    } catch (e) {
+      // Ignore - highlights may already be cleared
+    }
   }
 
   // ============================================================================
@@ -721,6 +872,16 @@
         case 'GET_HIGHLIGHT_COUNT':
           const count = countHighlights();
           sendResponse({ success: true, count });
+          break;
+
+        case 'NAVIGATE_HIGHLIGHT':
+          const navResult = navigateHighlight(message.direction);
+          sendResponse({ success: true, ...navResult });
+          break;
+
+        case 'GET_NAVIGATION_STATE':
+          const navState = getNavigationState();
+          sendResponse({ success: true, ...navState });
           break;
 
         default:
