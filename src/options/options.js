@@ -405,15 +405,61 @@
       }
     });
 
+    // Prevent info link click from toggling the checkbox (it's inside a <label>)
+    const infoLink = groupElement.querySelector('.info-link');
+    if (infoLink) {
+      infoLink.addEventListener('click', (e) => e.stopPropagation());
+    }
+
     // Setup match option checkboxes
+    const useRegexCheckbox = groupElement.querySelector('.use-regex-checkbox');
     const matchWholeWordCheckbox = groupElement.querySelector('.match-whole-word-checkbox');
     const caseSensitiveCheckbox = groupElement.querySelector('.case-sensitive-checkbox');
 
     // Set initial checkbox state (default to false for backward compatibility)
+    useRegexCheckbox.checked = group.useRegex || false;
     matchWholeWordCheckbox.checked = group.matchWholeWord || false;
     caseSensitiveCheckbox.checked = group.caseSensitive || false;
 
-    // Handle checkbox changes
+    // If regex is enabled, disable the other two checkboxes
+    if (group.useRegex) {
+      matchWholeWordCheckbox.disabled = true;
+      caseSensitiveCheckbox.disabled = true;
+      matchWholeWordCheckbox.closest('.match-option').classList.add('disabled');
+      caseSensitiveCheckbox.closest('.match-option').classList.add('disabled');
+    }
+
+    // Handle regex checkbox changes
+    useRegexCheckbox.addEventListener('change', async () =>
+    {
+      const isRegex = useRegexCheckbox.checked;
+      await handleMatchOptionChange(group.id, 'useRegex', isRegex);
+
+      if (isRegex) {
+        // Disable and uncheck the other two options
+        matchWholeWordCheckbox.disabled = true;
+        caseSensitiveCheckbox.disabled = true;
+        matchWholeWordCheckbox.closest('.match-option').classList.add('disabled');
+        caseSensitiveCheckbox.closest('.match-option').classList.add('disabled');
+
+        if (matchWholeWordCheckbox.checked) {
+          matchWholeWordCheckbox.checked = false;
+          await handleMatchOptionChange(group.id, 'matchWholeWord', false);
+        }
+        if (caseSensitiveCheckbox.checked) {
+          caseSensitiveCheckbox.checked = false;
+          await handleMatchOptionChange(group.id, 'caseSensitive', false);
+        }
+      } else {
+        // Re-enable the other two options
+        matchWholeWordCheckbox.disabled = false;
+        caseSensitiveCheckbox.disabled = false;
+        matchWholeWordCheckbox.closest('.match-option').classList.remove('disabled');
+        caseSensitiveCheckbox.closest('.match-option').classList.remove('disabled');
+      }
+    });
+
+    // Handle other checkbox changes
     matchWholeWordCheckbox.addEventListener('change', async () =>
     {
       await handleMatchOptionChange(group.id, 'matchWholeWord', matchWholeWordCheckbox.checked);

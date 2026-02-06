@@ -128,7 +128,7 @@
     "description": "Tooltip for remove word button"
   },
   "matchWholeWords": {
-    "message": "Match whole words only",
+    "message": "Match whole word",
     "description": "Checkbox label for whole word matching"
   },
   "caseSensitive": {
@@ -272,5 +272,9 @@
     "placeholders": {
       "1": { "content": "$1" }
     }
+  },
+  "useRegex": {
+    "message": "Regex",
+    "description": "Checkbox label for regex matching"
   }
 }

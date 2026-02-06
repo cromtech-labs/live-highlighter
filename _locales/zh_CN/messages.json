@@ -190,5 +190,8 @@
   },
   "defaultGroupName": {
     "message": "分组 $1"
+  },
+  "useRegex": {
+    "message": "Regex"
   }
 }

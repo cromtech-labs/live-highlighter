@@ -11,7 +11,8 @@
  *   order: number,          // Priority (lower = higher priority)
  *   words: string[],        // Array of words to highlight
  *   matchWholeWord: boolean,// Match whole words only (default: false)
- *   caseSensitive: boolean  // Case sensitive matching (default: false)
+ *   caseSensitive: boolean, // Case sensitive matching (default: false)
+ *   useRegex: boolean       // Use regular expressions (default: false)
  * }
  */
 
@@ -227,7 +228,8 @@ LiveHighlighter.Storage = (function ()
           order: 0,
           words: [...DEFAULT_GROUP.words],
           matchWholeWord: false,
-          caseSensitive: false
+          caseSensitive: false,
+          useRegex: false
         };
 
         await chrome.storage.local.set({
@@ -294,7 +296,8 @@ LiveHighlighter.Storage = (function ()
         order: groups.length,  // Add to end
         words: [],  // Start with empty words array
         matchWholeWord: false,  // Default: partial matching
-        caseSensitive: false    // Default: case-insensitive
+        caseSensitive: false,   // Default: case-insensitive
+        useRegex: false         // Default: no regex
       };
 
       groups.push(newGroup);
@@ -325,7 +328,7 @@ LiveHighlighter.Storage = (function ()
       }
 
       // Whitelist allowed fields to prevent id tampering
-      const allowedFields = ['name', 'colour', 'textColor', 'enabled', 'order', 'words', 'matchWholeWord', 'caseSensitive'];
+      const allowedFields = ['name', 'colour', 'textColor', 'enabled', 'order', 'words', 'matchWholeWord', 'caseSensitive', 'useRegex'];
       const validUpdates = {};
 
       for (const field of allowedFields) {
@@ -372,6 +375,11 @@ LiveHighlighter.Storage = (function ()
 
       if (validUpdates.caseSensitive !== undefined && typeof validUpdates.caseSensitive !== 'boolean') {
         console.warn('Live Highlighter: Invalid caseSensitive value in update');
+        return false;
+      }
+
+      if (validUpdates.useRegex !== undefined && typeof validUpdates.useRegex !== 'boolean') {
+        console.warn('Live Highlighter: Invalid useRegex value in update');
         return false;
       }
 
