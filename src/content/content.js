@@ -808,6 +808,20 @@
   }
 
   /**
+   * Check if an element is within the visible viewport
+   * @param {Element} el
+   * @returns {boolean}
+   */
+  function isElementInViewport(el)
+  {
+    const rect = el.getBoundingClientRect();
+    return (
+      rect.top >= 0 &&
+      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight)
+    );
+  }
+
+  /**
    * Scroll the page to bring the given range into view, centered vertically
    * Uses the parent element's scrollIntoView which handles nested scroll containers
    * Sets navScrolling flag to suppress scroll handler during the animation
@@ -821,10 +835,13 @@
 
       const el = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
       if (el && el.scrollIntoView) {
-        navScrolling = true;
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        // Clear flag after smooth scroll completes (~500ms is typical)
-        setTimeout(() => { navScrolling = false; }, 600);
+        // Only set navScrolling if the element actually needs scrolling
+        if (!isElementInViewport(el)) {
+          navScrolling = true;
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          // Clear flag after smooth scroll completes (~500ms is typical)
+          setTimeout(() => { navScrolling = false; }, 600);
+        }
       }
     } catch (e) {
       navScrolling = false;
@@ -879,9 +896,11 @@
 
       switch (message.type) {
         case 'STORAGE_CHANGED':
-          handleStorageChange(message.changes);
-          sendResponse({ success: true });
-          break;
+          handleStorageChange(message.changes).then(() =>
+          {
+            sendResponse({ success: true });
+          });
+          return true; // Keep channel open for async response
 
         case 'GET_HIGHLIGHT_COUNT':
           const count = countHighlights();

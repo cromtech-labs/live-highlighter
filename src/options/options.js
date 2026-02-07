@@ -386,27 +386,27 @@
 
     // Disable input and button if at limit
     if (atLimit) {
-      addWordInput.disabled = true;
-      addWordInput.placeholder = msg('placeholderMaxWordsReached', [MAX_WORDS_PER_GROUP.toString()]);
+      newAddWordInput.disabled = true;
+      newAddWordInput.placeholder = msg('placeholderMaxWordsReached', [MAX_WORDS_PER_GROUP.toString()]);
       newAddWordBtn.disabled = true;
     } else {
-      addWordInput.disabled = false;
-      addWordInput.placeholder = msg('addWordsPlaceholder');
+      newAddWordInput.disabled = false;
+      newAddWordInput.placeholder = msg('addWordsPlaceholder');
       newAddWordBtn.disabled = false;
     }
 
     // Add event listeners
     newAddWordBtn.addEventListener('click', async () =>
     {
-      await handleAddWord(group.id, addWordInput.value);
-      addWordInput.value = '';
+      await handleAddWord(group.id, newAddWordInput.value);
+      newAddWordInput.value = '';
     });
 
-    addWordInput.addEventListener('keypress', async (e) =>
+    newAddWordInput.addEventListener('keypress', async (e) =>
     {
       if (e.key === 'Enter') {
-        await handleAddWord(group.id, addWordInput.value);
-        addWordInput.value = '';
+        await handleAddWord(group.id, newAddWordInput.value);
+        newAddWordInput.value = '';
       }
     });
 
