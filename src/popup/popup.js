@@ -20,6 +20,7 @@
   let navPrev;
   let navNext;
   let navPosition;
+  let navText;
 
   // ============================================================================
   // Initialization
@@ -42,6 +43,7 @@
     navPrev = document.getElementById('navPrev');
     navNext = document.getElementById('navNext');
     navPosition = document.getElementById('navPosition');
+    navText = document.getElementById('navText');
 
     // Set version from manifest
     const manifest = chrome.runtime.getManifest();
@@ -234,10 +236,11 @@
       chrome.tabs.sendMessage(
         tab.id,
         { type: 'NAVIGATE_HIGHLIGHT', direction },
+        { frameId: 0 },
         (response) =>
         {
           if (chrome.runtime.lastError || !response || !response.success) return;
-          navPosition.textContent = `${response.index} / ${response.total}`;
+          updateNavDisplay(response);
         }
       );
     } catch (error) {
@@ -250,16 +253,25 @@
     chrome.tabs.sendMessage(
       tabId,
       { type: 'GET_NAVIGATION_STATE' },
+      { frameId: 0 },
       (response) =>
       {
         if (chrome.runtime.lastError || !response || !response.success) return;
-        if (response.index > 0) {
-          navPosition.textContent = `${response.index} / ${response.total}`;
-        } else {
-          navPosition.textContent = `- / ${response.total}`;
-        }
+        updateNavDisplay(response);
       }
     );
+  }
+
+  function updateNavDisplay(response)
+  {
+    if (response.index > 0) {
+      navPosition.textContent = `${response.index} / ${response.total}`;
+      navText.textContent = `"${response.text}"`;
+      navText.style.display = 'block';
+    } else {
+      navPosition.textContent = `- / ${response.total}`;
+      navText.style.display = 'none';
+    }
   }
 
   // ============================================================================

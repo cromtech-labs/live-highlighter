@@ -104,11 +104,17 @@ This directory contains test files to validate Live Highlighter's highlighting c
 2. **Configure test groups:**
    Create these groups in the extension options:
    - Group 1 (Yellow): Add word `error`
-   - Group 2 (Green): Add word `success` and `error`
+   - Group 2 (Green): Add words `success` and `error`
    - Group 3 (Cyan): Add word `resource`
    - Group 4 (Pink): Add word `data`
    - Group 5 (Orange): Add word `tags`
    - Group 6 (Lavender): Add word `kv-`
+
+   **Regex groups** (enable the Regex checkbox on each):
+   - Group 7 (Blue, Regex): `[A-Z]{2,5}-\d+` — Matches issue IDs like JIRA-123, BUG-42, FEAT-9901 (hits 8 test files)
+   - Group 8 (Peach, Regex): `\d+(\.\d+)?%` — Matches percentages like 99.99%, 0.02%, 65% (hits 7 test files)
+   - Group 9 (Teal, Regex): `#\d+` — Matches numbered references like #1, #12345 (hits 8 test files)
+   - Group 10 (Indigo, Regex): `error(s|ed)` — Matches error variants: errors, errored but not "error" alone (hits 8 test files; tests priority with Group 1 since Group 1 matches "error" first)
 
 3. **Open test files:**
    - Navigate to `file:///D:/live-highlighter/tests/[testfile].html`

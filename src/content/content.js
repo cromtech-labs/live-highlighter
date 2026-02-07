@@ -28,6 +28,7 @@
   let navRanges = [];       // All ranges sorted in document order (main document only)
   let navCurrentIndex = -1; // Current position (-1 = not navigating)
   let navDirty = false;     // Flag to rebuild when highlights change
+  let navScrolling = false; // True while navigation scroll is in progress
 
   // ============================================================================
   // Browser Compatibility Check
@@ -125,8 +126,9 @@
 
       // Fallback: Re-scan after delays to catch late-loading content
       // This helps with SPAs like Azure Portal that load content dynamically
-      setTimeout(() => highlightPage(), 1000);
-      setTimeout(() => highlightPage(), 3000);
+      // Skip if navigation is active to avoid destroying navigation state
+      setTimeout(() => { if (navCurrentIndex < 0) highlightPage(); }, 1000);
+      setTimeout(() => { if (navCurrentIndex < 0) highlightPage(); }, 3000);
     }
 
     // Listen for storage changes from background script
@@ -148,10 +150,13 @@
     }
 
     // Use requestIdleCallback for better performance on large pages
+    // Guard: skip if navigation is active to avoid destroying navigation state
     if ('requestIdleCallback' in window) {
       requestIdleCallback(() =>
       {
-        processDocument();
+        if (navCurrentIndex < 0) {
+          processDocument();
+        }
       }, { timeout: 1000 });
     } else {
       processDocument();
@@ -703,10 +708,10 @@
       }
 
       // Re-highlight after scrolling stops (300ms debounce)
-      // Skip full re-highlight when actively navigating to preserve navigation state
+      // Skip when navigating or during navigation scroll to preserve state
       scrollTimer = setTimeout(() =>
       {
-        if (enabled && rules.length > 0 && navCurrentIndex < 0) {
+        if (enabled && rules.length > 0 && navCurrentIndex < 0 && !navScrolling) {
           // With CSS Highlight API, we can just re-process the page
           // This is fast because we only create Range objects, no DOM manipulation
           highlightPage();
@@ -731,9 +736,11 @@
 
     for (const rangeSet of rangeCache.values()) {
       for (const range of rangeSet) {
-        // Only include ranges from the main document
+        // Only include ranges that are still connected to the main document
         try {
-          if (range.startContainer.ownerDocument === document) {
+          if (range.startContainer.ownerDocument === document &&
+              range.startContainer.isConnected &&
+              range.toString().length > 0) {
             navRanges.push(range);
           }
         } catch (e) {
@@ -768,7 +775,7 @@
     }
 
     if (navRanges.length === 0) {
-      return { index: 0, total: 0 };
+      return { index: 0, total: 0, text: '' };
     }
 
     if (direction === 'next') {
@@ -781,7 +788,7 @@
     setActiveHighlight(range);
     scrollToRange(range);
 
-    return { index: navCurrentIndex + 1, total: navRanges.length };
+    return { index: navCurrentIndex + 1, total: navRanges.length, text: range.toString() };
   }
 
   /**
@@ -801,21 +808,26 @@
   }
 
   /**
-   * Scroll the page to center the given range in the viewport
+   * Scroll the page to bring the given range into view, centered vertically
+   * Uses the parent element's scrollIntoView which handles nested scroll containers
+   * Sets navScrolling flag to suppress scroll handler during the animation
    * @param {Range} range
    */
   function scrollToRange(range)
   {
     try {
-      const rect = range.getBoundingClientRect();
-      const scrollY = window.scrollY + rect.top - (window.innerHeight / 2) + (rect.height / 2);
-      const scrollX = window.scrollX + rect.left - (window.innerWidth / 2) + (rect.width / 2);
-      window.scrollTo({
-        top: scrollY,
-        left: scrollX,
-        behavior: 'smooth'
-      });
+      const node = range.startContainer;
+      if (!node.isConnected) return;
+
+      const el = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+      if (el && el.scrollIntoView) {
+        navScrolling = true;
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Clear flag after smooth scroll completes (~500ms is typical)
+        setTimeout(() => { navScrolling = false; }, 600);
+      }
     } catch (e) {
+      navScrolling = false;
       console.debug('Live Highlighter: Failed to scroll to range', e);
     }
   }
@@ -831,7 +843,8 @@
     }
     return {
       index: navCurrentIndex >= 0 ? navCurrentIndex + 1 : 0,
-      total: navRanges.length
+      total: navRanges.length,
+      text: navCurrentIndex >= 0 ? navRanges[navCurrentIndex].toString() : ''
     };
   }
 
@@ -843,6 +856,7 @@
     navRanges = [];
     navCurrentIndex = -1;
     navDirty = false;
+    navScrolling = false;
     try {
       CSS.highlights.delete(ACTIVE_HIGHLIGHT_NAME);
     } catch (e) {
