@@ -22,6 +22,9 @@
   let navPosition;
   let navText;
 
+  // Sequence counter to prevent stale responses from overwriting newer ones
+  let navSequence = 0;
+
   // ============================================================================
   // Initialization
   // ============================================================================
@@ -114,67 +117,31 @@
         return;
       }
 
-      // Execute script in all frames to count highlights
-      try {
-        const results = await chrome.scripting.executeScript({
-          target: { tabId: tab.id, allFrames: true },
-          func: () =>
-          {
-            // This function runs in each frame
-            // Count Range objects in CSS.highlights (CSS Highlight API)
-            if (!('highlights' in CSS)) {
-              return 0; // Browser doesn't support CSS Highlight API
-            }
-
-            let count = 0;
-            for (const [name, highlight] of CSS.highlights.entries()) {
-              // Skip the active navigation highlight from the count
-              if (name === 'lh-active') continue;
-              count += highlight.size;
-            }
-            return count;
-          }
-        });
-
-        // Sum up counts from all frames
-        let totalCount = 0;
-        results.forEach(result =>
+      // Get count and navigation state from the main frame content script
+      // in a single call so both numbers are always consistent
+      chrome.tabs.sendMessage(
+        tab.id,
+        { type: 'GET_NAVIGATION_STATE' },
+        { frameId: 0 },
+        (response) =>
         {
-          if (result.result !== undefined) {
-            totalCount += result.result;
+          if (chrome.runtime.lastError || !response || !response.success) {
+            highlightCountSpan.textContent = '0';
+            navControls.style.display = 'none';
+            return;
           }
-        });
 
-        highlightCountSpan.textContent = totalCount;
+          // Use navigation total as the highlight count (single source of truth)
+          highlightCountSpan.textContent = response.total;
 
-        // Show/hide navigation controls based on highlight count
-        if (totalCount > 0) {
-          navControls.style.display = 'flex';
-          updateNavigationState(tab.id);
-        } else {
-          navControls.style.display = 'none';
+          if (response.total > 0) {
+            navControls.style.display = 'flex';
+            updateNavDisplay(response);
+          } else {
+            navControls.style.display = 'none';
+          }
         }
-
-      } catch (error) {
-        // If script execution fails, try the old message-based approach
-        chrome.tabs.sendMessage(
-          tab.id,
-          { type: 'GET_HIGHLIGHT_COUNT' },
-          (response) =>
-          {
-            if (chrome.runtime.lastError) {
-              highlightCountSpan.textContent = '0';
-              return;
-            }
-
-            if (response && response.success) {
-              highlightCountSpan.textContent = response.count;
-            } else {
-              highlightCountSpan.textContent = '0';
-            }
-          }
-        );
-      }
+      );
 
     } catch (error) {
       console.error('Live Highlighter: Error getting highlight count', error);
@@ -229,6 +196,7 @@
 
   async function handleNavigate(direction)
   {
+    const seq = ++navSequence;
     try {
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
       if (!tab || !tab.id) return;
@@ -239,6 +207,7 @@
         { frameId: 0 },
         (response) =>
         {
+          if (seq !== navSequence) return; // Stale response, ignore
           if (chrome.runtime.lastError || !response || !response.success) return;
           updateNavDisplay(response);
         }
@@ -250,12 +219,14 @@
 
   function updateNavigationState(tabId)
   {
+    const seq = ++navSequence;
     chrome.tabs.sendMessage(
       tabId,
       { type: 'GET_NAVIGATION_STATE' },
       { frameId: 0 },
       (response) =>
       {
+        if (seq !== navSequence) return; // Stale response, ignore
         if (chrome.runtime.lastError || !response || !response.success) return;
         updateNavDisplay(response);
       }
@@ -264,6 +235,9 @@
 
   function updateNavDisplay(response)
   {
+    // Keep "Highlights on Page" in sync with navigation total (single source of truth)
+    highlightCountSpan.textContent = response.total;
+
     if (response.index > 0) {
       navPosition.textContent = `${response.index} / ${response.total}`;
       navText.textContent = `"${response.text}"`;

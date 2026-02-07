@@ -527,11 +527,47 @@
   }
 
   /**
+   * Remove stale ranges (detached text nodes) from rangeCache and CSS.highlights.
+   * This keeps counts accurate on dynamic pages where content is added/removed.
+   */
+  function pruneStaleRanges()
+  {
+    for (const [highlightName, rangeSet] of rangeCache.entries()) {
+      const highlight = CSS.highlights.get(highlightName);
+      const staleRanges = [];
+
+      for (const range of rangeSet) {
+        try {
+          if (!range.startContainer.isConnected || range.toString().length === 0) {
+            staleRanges.push(range);
+          }
+        } catch (e) {
+          staleRanges.push(range);
+        }
+      }
+
+      for (const range of staleRanges) {
+        rangeSet.delete(range);
+        if (highlight) highlight.delete(range);
+      }
+
+      // Clean up empty entries
+      if (rangeSet.size === 0) {
+        rangeCache.delete(highlightName);
+        if (highlight && highlight.size === 0) {
+          CSS.highlights.delete(highlightName);
+        }
+      }
+    }
+  }
+
+  /**
    * Count all highlighted ranges on the page
    * @returns {number} Total number of highlights
    */
   function countHighlights()
   {
+    pruneStaleRanges();
     let count = 0;
     for (const [name, highlight] of CSS.highlights.entries()) {
       // Skip the active navigation highlight from the count
@@ -732,6 +768,13 @@
    */
   function buildNavigationList()
   {
+    pruneStaleRanges();
+
+    // Save the current range to restore position after rebuild
+    const currentRange = (navCurrentIndex >= 0 && navCurrentIndex < navRanges.length)
+      ? navRanges[navCurrentIndex]
+      : null;
+
     navRanges = [];
 
     for (const rangeSet of rangeCache.values()) {
@@ -759,7 +802,14 @@
       }
     });
 
-    navCurrentIndex = -1;
+    // Restore position if the current range still exists in the new list
+    if (currentRange) {
+      const restoredIndex = navRanges.indexOf(currentRange);
+      navCurrentIndex = restoredIndex >= 0 ? restoredIndex : -1;
+    } else {
+      navCurrentIndex = -1;
+    }
+
     navDirty = false;
   }
 
@@ -770,9 +820,8 @@
    */
   function navigateHighlight(direction)
   {
-    if (navDirty || navRanges.length === 0) {
-      buildNavigationList();
-    }
+    // Always rebuild to prune stale ranges and get accurate count
+    buildNavigationList();
 
     if (navRanges.length === 0) {
       return { index: 0, total: 0, text: '' };
@@ -855,9 +904,8 @@
    */
   function getNavigationState()
   {
-    if (navDirty || navRanges.length === 0) {
-      buildNavigationList();
-    }
+    // Always rebuild to prune stale ranges and get accurate count
+    buildNavigationList();
     return {
       index: navCurrentIndex >= 0 ? navCurrentIndex + 1 : 0,
       total: navRanges.length,
