@@ -4,6 +4,34 @@ All notable changes to Live Highlighter will be documented in this file.
 
 ---
 
+## [0.9.0] - 2026-02-14
+
+### Added
+- **Highlight navigation** - Previous/Next buttons in the popup to cycle through all highlights on the page
+  - Active highlight styled with orange background, black text, and blue underline for clear visibility
+  - Page smoothly scrolls to off-screen highlights (skips scroll if already in viewport)
+  - Position indicator shows current index and total count (e.g., "3 / 42") with matched text
+  - Navigation wraps around at both ends
+- **Stale range pruning** - New `pruneStaleRanges()` function removes detached text nodes from `rangeCache` and `CSS.highlights`, keeping counts accurate on dynamic pages
+
+### Fixed
+- **Options page event listener leak** - `renderWords()` now clones both the add-word button and input element to prevent stale closures from accumulating on repeated renders
+- **Options page color dropdown leak** - Document-level click handler for closing color dropdowns is now registered once at init instead of per-group on every render
+- **Service worker error handling** - Added `.catch()` handlers to all async message responses (`GET_GROUPS`, `GET_ENABLED`, `TOGGLE_ENABLED`)
+- **Content script async messaging** - `STORAGE_CHANGED` handler now properly returns `true` to keep the message channel open for the async response
+- **Inconsistent highlight counts** - Popup now uses content script message instead of `chrome.scripting.executeScript`, making the count consistent with navigation total (single source of truth)
+
+### Technical
+- Added `ACTIVE_HIGHLIGHT_NAME`, `ACTIVE_HIGHLIGHT_COLOR`, `ACTIVE_HIGHLIGHT_TEXT_COLOR` constants
+- Active highlight uses CSS Highlight API `priority: 1000` to paint on top of regular highlights
+- Navigation only covers main document ranges (cross-document `Range.compareBoundaryPoints` throws)
+- Added `navSequence` counter in popup to prevent stale async responses from overwriting newer state
+- Added `navScrolling` flag to suppress scroll-based re-highlight during smooth scroll animations
+- Added `navPrevious`, `navNext`, `navPositionTooltip` i18n strings to all 8 locale files
+- Updated tests README with regex group test instructions
+
+---
+
 ## [0.8.0] - 2026-02-06
 
 ### Added

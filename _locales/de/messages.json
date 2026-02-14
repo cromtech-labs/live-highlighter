@@ -193,5 +193,14 @@
   },
   "useRegex": {
     "message": "Regex"
+  },
+  "navPrevious": {
+    "message": "Vorherige Hervorhebung"
+  },
+  "navNext": {
+    "message": "Nächste Hervorhebung"
+  },
+  "navPositionTooltip": {
+    "message": "Aktuelle Position"
   }
 }

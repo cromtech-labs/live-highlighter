@@ -66,6 +66,17 @@
     // Listen for storage changes from other tabs
     Storage.onStorageChanged(handleStorageChange);
 
+    // Single document-level listener to close color dropdowns when clicking outside
+    document.addEventListener('click', (e) =>
+    {
+      if (!e.target.closest('.group-color-picker')) {
+        document.querySelectorAll('.color-dropdown.show').forEach(dropdown =>
+        {
+          dropdown.classList.remove('show');
+        });
+      }
+    });
+
     console.log('Live Highlighter: Options page initialized');
   }
 
@@ -342,14 +353,6 @@
     {
       e.stopPropagation();
     });
-
-    // Close dropdown when clicking outside
-    document.addEventListener('click', (e) =>
-    {
-      if (!e.target.closest('.group-color-picker')) {
-        colorDropdown.classList.remove('show');
-      }
-    });
   }
 
   // ============================================================================
@@ -375,33 +378,35 @@
     // Check if group is at word limit
     const atLimit = group.words.length >= MAX_WORDS_PER_GROUP;
 
-    // Clear any existing event listeners by cloning the button
+    // Clear any existing event listeners by cloning the button and input
     const newAddWordBtn = addWordBtn.cloneNode(true);
     addWordBtn.replaceWith(newAddWordBtn);
+    const newAddWordInput = addWordInput.cloneNode(true);
+    addWordInput.replaceWith(newAddWordInput);
 
     // Disable input and button if at limit
     if (atLimit) {
-      addWordInput.disabled = true;
-      addWordInput.placeholder = msg('placeholderMaxWordsReached', [MAX_WORDS_PER_GROUP.toString()]);
+      newAddWordInput.disabled = true;
+      newAddWordInput.placeholder = msg('placeholderMaxWordsReached', [MAX_WORDS_PER_GROUP.toString()]);
       newAddWordBtn.disabled = true;
     } else {
-      addWordInput.disabled = false;
-      addWordInput.placeholder = msg('addWordsPlaceholder');
+      newAddWordInput.disabled = false;
+      newAddWordInput.placeholder = msg('addWordsPlaceholder');
       newAddWordBtn.disabled = false;
     }
 
     // Add event listeners
     newAddWordBtn.addEventListener('click', async () =>
     {
-      await handleAddWord(group.id, addWordInput.value);
-      addWordInput.value = '';
+      await handleAddWord(group.id, newAddWordInput.value);
+      newAddWordInput.value = '';
     });
 
-    addWordInput.addEventListener('keypress', async (e) =>
+    newAddWordInput.addEventListener('keypress', async (e) =>
     {
       if (e.key === 'Enter') {
-        await handleAddWord(group.id, addWordInput.value);
-        addWordInput.value = '';
+        await handleAddWord(group.id, newAddWordInput.value);
+        newAddWordInput.value = '';
       }
     });
 

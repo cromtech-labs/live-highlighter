@@ -16,6 +16,14 @@
   let highlightCountSpan;
   let openOptionsBtn;
   let versionDiv;
+  let navControls;
+  let navPrev;
+  let navNext;
+  let navPosition;
+  let navText;
+
+  // Sequence counter to prevent stale responses from overwriting newer ones
+  let navSequence = 0;
 
   // ============================================================================
   // Initialization
@@ -34,6 +42,11 @@
     highlightCountSpan = document.getElementById('highlightCount');
     openOptionsBtn = document.getElementById('openOptionsBtn');
     versionDiv = document.getElementById('version');
+    navControls = document.getElementById('navControls');
+    navPrev = document.getElementById('navPrev');
+    navNext = document.getElementById('navNext');
+    navPosition = document.getElementById('navPosition');
+    navText = document.getElementById('navText');
 
     // Set version from manifest
     const manifest = chrome.runtime.getManifest();
@@ -48,6 +61,8 @@
     // Set up event listeners
     globalToggle.addEventListener('click', handleGlobalToggle);
     openOptionsBtn.addEventListener('click', handleOpenOptions);
+    navPrev.addEventListener('click', () => handleNavigate('prev'));
+    navNext.addEventListener('click', () => handleNavigate('next'));
     document.getElementById('createFirstRule').addEventListener('click', handleCreateFirstRule);
     document.getElementById('dismissBanner').addEventListener('click', handleDismissBanner);
 
@@ -102,57 +117,31 @@
         return;
       }
 
-      // Execute script in all frames to count highlights
-      try {
-        const results = await chrome.scripting.executeScript({
-          target: { tabId: tab.id, allFrames: true },
-          func: () =>
-          {
-            // This function runs in each frame
-            // Count Range objects in CSS.highlights (CSS Highlight API)
-            if (!('highlights' in CSS)) {
-              return 0; // Browser doesn't support CSS Highlight API
-            }
-
-            let count = 0;
-            for (const highlight of CSS.highlights.values()) {
-              count += highlight.size;
-            }
-            return count;
-          }
-        });
-
-        // Sum up counts from all frames
-        let totalCount = 0;
-        results.forEach(result =>
+      // Get count and navigation state from the main frame content script
+      // in a single call so both numbers are always consistent
+      chrome.tabs.sendMessage(
+        tab.id,
+        { type: 'GET_NAVIGATION_STATE' },
+        { frameId: 0 },
+        (response) =>
         {
-          if (result.result !== undefined) {
-            totalCount += result.result;
+          if (chrome.runtime.lastError || !response || !response.success) {
+            highlightCountSpan.textContent = '0';
+            navControls.style.display = 'none';
+            return;
           }
-        });
 
-        highlightCountSpan.textContent = totalCount;
+          // Use navigation total as the highlight count (single source of truth)
+          highlightCountSpan.textContent = response.total;
 
-      } catch (error) {
-        // If script execution fails, try the old message-based approach
-        chrome.tabs.sendMessage(
-          tab.id,
-          { type: 'GET_HIGHLIGHT_COUNT' },
-          (response) =>
-          {
-            if (chrome.runtime.lastError) {
-              highlightCountSpan.textContent = '0';
-              return;
-            }
-
-            if (response && response.success) {
-              highlightCountSpan.textContent = response.count;
-            } else {
-              highlightCountSpan.textContent = '0';
-            }
+          if (response.total > 0) {
+            navControls.style.display = 'flex';
+            updateNavDisplay(response);
+          } else {
+            navControls.style.display = 'none';
           }
-        );
-      }
+        }
+      );
 
     } catch (error) {
       console.error('Live Highlighter: Error getting highlight count', error);
@@ -199,6 +188,64 @@
   {
     // Open the options page
     chrome.runtime.openOptionsPage();
+  }
+
+  // ============================================================================
+  // Highlight Navigation
+  // ============================================================================
+
+  async function handleNavigate(direction)
+  {
+    const seq = ++navSequence;
+    try {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (!tab || !tab.id) return;
+
+      chrome.tabs.sendMessage(
+        tab.id,
+        { type: 'NAVIGATE_HIGHLIGHT', direction },
+        { frameId: 0 },
+        (response) =>
+        {
+          if (seq !== navSequence) return; // Stale response, ignore
+          if (chrome.runtime.lastError || !response || !response.success) return;
+          updateNavDisplay(response);
+        }
+      );
+    } catch (error) {
+      console.error('Live Highlighter: Error navigating', error);
+    }
+  }
+
+  function updateNavigationState(tabId)
+  {
+    const seq = ++navSequence;
+    chrome.tabs.sendMessage(
+      tabId,
+      { type: 'GET_NAVIGATION_STATE' },
+      { frameId: 0 },
+      (response) =>
+      {
+        if (seq !== navSequence) return; // Stale response, ignore
+        if (chrome.runtime.lastError || !response || !response.success) return;
+        updateNavDisplay(response);
+      }
+    );
+  }
+
+  function updateNavDisplay(response)
+  {
+    // Keep "Highlights on Page" in sync with navigation total (single source of truth)
+    highlightCountSpan.textContent = response.total;
+
+    if (response.index > 0) {
+      navPosition.textContent = `${response.index} / ${response.total}`;
+      navText.textContent = `"${response.text}"`;
+      navText.style.display = 'block';
+    } else {
+      navPosition.textContent = `- / ${response.total}`;
+      navText.style.display = 'none';
+    }
   }
 
   // ============================================================================

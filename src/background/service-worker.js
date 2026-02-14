@@ -56,6 +56,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) =>
       Storage.getGroups().then(groups =>
       {
         sendResponse({ success: true, groups });
+      }).catch(error =>
+      {
+        console.error('Live Highlighter: Failed to get groups', error);
+        sendResponse({ success: false, error: error.message });
       });
       return true; // Keep channel open for async response
 
@@ -64,6 +68,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) =>
       Storage.getEnabled().then(enabled =>
       {
         sendResponse({ success: true, enabled });
+      }).catch(error =>
+      {
+        console.error('Live Highlighter: Failed to get enabled state', error);
+        sendResponse({ success: false, error: error.message });
       });
       return true;
 
@@ -78,6 +86,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) =>
         // No need to call notifyAllTabs here (prevents double notification)
 
         sendResponse({ success: true, enabled: newState });
+      }).catch(error =>
+      {
+        console.error('Live Highlighter: Failed to toggle enabled state', error);
+        sendResponse({ success: false, error: error.message });
       });
       return true;
 

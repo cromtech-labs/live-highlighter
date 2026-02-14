@@ -193,5 +193,14 @@
   },
   "useRegex": {
     "message": "Regex"
+  },
+  "navPrevious": {
+    "message": "上一个高亮"
+  },
+  "navNext": {
+    "message": "下一个高亮"
+  },
+  "navPositionTooltip": {
+    "message": "当前位置"
   }
 }

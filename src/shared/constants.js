@@ -64,6 +64,11 @@ const LiveHighlighter = (function ()
     // "lh" = Live Highlighter
     HIGHLIGHT_PREFIX: 'lh',
 
+    // Active highlight for navigation (painted on top of regular highlights)
+    ACTIVE_HIGHLIGHT_NAME: 'lh-active',
+    ACTIVE_HIGHLIGHT_COLOR: '#FFAB40',
+    ACTIVE_HIGHLIGHT_TEXT_COLOR: '#000000',
+
     // Map of color hex to highlight name for CSS Highlight API
     getHighlightName(colourHex)
     {

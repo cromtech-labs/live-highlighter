@@ -66,6 +66,22 @@
           </div>
         </div>
 
+        <!-- Navigation Controls -->
+        <div class="nav-controls" id="navControls" style="display: none">
+          <button class="nav-btn" id="navPrev" data-i18n-title="navPrevious">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+            </svg>
+          </button>
+          <span class="nav-position" id="navPosition" data-i18n-title="navPositionTooltip">- / 0</span>
+          <button class="nav-btn" id="navNext" data-i18n-title="navNext">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+            </svg>
+          </button>
+          <div class="nav-text" id="navText" style="display: none"></div>
+        </div>
+
         <!-- Actions -->
         <div class="actions">
           <button id="openOptionsBtn" class="btn btn-primary">
