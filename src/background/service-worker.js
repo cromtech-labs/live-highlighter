@@ -15,6 +15,9 @@ const { Storage, STORAGE_KEYS } = LiveHighlighter;
 /**
  * Handle extension installation or update
  */
+// Set uninstall feedback URL
+chrome.runtime.setUninstallURL('https://docs.livehighlighter.com/uninstall/');
+
 chrome.runtime.onInstalled.addListener(async (details) =>
 {
   console.log('Live Highlighter: Extension event', details.reason);
