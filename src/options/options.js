@@ -74,6 +74,10 @@
         {
           dropdown.classList.remove('show');
         });
+        document.querySelectorAll('[aria-haspopup="listbox"]').forEach(btn =>
+        {
+          btn.setAttribute('aria-expanded', 'false');
+        });
       }
     });
 
@@ -99,6 +103,7 @@
     } else {
       toggleSlider.classList.remove('active');
     }
+    globalToggle.setAttribute('aria-checked', enabled.toString());
   }
 
   function renderGroups()
@@ -117,12 +122,27 @@
       // Sort groups by order
       const sortedGroups = [...groups].sort((a, b) => a.order - b.order);
 
+      // Auto-expand the sole group when it has no words yet
+      if (sortedGroups.length === 1 && sortedGroups[0].words.length === 0) {
+        expandedGroupIds.add(sortedGroups[0].id);
+      }
+
+      // Mark list when only one group exists (hides drag handle via CSS)
+      groupsList.classList.toggle('single-group', sortedGroups.length === 1);
+
       // Render each group
       sortedGroups.forEach((group, index) =>
       {
         const groupElement = createGroupElement(group, index);
         groupsList.appendChild(groupElement);
       });
+    }
+
+    // Show help section only when no words are configured yet
+    const totalWordsForHelp = groups.reduce((sum, g) => sum + g.words.length, 0);
+    const helpSection = document.querySelector('.help-section');
+    if (helpSection) {
+      helpSection.style.display = totalWordsForHelp === 0 ? 'block' : 'none';
     }
 
     // Update counts
@@ -155,9 +175,6 @@
     // Set group ID
     groupItem.dataset.groupId = group.id;
 
-    // Set order number
-    groupItem.querySelector('.group-order').textContent = index + 1;
-
     // Set group name (read-only by default with edit button)
     const nameDisplay = groupItem.querySelector('.group-name-display');
     const nameInput = groupItem.querySelector('.group-name-input');
@@ -166,8 +183,8 @@
     nameDisplay.textContent = group.name;
     nameInput.value = group.name;
 
-    // Edit button click - switch to edit mode
-    editNameBtn.addEventListener('click', (e) =>
+    // Click on name display or edit button to switch to edit mode
+    const activateNameEdit = (e) =>
     {
       e.stopPropagation(); // Don't trigger header expansion
       nameDisplay.style.display = 'none';
@@ -175,7 +192,9 @@
       nameInput.style.display = 'inline-block';
       nameInput.focus();
       nameInput.select();
-    });
+    };
+    nameDisplay.addEventListener('click', activateNameEdit);
+    editNameBtn.addEventListener('click', activateNameEdit);
 
     // Save on blur
     nameInput.addEventListener('blur', async () =>
@@ -205,10 +224,12 @@
     const toggleElement = groupItem.querySelector('.group-toggle');
     const toggleSlider = groupItem.querySelector('.toggle-slider');
 
-    // Set initial visual state
+    // Set initial visual and ARIA state
     if (group.enabled) {
       toggleSlider.classList.add('active');
     }
+    toggleElement.setAttribute('aria-checked', group.enabled.toString());
+    toggleElement.setAttribute('aria-label', group.name);
 
     // Handle toggle click
     toggleElement.addEventListener('click', (e) => {
@@ -227,6 +248,7 @@
       const isExpanded = wordsSection.style.display !== 'none';
       wordsSection.style.display = isExpanded ? 'none' : 'block';
       expandBtn.classList.toggle('expanded', !isExpanded);
+      expandBtn.setAttribute('aria-expanded', (!isExpanded).toString());
 
       // Track expanded state
       if (isExpanded) {
@@ -240,14 +262,17 @@
     if (expandedGroupIds.has(group.id)) {
       wordsSection.style.display = 'block';
       expandBtn.classList.add('expanded');
+      expandBtn.setAttribute('aria-expanded', 'true');
     }
 
     // Click anywhere on header to expand/collapse
     groupHeader.addEventListener('click', (e) =>
     {
       // Don't toggle if clicking directly on interactive elements
-      if (e.target.closest('.color-button') ||
+      if (e.target.closest('.drag-handle') ||
+          e.target.closest('.color-button') ||
           e.target.closest('.color-dropdown') ||
+          e.target.closest('.group-name-display') ||
           e.target.closest('.edit-name-btn') ||
           e.target.closest('.group-name-input') ||
           e.target.closest('.group-toggle') ||
@@ -270,6 +295,7 @@
 
     // Delete button
     const deleteBtn = groupItem.querySelector('.delete-group-btn');
+    deleteBtn.setAttribute('aria-label', msg('deleteGroupAriaLabel', [group.name]));
     deleteBtn.addEventListener('click', () => handleDeleteGroup(group.id));
 
     // Drag and drop
@@ -297,16 +323,26 @@
     const colorPreview = groupElement.querySelector('.color-preview');
     const colorDropdown = groupElement.querySelector('.color-dropdown');
 
-    // Set current color
+    // Set current color and aria-label on trigger
     colorPreview.style.backgroundColor = group.colour;
+    const currentPreset = PRESET_COLOURS.find(p => p.hex === group.colour);
+    colorButton.setAttribute('aria-label', msg('colourPickerLabel', [currentPreset ? currentPreset.name : msg('colourCustom')]));
+    colorButton.setAttribute('aria-haspopup', 'listbox');
+    colorButton.setAttribute('aria-expanded', 'false');
 
     // Build color dropdown
     PRESET_COLOURS.forEach(preset =>
     {
-      const colorOption = document.createElement('div');
+      const colorOption = document.createElement('button');
+      colorOption.type = 'button';
       colorOption.className = 'color-option';
+      colorOption.setAttribute('role', 'option');
+      colorOption.setAttribute('aria-label', preset.name);
       if (preset.hex === group.colour) {
         colorOption.classList.add('selected');
+        colorOption.setAttribute('aria-selected', 'true');
+      } else {
+        colorOption.setAttribute('aria-selected', 'false');
       }
 
       const colorSwatch = document.createElement('div');
@@ -314,6 +350,7 @@
       colorSwatch.style.backgroundColor = preset.hex;
 
       const colorName = document.createElement('span');
+      colorName.className = 'color-name';
       colorName.textContent = preset.name;
 
       colorOption.appendChild(colorSwatch);
@@ -323,10 +360,27 @@
       {
         await handleGroupColorChange(group.id, preset.hex);
         colorDropdown.classList.remove('show');
+        colorButton.setAttribute('aria-expanded', 'false');
+        colorButton.focus();
       });
 
       colorDropdown.appendChild(colorOption);
     });
+
+    const openDropdown = () =>
+    {
+      colorDropdown.classList.add('show');
+      colorButton.setAttribute('aria-expanded', 'true');
+      // Focus the currently selected option, or the first one
+      const selected = colorDropdown.querySelector('.selected') || colorDropdown.querySelector('button');
+      if (selected) setTimeout(() => selected.focus(), 0);
+    };
+
+    const closeDropdown = () =>
+    {
+      colorDropdown.classList.remove('show');
+      colorButton.setAttribute('aria-expanded', 'false');
+    };
 
     // Toggle dropdown
     colorButton.addEventListener('click', (e) =>
@@ -341,10 +395,31 @@
       {
         dropdown.classList.remove('show');
       });
+      document.querySelectorAll('[aria-haspopup="listbox"]').forEach(btn =>
+      {
+        btn.setAttribute('aria-expanded', 'false');
+      });
 
-      // Toggle this dropdown
       if (!wasShown) {
-        colorDropdown.classList.add('show');
+        openDropdown();
+      }
+    });
+
+    // Keyboard navigation inside dropdown
+    colorDropdown.addEventListener('keydown', (e) =>
+    {
+      const options = [...colorDropdown.querySelectorAll('button')];
+      const idx = options.indexOf(document.activeElement);
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        options[(idx + 1) % options.length].focus();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        options[(idx - 1 + options.length) % options.length].focus();
+      } else if (e.key === 'Escape') {
+        closeDropdown();
+        colorButton.focus();
       }
     });
 
@@ -488,6 +563,7 @@
     chip.querySelector('.word-text').textContent = word;
 
     const removeBtn = chip.querySelector('.remove-word-btn');
+    removeBtn.setAttribute('aria-label', msg('removeWordAriaLabel', [word]));
     removeBtn.addEventListener('click', () => handleRemoveWord(groupId, word));
 
     return chip;
@@ -607,15 +683,17 @@
         group.enabled = enabled;
       }
 
-      // Update visual state
+      // Update visual and ARIA state
       const groupElement = document.querySelector(`[data-group-id="${groupId}"]`);
       if (groupElement) {
         const toggleSlider = groupElement.querySelector('.toggle-slider');
+        const toggleEl = groupElement.querySelector('.group-toggle');
         if (enabled) {
           toggleSlider.classList.add('active');
         } else {
           toggleSlider.classList.remove('active');
         }
+        if (toggleEl) toggleEl.setAttribute('aria-checked', enabled.toString());
       }
     } else {
       showNotification(msg('notifFailedToggleGroup'), 'error');
@@ -726,6 +804,7 @@
       } else {
         toggleSlider.classList.remove('active');
       }
+      globalToggle.setAttribute('aria-checked', newEnabled.toString());
     } else {
       showNotification(msg('notifFailedUpdateSetting'), 'error');
     }

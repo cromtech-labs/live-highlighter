@@ -202,5 +202,23 @@
   },
   "navPositionTooltip": {
     "message": "현재 위치"
+  },
+  "matchingOptions": {
+    "message": "일치 옵션"
+  },
+  "deleteGroupAriaLabel": {
+    "message": "그룹 삭제: $1",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "removeWordAriaLabel": {
+    "message": "\"$1\" 삭제",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "colourPickerLabel": {
+    "message": "강조 색상: $1",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "colourCustom": {
+    "message": "사용자 지정"
   }
 }

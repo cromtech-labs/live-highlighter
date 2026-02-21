@@ -202,5 +202,23 @@
   },
   "navPositionTooltip": {
     "message": "現在の位置"
+  },
+  "matchingOptions": {
+    "message": "検索オプション"
+  },
+  "deleteGroupAriaLabel": {
+    "message": "グループを削除: $1",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "removeWordAriaLabel": {
+    "message": "「$1」を削除",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "colourPickerLabel": {
+    "message": "ハイライト色: $1",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "colourCustom": {
+    "message": "カスタム"
   }
 }

@@ -10,11 +10,9 @@ A browser extension that highlights user-defined strings on web pages with confi
 
 ### Chrome Web Store
 
-> **Note:** This extension is currently in beta and not yet published to the Chrome Web Store. This section will be updated with the installation link once the extension is live.
+Install Live Highlighter directly from the Chrome Web Store:
 
-Once published, you'll be able to install Live Highlighter directly from the Chrome Web Store:
-
-1. Visit the Chrome Web Store listing (link coming soon)
+1. Visit the [Live Highlighter page](https://chromewebstore.google.com/detail/live-highlighter/ihoijklcbeigoingpcaljolckeaoljml) on the Chrome Web Store
 2. Click "Add to Chrome"
 3. Confirm the installation when prompted
 4. Click the Live Highlighter icon in your browser toolbar to get started

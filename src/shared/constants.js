@@ -34,7 +34,7 @@ const LiveHighlighter = (function ()
       colour: '#FFF59D',
       textColor: '#000000',
       enabled: true,
-      words: ['Important', 'TODO', 'URGENT']
+      words: []
     },
 
     // Storage keys

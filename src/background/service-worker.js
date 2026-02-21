@@ -24,8 +24,8 @@ chrome.runtime.onInstalled.addListener(async (details) =>
     console.log('Live Highlighter: First install - initializing storage');
     await Storage.initializeStorage();
 
-    // Optional: Open options page on first install
-    // chrome.runtime.openOptionsPage();
+    // Open welcome page on first install
+    chrome.tabs.create({ url: chrome.runtime.getURL('src/welcome/welcome.html') });
   } else if (details.reason === 'update') {
     // Extension updated
     const previousVersion = details.previousVersion;

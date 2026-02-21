@@ -4,6 +4,52 @@ All notable changes to Live Highlighter will be documented in this file.
 
 ---
 
+## [0.10.0] - 2026-02-21
+
+### Added
+- **Welcome page** - A welcome/onboarding page now opens automatically on first install
+  - Confirms the extension is installed with a green badge inline next to the heading
+  - Step-by-step guide: open options → create a group → add words
+  - Tips section covering phrases, regex, priority, and toggling
+  - "Set up my first group" button that opens the options page directly
+  - Shows extension version number; dark mode support
+
+### Changed
+- **README** - Updated Chrome Web Store section with live store link (extension is now published)
+- **Options page accessibility** - Full ARIA audit and improvements
+  - Global toggle and per-group toggles changed from `<div>` to `<button role="switch">` for native keyboard activation (Enter/Space)
+  - `aria-checked` state kept in sync on all toggle buttons
+  - Expand/collapse button tracks `aria-expanded` state
+  - Group name display is now click-to-edit (in addition to the pencil button)
+  - Delete button and remove-word button now have descriptive `aria-label` values (e.g. "Delete group: Errors")
+  - Colour picker rebuilt with `<button>` options, `role="listbox/option"`, `aria-selected`, and full arrow-key + Escape keyboard navigation
+- **Options page layout** - Cleaner visual hierarchy to guide new users
+  - Matching options (whole word, case sensitive, regex) collapsed under a `<details>`/`<summary>` by default to reduce noise
+  - Group priority number removed — redundant with drag-to-reorder
+  - Drag handle hidden when only one group exists
+  - Edit pencil always subtly visible (opacity 0.35) rather than hidden until hover
+  - Help section auto-hides once users have added words
+  - Delete button visually separated with a left border divider
+- **Options page behaviour** - First-run UX
+  - Single empty group now auto-expands on first load
+  - Default group starts with no sample words (was: "Important", "TODO", "URGENT")
+- **i18n** - All hardcoded strings now use the i18n system
+  - "Matching options" summary label
+  - Colour picker aria-label (e.g. "Highlight colour: Yellow")
+  - Delete group aria-label (e.g. "Delete group: Errors")
+  - Remove word aria-label (e.g. Remove "error")
+  - "Custom" fallback for non-preset colours
+  - All 5 new keys added to all 8 locale files with native-quality translations
+
+### Technical
+- Added `tabs` permission to `manifest.json` (required to open the welcome tab from the service worker)
+- New `src/welcome/` directory with `welcome.html`, `welcome.css`, `welcome.js`
+- Service worker `onInstalled` handler opens `welcome.html` on `reason === 'install'`
+- `groups-list.single-group .drag-handle { display: none }` via JS class toggle
+- New i18n keys: `matchingOptions`, `deleteGroupAriaLabel`, `removeWordAriaLabel`, `colourPickerLabel`, `colourCustom`
+
+---
+
 ## [0.9.0] - 2026-02-14
 
 ### Added

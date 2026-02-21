@@ -288,5 +288,28 @@
   "navPositionTooltip": {
     "message": "Current position",
     "description": "Tooltip for navigation position indicator"
+  },
+  "matchingOptions": {
+    "message": "Matching options",
+    "description": "Label for the collapsible matching options section"
+  },
+  "deleteGroupAriaLabel": {
+    "message": "Delete group: $1",
+    "description": "Aria label for delete group button, $1 is the group name",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "removeWordAriaLabel": {
+    "message": "Remove \"$1\"",
+    "description": "Aria label for remove word button, $1 is the word",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "colourPickerLabel": {
+    "message": "Highlight colour: $1",
+    "description": "Aria label for colour picker button, $1 is the colour name",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "colourCustom": {
+    "message": "Custom",
+    "description": "Fallback label when a colour has no preset name"
   }
 }
