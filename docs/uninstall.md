@@ -13,8 +13,6 @@ But if you've got 60 seconds, I'd love to know what happened. Every response goe
 <div class="uninstall-form">
   <iframe
     src="https://docs.google.com/forms/d/e/1FAIpQLSdFjti2aTlrdddA4rlPoRhiFh1NkcU48ARlpvi8k-4fSUn6YQ/viewform?embedded=true"
-    width="640"
-    height="1120"
     frameborder="0"
     marginheight="0"
     marginwidth="0"
@@ -26,9 +24,10 @@ But if you've got 60 seconds, I'd love to know what happened. Every response goe
 Thanks again. You're the best. 🙌
 
 <style>
-.uninstall-form {
-  display: flex;
-  justify-content: center;
-  margin: 2rem 0;
+.uninstall-form iframe {
+  display: block;
+  width: 100%;
+  height: 1200px;
+  border: none;
 }
 </style>
