@@ -4,6 +4,10 @@ hide:
   - toc
 ---
 
+<script>
+  document.documentElement.setAttribute('data-md-color-scheme', 'default');
+</script>
+
 # Hey, no hard feelings 👋
 
 Genuinely — thanks for giving Live Highlighter a shot. If something wasn't working or it just wasn't the right fit, that's totally okay.
