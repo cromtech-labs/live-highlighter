@@ -1,4 +1,4 @@
-name: Azure Static Web Apps CI/CD
+name: $(Date:yyyyMMdd).$(Rev:r)
 
 pr:
   branches:
@@ -21,34 +21,27 @@ jobs:
   - checkout: self
     submodules: true
 
-  # Install Python
   - task: UsePythonVersion@0
     displayName: 'Use Python 3.11'
     inputs:
       versionSpec: '3.11'
       addToPath: true
 
-  # Install MkDocs dependencies
   - script: |
       python -m pip install --upgrade pip
       pip install -r requirements.txt
-    displayName: 'Install Python dependencies'
+    displayName: 'Install MkDocs dependencies'
 
-  # Build MkDocs site
   - script: |
-      mkdocs build
+      mkdocs build --config-file mkdocs.yml --site-dir site
     displayName: 'Build MkDocs site'
+    workingDirectory: $(Build.SourcesDirectory)
 
-  # Deploy to Azure Static Web Apps
   - task: AzureStaticWebApp@0
     displayName: 'Deploy to Azure Static Web Apps'
     inputs:
       azure_static_web_apps_api_token: $(AZURE_STATIC_WEB_APPS_API_TOKEN_GREEN_WAVE_027C32500)
-###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
-# For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-      app_location: "/" # App source code path
-      api_location: "" # Api source code path - optional
-      output_location: "site" # Built app content directory - optional
-      skip_app_build: true # We already built with mkdocs build
-###### End of Repository/Build Configurations ######
-
+      app_location: "/"
+      api_location: ""
+      output_location: "site"
+      skip_app_build: true
