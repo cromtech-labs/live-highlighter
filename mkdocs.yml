@@ -1,0 +1,78 @@
+site_name: Live Highlighter
+site_description: Stop searching. Start seeing. Make important words pop with colour highlights.
+site_url: https://cromtech-labs.github.io/live-highlighter-docs/
+repo_url: https://github.com/cromtech-labs/browser-highlighter
+repo_name: cromtech-labs/browser-highlighter
+
+theme:
+  name: material
+  palette:
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+  icon:
+    repo: fontawesome/brands/github
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - admonition
+  - pymdownx.details
+  - attr_list
+  - md_in_html
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: getting-started/installation.md
+    - Quick Start: getting-started/quick-start.md
+  - User Guide:
+    - Creating Rules: user-guide/creating-rules.md
+    - Managing Rules: user-guide/managing-rules.md
+    - Use Cases: user-guide/use-cases.md
+  - Reference:
+    - Browser Compatibility: reference/compatibility.md
+    - Privacy: reference/privacy.md
+    - FAQ: reference/faq.md
+  - About:
+    - Changelog: about/changelog.md
+    - License: about/license.md
+    - Support: about/support.md
+
+plugins:
+  - search
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/cromtech-labs/browser-highlighter
