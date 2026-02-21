@@ -4,24 +4,26 @@
 
 ## What is Live Highlighter?
 
-Live Highlighter is a browser extension that helps you instantly spot important text on any webpage by highlighting user-defined strings with customizable colours. Whether you're managing cloud environments, monitoring logs, or tracking specific keywords, Live Highlighter makes critical information stand out.
+Live Highlighter is a browser extension that highlights user-defined words and phrases on any webpage with customizable colours. Organise your highlights into groups, each with its own colour and matching options. Whether you're managing cloud environments, monitoring logs, or tracking specific keywords, Live Highlighter makes critical information stand out — instantly, as you browse.
 
 ## Key Features
 
-- **Multiple highlight rules** - Highlight different words in different colours
-- **6 colour options** - Easy-to-read colours that work for everyone
-- **Drag to reorder** - Control which highlights show when text matches multiple rules
-- **Works everywhere** - Any website, any page, including complex web apps
+- **Groups & words** - Organise highlights into named, colour-coded groups, each containing multiple words or phrases
+- **10 colour options** - WCAG AA compliant colours that work for everyone, including colourblind users
+- **Matching options** - Per-group control over whole word matching, case sensitivity, and regex
+- **Highlight navigation** - Jump through all matches on a page with Previous/Next buttons in the popup
+- **Drag to reorder** - Control which highlight wins when text matches multiple groups
+- **Works everywhere** - Any website, any page, including iframes and complex web apps
 - **Privacy-first** - Zero tracking, all data stays on your device
-- **Simple and fast** - Starts working instantly, no setup required
+- **8 languages** - UI available in English, Spanish, French, German, Portuguese, Chinese, Japanese, and Korean
 
 ## Quick Example
 
-Imagine you manage cloud resources across multiple environments. Create rules like:
+Imagine you manage cloud resources across multiple environments. Create a group called "Environments":
 
-- Highlight "production" in red
-- Highlight "staging" in yellow
-- Highlight "dev" in green
+- Add "production" → highlighted in red
+- Add "staging" → highlighted in yellow
+- Add "dev" → highlighted in green
 
 Now when you browse your cloud console, environment names instantly pop with colour, making it impossible to accidentally modify the wrong resource.
 
@@ -47,7 +49,7 @@ Live Highlighter is perfect for:
 Your privacy matters. Live Highlighter:
 
 - Doesn't track, collect, or transmit any data
-- Stores all rules locally on your device
+- Stores all groups and words locally on your device
 - Works entirely offline
 - Is open source for transparency
 

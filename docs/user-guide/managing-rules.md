@@ -1,141 +1,143 @@
-# Managing Rules
+# Managing Groups
 
-Learn how to organize, edit, and maintain your highlight rules.
+Learn how to organise, edit, and maintain your highlight groups.
 
-## Accessing Rule Management
+## Accessing the Options Page
 
-To access the rule management interface:
+To manage your groups:
 
 1. Click the Live Highlighter icon in your browser toolbar
-2. Click "Manage Rules" button in the popup
+2. Click **Manage Groups** in the popup
 
-## Reordering Rules
+## Reordering Groups
 
 ### Why Order Matters
 
-When text matches multiple rules, **only the first matching rule applies**. This means rule order determines which highlight appears when there's a conflict.
+When text matches words in multiple groups, **only the first matching group applies**. Group order determines which highlight wins when there's a conflict.
 
 ### Example
 
-If you have these rules:
+If you have these groups (in order):
 
 1. "production" → Red
 2. "prod" → Orange
 
-The text "production" will be highlighted in red because it matches the first rule before reaching the second.
+The text "production" will be highlighted in red because it matches the first group before reaching the second.
 
 ### How to Reorder
 
-1. Open the rule management interface
-2. Click and hold the drag handle (⋮⋮) next to a rule
-3. Drag the rule up or down
+1. Open the options page
+2. Click and hold the drag handle (⋮⋮) next to a group
+3. Drag the group up or down
 4. Release to drop it in the new position
 5. Changes are saved automatically
 
-!!! tip "Ordering Strategy"
-    Place more specific rules above more general ones:
+!!! tip "Ordering strategy"
+    Place more specific groups above more general ones:
 
-    ```
-    1. "production-database" → Red
+    1. "production-database" → Red (most specific)
     2. "production" → Orange
-    3. "prod" → Yellow
-    ```
+    3. "prod" → Yellow (catch-all)
 
-## Toggling Rules On/Off
+!!! info
+    The drag handle is hidden when you only have one group.
 
-Temporarily disable rules without deleting them:
+## Toggling Groups On/Off
 
-1. Open the rule management interface
-2. Locate the toggle switch next to the rule
-3. Click to toggle between enabled (on) and disabled (off)
-4. Disabled rules are grayed out
+Temporarily disable a group without deleting it:
+
+1. Open the options page
+2. Click the toggle switch next to the group
+3. Disabled groups are greyed out and won't highlight anything
 
 **When to toggle off:**
 
-- Testing different highlighting schemes
+- Testing a different highlighting scheme
 - Temporarily reducing visual clutter
-- Keeping seasonal or context-specific rules
+- Keeping seasonal or context-specific groups ready but inactive
 
-## Editing Rules
+## Editing a Group
 
-Currently, to modify a rule:
+To rename a group or change its colour:
 
-1. Note the text and colour of the existing rule
-2. Delete the rule
-3. Create a new rule with the updated settings
+- **Name:** Click the group name text (or the pencil icon) to edit it inline
+- **Colour:** Click the colour swatch in the group header to open the colour picker, then select a new colour
 
-!!! info "Future Enhancement"
-    Direct rule editing is planned for a future release.
+Changes are saved automatically.
 
-## Deleting Rules
+## Adding and Removing Words
 
-To permanently remove a rule:
+To add a word to an existing group:
 
-1. Open the rule management interface
-2. Click the delete icon (🗑️) next to the rule
-3. Confirm the deletion in the popup dialog
+1. Expand the group by clicking its header
+2. Type a word or phrase in the input field
+3. Press **Enter** or click **Add**
 
-!!! warning "No Undo"
-    Deleted rules cannot be recovered. Make sure you don't need the rule before deleting.
+To remove a word, click the × on its chip.
 
-## Organizing Large Rule Sets
+## Deleting Groups
+
+To permanently remove a group and all its words:
+
+1. Open the options page
+2. Click the delete icon (🗑️) next to the group
+3. Confirm the deletion
+
+!!! warning "No undo"
+    Deleted groups cannot be recovered.
+
+## Global Toggle
+
+The toggle at the top of the options page (and in the popup) disables all highlighting across every tab without changing your groups. Use this to quickly pause highlighting and re-enable it later.
+
+## Organising Large Setups
 
 ### Group by Purpose
 
-Organize rules mentally or with naming conventions:
+Use descriptive group names so your setup stays readable:
 
-```
-Cloud Environments:
-  - "production" → Red
-  - "staging" → Yellow
-  - "dev" → Green
-
-Status Messages:
-  - "ERROR" → Red
-  - "WARNING" → Orange
-  - "SUCCESS" → Green
-```
+- "Cloud: Production" → Red
+- "Cloud: Staging" → Yellow
+- "Cloud: Dev" → Green
+- "Logs: Errors" → Pink
+- "Logs: Warnings" → Orange
 
 ### Regular Maintenance
 
-Periodically review your rules:
+Periodically review your groups:
 
-- Remove rules you no longer use
-- Update rules that aren't working as expected
-- Reorder rules based on what you need most
+- Remove groups you no longer use
+- Tune matching options if you're seeing false positives
+- Reorder groups based on current priorities
 
-### Export and Backup
+## Performance
 
-!!! info "Future Feature"
-    Export/import functionality is planned for a future release. For now, all rules are stored in your browser's local storage.
-
-## Performance Considerations
-
-- Live Highlighter is optimized for performance
-- No noticeable impact even with many rules
-- Highlighting happens instantly as pages load
-- Rules work on all frames within a page
+- Live Highlighter uses the CSS Custom Highlight API — no DOM modification
+- Highlighting is fast even with many groups and words
+- A debounced observer re-highlights after DOM mutations (e.g., lazy-loaded content)
+- Works in iframes and shadow DOM within the same page
 
 ## Troubleshooting
 
-### Rules Not Applying
+### Groups Not Applying
 
-If a rule isn't working:
+If a group isn't highlighting:
 
-1. Check if the rule is enabled (toggle should be on)
-2. Verify the text matches exactly (case-sensitive)
-3. Check if a higher rule is matching first
-4. Try refreshing the page
+1. Check that the group is enabled (toggle should be on)
+2. Check that global highlighting is enabled (popup toggle)
+3. Verify the word exists on the page with the correct spelling
+4. Check if case sensitivity is enabled and the case matches
+5. Check if a higher-priority group is matching the same text first
 
 ### Unexpected Highlights
 
 If text is highlighting unexpectedly:
 
-1. Review rule order - a more general rule might be matching first
-2. Make your rules more specific
-3. Check for partial matches (e.g., "prod" in "product")
+1. Review group order — a more general group might be matching first
+2. Enable **Match whole word** to prevent partial matches
+3. Make your words more specific
 
 ## Next Steps
 
-- Learn more about [creating effective rules](creating-rules.md)
+- Learn more about [matching options](creating-rules.md#text-matching)
 - Explore [use cases](use-cases.md) for different scenarios

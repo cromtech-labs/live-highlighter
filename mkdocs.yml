@@ -1,8 +1,8 @@
 site_name: Live Highlighter
 site_description: Stop searching. Start seeing. Make important words pop with colour highlights.
-site_url: https://cromtech-labs.github.io/live-highlighter-docs/
-repo_url: https://github.com/cromtech-labs/browser-highlighter
-repo_name: cromtech-labs/browser-highlighter
+site_url: https://docs.livehighlighter.com/
+repo_url: https://github.com/cromtech-labs/live-highlighter
+repo_name: cromtech-labs/live-highlighter
 
 theme:
   name: material
@@ -57,8 +57,8 @@ nav:
     - Installation: getting-started/installation.md
     - Quick Start: getting-started/quick-start.md
   - User Guide:
-    - Creating Rules: user-guide/creating-rules.md
-    - Managing Rules: user-guide/managing-rules.md
+    - Groups & Words: user-guide/creating-rules.md
+    - Managing Groups: user-guide/managing-rules.md
     - Use Cases: user-guide/use-cases.md
   - Reference:
     - Browser Compatibility: reference/compatibility.md
@@ -75,4 +75,4 @@ plugins:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/cromtech-labs/browser-highlighter
+      link: https://github.com/cromtech-labs/live-highlighter

@@ -4,6 +4,14 @@ All notable changes to Live Highlighter will be documented in this file.
 
 ---
 
+## [0.11.0] - 2026-02-22
+
+### Added
+- **Documentation site** - Published docs at [docs.livehighlighter.com](https://docs.livehighlighter.com/) covering all current features, groups architecture, matching options, changelog, and FAQ
+- **Uninstall feedback page** - Opens automatically when the extension is uninstalled, with a short feedback form to capture why users leave
+
+---
+
 ## [0.10.0] - 2026-02-21
 
 ### Added

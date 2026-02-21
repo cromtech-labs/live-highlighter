@@ -4,7 +4,7 @@
 
 ### What is Live Highlighter?
 
-Live Highlighter is a browser extension that highlights user-defined text on web pages with customizable colours. It helps you quickly spot important information like environment names, status messages, or specific keywords.
+Live Highlighter is a browser extension that highlights user-defined words and phrases on web pages with customizable colours. Organise your highlights into groups, each with its own colour and matching options, to quickly spot important information like environment names, status messages, or specific keywords.
 
 ### Is Live Highlighter free?
 
@@ -22,48 +22,63 @@ No. Live Highlighter collects zero data. Everything happens locally on your devi
 
 ### Can Live Highlighter see my passwords or sensitive information?
 
-Live Highlighter only reads text content to find matches for your highlight rules. It doesn't collect, store, or transmit any data, including passwords or sensitive information.
+Live Highlighter only reads text content to find matches for your highlight groups. It doesn't collect, store, or transmit any data, including passwords or sensitive information.
 
 ### Is my data synced across devices?
 
-No, currently all highlight rules are stored locally on each device. Cross-device sync is a potential future feature.
+No, all groups and words are stored locally on each device. Cross-device sync is a potential future feature.
 
 ## Features & Usage
 
-### How many highlight rules can I create?
+### How many groups and words can I create?
 
-There's no hard limit. The extension performs well even with many rules, but for practical purposes, 10-20 rules is usually sufficient.
+- Up to **10 groups**
+- Up to **20 words per group**
+- Up to **200 words total** across all groups
 
 ### Can I highlight the same text in different colours on different websites?
 
-Currently, no. A rule applies globally to all websites. Website-specific rules are a potential future feature.
+Currently, no. Groups apply globally to all websites. Website-specific groups are a potential future feature.
 
-### Why isn't my rule working?
+### Why isn't my group highlighting text?
 
 Common reasons:
 
-1. The rule might be disabled (check the toggle)
-2. Text matching is case-sensitive - "Error" won't match "error"
-3. A higher-priority rule might be matching first
-4. The text might not exist on the page exactly as you entered it
+1. The group or global highlighting might be disabled — check both toggles
+2. Case sensitive matching is enabled — "Error" won't match "error"
+3. Whole word matching is enabled — "prod" won't match "production"
+4. A higher-priority group is matching the same text first
+5. The text might not exist on the page exactly as you entered it
 
-### Can I use regular expressions in rules?
+### Can I use regular expressions?
 
-Not currently. Rules use exact text matching. Regular expression support is a potential future feature.
+Yes. Enable the **Regex** option on a group to use JavaScript regular expressions for matching. This supports alternation (`error|warn`), character classes, quantifiers, and more. Invalid patterns are silently skipped.
+
+### Can I match case-sensitively?
+
+Yes. Enable the **Case sensitive** option on a group. By default, matching is case-insensitive.
+
+### Can I match whole words only?
+
+Yes. Enable the **Match whole word** option on a group to avoid partial matches. For example, "error" will match "There was an error" but not "errors" or "proofreader".
 
 ### Do highlights work in iframes?
 
-Yes, Live Highlighter works in all frames within a page (`all_frames: true` in the manifest).
+Yes, Live Highlighter works in all same-origin frames within a page. Cross-origin iframes cannot be accessed due to browser security restrictions.
 
-### Can I export my rules to share with my team?
+### Can I export my groups to share with my team?
 
 Not currently, but export/import functionality is planned for a future release.
+
+### Does it work on dynamically loaded content?
+
+Yes. Live Highlighter uses a mutation observer to detect new content added to the page (e.g., lazy-loaded sections, infinite scroll) and highlights it automatically.
 
 ## Performance
 
 ### Will Live Highlighter slow down my browser?
 
-No. Live Highlighter is optimized for performance and has negligible impact on browser speed or page load times.
+No. Live Highlighter uses the CSS Custom Highlight API, which highlights text without modifying the DOM. It has negligible impact on browser speed or page load times.
 
 ### Does it work on large pages?
 
@@ -84,13 +99,14 @@ No, Live Highlighter has minimal memory footprint.
 ### Highlights aren't appearing on a specific website
 
 1. Refresh the page
-2. Check if the text actually exists on the page
-3. Verify your rule is enabled and matches the text exactly
-4. Try disabling other extensions that might interfere
+2. Check that the text actually exists on the page
+3. Verify global highlighting is enabled (popup toggle)
+4. Verify your group is enabled and the word matches the text
+5. Try disabling other extensions that might interfere
 
-### I accidentally deleted a rule, can I recover it?
+### I accidentally deleted a group — can I recover it?
 
-Unfortunately, no. Deleted rules cannot be recovered. This is why export/import functionality is planned for a future release.
+Unfortunately, no. Deleted groups cannot be recovered. This is why export/import functionality is planned for a future release.
 
 ### The extension stopped working after a browser update
 
@@ -103,7 +119,7 @@ Unfortunately, no. Deleted rules cannot be recovered. This is why export/import 
 
 ### Can I change the highlight colour intensity?
 
-Not currently. The 6 available colours are pre-selected for good readability and accessibility.
+Not currently. The 10 available colours are pre-selected for good readability and WCAG AA accessibility compliance.
 
 ### Can I highlight with bold or underline instead of background colour?
 
@@ -111,13 +127,13 @@ Not currently, but alternative highlight styles are under consideration for futu
 
 ### Can I add my own custom colours?
 
-Not currently. The 6 available colours are designed to work well together and be accessible.
+Not currently. The 10 available colours are designed to work well together and be accessible.
 
 ## Development & Contributing
 
 ### Is Live Highlighter open source?
 
-Yes! The source code is available on [GitHub](https://github.com/cromtech-labs/browser-highlighter).
+Yes! The source code is available on [GitHub](https://github.com/cromtech-labs/live-highlighter).
 
 ### Can I contribute to Live Highlighter?
 
@@ -125,11 +141,11 @@ Yes! Contributions are welcome. Visit the GitHub repository for contribution gui
 
 ### How do I report a bug?
 
-Please report bugs on our [GitHub Issues page](https://github.com/cromtech-labs/browser-highlighter/issues).
+Please report bugs on our [GitHub Issues page](https://github.com/cromtech-labs/live-highlighter/issues).
 
 ### How do I request a feature?
 
-Feature requests are welcome on [GitHub Issues](https://github.com/cromtech-labs/browser-highlighter/issues). Please check if someone has already requested the same feature.
+Feature requests are welcome on [GitHub Issues](https://github.com/cromtech-labs/live-highlighter/issues). Please check if someone has already requested the same feature.
 
 ## Installation & Updates
 
@@ -145,9 +161,9 @@ Browser extensions update automatically. You can also manually update:
 2. Enable "Developer mode"
 3. Click "Update" at the top
 
-### Will my rules be preserved when updating?
+### Will my groups be preserved when updating?
 
-Yes, all your rules are stored in local storage and will persist across updates.
+Yes, all your groups and words are stored in local storage and will persist across updates.
 
 ## Advanced
 
@@ -155,9 +171,10 @@ Yes, all your rules are stored in local storage and will persist across updates.
 
 Live Highlighter requires:
 
-- **Storage:** To save your highlight rules
+- **Storage:** To save your highlight groups and settings
 - **Active Tab:** To access page content for highlighting
 - **Scripting:** To inject highlighting code into pages
+- **Tabs:** To open the welcome page on first install
 
 See the [privacy policy](privacy.md) for details on how these permissions are used.
 
@@ -170,7 +187,11 @@ Yes, but you need to enable it:
 3. Click "Details"
 4. Enable "Allow in incognito"
 
-Note: Rules created in normal mode will also apply in incognito mode.
+Your groups will apply in incognito mode once enabled.
+
+### Is Live Highlighter available in other languages?
+
+Yes. The UI is available in 8 languages: English, Spanish, French, German, Portuguese (Brazil), Chinese (Simplified), Japanese, and Korean. The extension uses your browser's language setting automatically.
 
 ## Still Have Questions?
 
