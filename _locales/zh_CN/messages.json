@@ -202,5 +202,23 @@
   },
   "navPositionTooltip": {
     "message": "当前位置"
+  },
+  "matchingOptions": {
+    "message": "匹配选项"
+  },
+  "deleteGroupAriaLabel": {
+    "message": "删除分组：$1",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "removeWordAriaLabel": {
+    "message": "删除「$1」",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "colourPickerLabel": {
+    "message": "高亮颜色：$1",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "colourCustom": {
+    "message": "自定义"
   }
 }

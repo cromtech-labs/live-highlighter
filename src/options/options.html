@@ -25,10 +25,10 @@
           </div>
           <div class="header-controls">
             <div class="toggle-container">
-              <div class="toggle-label" id="globalToggle">
+              <button type="button" class="toggle-label" id="globalToggle" role="switch" aria-checked="false">
                 <span class="toggle-slider"></span>
                 <span class="toggle-text" data-i18n="highlightingEnabled">Highlighting Enabled</span>
-              </div>
+              </button>
             </div>
           </div>
         </div>
@@ -113,13 +113,11 @@
             </svg>
           </div>
 
-          <button class="expand-btn" data-i18n-title="clickToExpand" title="Click to expand/collapse">
+          <button class="expand-btn" data-i18n-title="clickToExpand" title="Click to expand/collapse" aria-expanded="false">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
               <path d="M4 6l4 4 4-4z" />
             </svg>
           </button>
-
-          <div class="group-order"></div>
 
           <div class="group-content">
             <div class="group-name-container">
@@ -158,9 +156,9 @@
           </div>
 
           <div class="group-actions">
-            <div class="group-toggle">
+            <button type="button" class="group-toggle" role="switch" aria-checked="false">
               <span class="toggle-slider small"></span>
-            </div>
+            </button>
 
             <button class="btn-icon delete-group-btn" data-i18n-title="deleteGroup" title="Delete group">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
@@ -196,25 +194,28 @@
             <div class="words-list-empty" data-i18n="noWordsYet">No words added yet</div>
           </div>
 
-          <div class="match-options">
-            <label class="match-option">
-              <input type="checkbox" class="match-whole-word-checkbox" />
-              <span data-i18n="matchWholeWords">Match whole word</span>
-            </label>
-            <label class="match-option">
-              <input type="checkbox" class="case-sensitive-checkbox" />
-              <span data-i18n="caseSensitive">Case sensitive</span>
-            </label>
-            <label class="match-option">
-              <input type="checkbox" class="use-regex-checkbox" />
-              <span data-i18n="useRegex">Regex</span>
-              <a href="https://regexr.com/" target="_blank" rel="noopener noreferrer" class="info-link" title="Learn regex at https://regexr.com">
-                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
-                  <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm0 14.5a6.5 6.5 0 1 1 0-13 6.5 6.5 0 0 1 0 13zM7.25 11h1.5V7h-1.5v4zm0-5.5h1.5V4h-1.5v1.5z"/>
-                </svg>
-              </a>
-            </label>
-          </div>
+          <details class="match-options-details">
+            <summary class="match-options-summary" data-i18n="matchingOptions">Matching options</summary>
+            <div class="match-options">
+              <label class="match-option">
+                <input type="checkbox" class="match-whole-word-checkbox" />
+                <span data-i18n="matchWholeWords">Match whole word</span>
+              </label>
+              <label class="match-option">
+                <input type="checkbox" class="case-sensitive-checkbox" />
+                <span data-i18n="caseSensitive">Case sensitive</span>
+              </label>
+              <label class="match-option">
+                <input type="checkbox" class="use-regex-checkbox" />
+                <span data-i18n="useRegex">Regex</span>
+                <a href="https://regexr.com/" target="_blank" rel="noopener noreferrer" class="info-link" title="Learn regex at https://regexr.com">
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm0 14.5a6.5 6.5 0 1 1 0-13 6.5 6.5 0 0 1 0 13zM7.25 11h1.5V7h-1.5v4zm0-5.5h1.5V4h-1.5v1.5z"/>
+                  </svg>
+                </a>
+              </label>
+            </div>
+          </details>
         </div>
       </div>
     </template>

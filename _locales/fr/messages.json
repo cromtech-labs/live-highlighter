@@ -202,5 +202,23 @@
   },
   "navPositionTooltip": {
     "message": "Position actuelle"
+  },
+  "matchingOptions": {
+    "message": "Options de correspondance"
+  },
+  "deleteGroupAriaLabel": {
+    "message": "Supprimer le groupe : $1",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "removeWordAriaLabel": {
+    "message": "Supprimer «$1»",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "colourPickerLabel": {
+    "message": "Couleur de surlignage : $1",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "colourCustom": {
+    "message": "Personnalisé"
   }
 }
