@@ -7,9 +7,10 @@ const LiveHighlighter = (function ()
 
   return {
     // Maximum limits (free tier)
-    MAX_GROUPS: 10,              // Maximum number of groups
-    MAX_WORDS_PER_GROUP: 20,     // Maximum words per group
-    MAX_TOTAL_WORDS: 200,        // Maximum total words across all groups
+    MAX_GROUPS: 10,                       // Maximum number of groups
+    MAX_WORDS_PER_GROUP: 1000,            // Maximum words per group
+    MAX_TOTAL_WORDS: 2000,                // Maximum total words across all groups
+    MAX_IMPORT_FILE_BYTES: 100 * 1024,     // 100 KB max import file size (~1000 words/phrases)
 
     // Preset colour options (free tier)
     // WCAG AA compliant colors optimized for light backgrounds with black text

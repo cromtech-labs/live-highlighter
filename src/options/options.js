@@ -5,7 +5,7 @@
   'use strict';
 
   // Access namespace
-  const { Storage, PRESET_COLOURS, MAX_GROUPS, MAX_WORDS_PER_GROUP, MAX_TOTAL_WORDS, NOTIFICATION_TIMEOUT_MS, i18n } = LiveHighlighter;
+  const { Storage, PRESET_COLOURS, MAX_GROUPS, MAX_WORDS_PER_GROUP, MAX_TOTAL_WORDS, MAX_IMPORT_FILE_BYTES, NOTIFICATION_TIMEOUT_MS, i18n } = LiveHighlighter;
 
   // Helper for translated messages
   const msg = (key, substitutions) => i18n.getMessage(key, substitutions);
@@ -485,6 +485,25 @@
       }
     });
 
+    // Import button setup
+    const importWordsBtn = groupElement.querySelector('.import-words-btn');
+    const importWordsFile = groupElement.querySelector('.import-words-file');
+    const newImportBtn = importWordsBtn.cloneNode(true);
+    importWordsBtn.replaceWith(newImportBtn);
+    const newImportFile = importWordsFile.cloneNode(true);
+    importWordsFile.replaceWith(newImportFile);
+
+    newImportBtn.disabled = atLimit;
+
+    newImportBtn.addEventListener('click', () => newImportFile.click());
+    newImportFile.addEventListener('change', async (e) =>
+    {
+      const file = e.target.files[0];
+      if (!file) return;
+      await handleImportWords(group.id, file);
+      newImportFile.value = '';
+    });
+
     // Prevent info link click from toggling the checkbox (it's inside a <label>)
     const infoLink = groupElement.querySelector('.info-link');
     if (infoLink) {
@@ -740,12 +759,10 @@
     let failedWords = [];
     let skippedWords = [];
 
-    for (const singleWord of words) {
+    for (const [i, singleWord] of words.entries()) {
       const canAdd = await Storage.canAddWord(groupId);
       if (!canAdd) {
-        // Track remaining words as skipped
-        const currentIndex = words.indexOf(singleWord);
-        skippedWords = words.slice(currentIndex);
+        skippedWords = words.slice(i);
         break; // Stop adding if limit reached
       }
 
@@ -783,6 +800,57 @@
     } else {
       showNotification(msg('notifFailedRemoveWord'), 'error');
     }
+  }
+
+  async function handleImportWords(groupId, file)
+  {
+    if (file.size > MAX_IMPORT_FILE_BYTES) {
+      const maxKB = Math.round(MAX_IMPORT_FILE_BYTES / 1024);
+      showNotification(msg('notifImportFileTooBig', [maxKB.toString()]), 'error');
+      return;
+    }
+
+    let text;
+    try {
+      text = await readFileAsText(file);
+    } catch (e) {
+      showNotification(msg('notifImportError'), 'error');
+      return;
+    }
+
+    const words = text.split(/\r?\n/)
+      .map(line => line.trim())
+      .filter(line => line.length > 0);
+
+    if (words.length === 0) {
+      showNotification(msg('notifImportEmpty'), 'info');
+      return;
+    }
+
+    const { added, duplicates, skipped } = await Storage.addWordsToGroup(groupId, words);
+
+    await loadGroups();
+
+    const parts = [];
+    if (added > 0) parts.push(msg('notifImportAdded', [added.toString()]));
+    if (duplicates > 0) parts.push(msg('notifImportDuplicates', [duplicates.toString()]));
+    if (skipped > 0) parts.push(msg('notifImportLimitReached', [skipped.toString()]));
+
+    if (parts.length > 0) {
+      const type = skipped > 0 ? 'error' : 'info';
+      showNotification(parts.join('. ') + '.', type);
+    }
+  }
+
+  function readFileAsText(file)
+  {
+    return new Promise((resolve, reject) =>
+    {
+      const reader = new FileReader();
+      reader.onload = (e) => resolve(e.target.result);
+      reader.onerror = () => reject(new Error('Failed to read file'));
+      reader.readAsText(file);
+    });
   }
 
   // ============================================================================

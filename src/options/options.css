@@ -1161,6 +1161,33 @@ header {
   cursor: not-allowed;
 }
 
+.import-words-btn {
+  padding: 10px 16px;
+  background: var(--bg-light);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.import-words-btn:hover:not(:disabled) {
+  background: var(--bg-white);
+  border-color: var(--primary-color);
+}
+
+.import-words-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.import-words-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Delete Group Button */
 .delete-group-btn {
   color: var(--text-secondary);

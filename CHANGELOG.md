@@ -4,6 +4,32 @@ All notable changes to Live Highlighter will be documented in this file.
 
 ---
 
+## [0.12.0] - 2026-04-25
+
+### Added
+- **Import word list from file** - New "Import" button in each group's word section loads a `.txt` file (one word or phrase per line)
+  - Summary notification reports how many words were added, how many were already in the group, and how many were not added due to limits
+  - Files over 100 KB are rejected with a clear error message (100 KB is generous for any realistic word list)
+  - Import button is disabled when the group is already at its word limit
+
+### Changed
+- **Word limits raised** - `MAX_WORDS_PER_GROUP` increased from 20 to 1,000; `MAX_TOTAL_WORDS` increased from 200 to 2,000, supported by the highlighting performance improvements below
+
+### Fixed
+- **Skipped-word tracking bug in manual add** - When adding multiple words at once (comma/space separated) and hitting the limit mid-way, `Array.indexOf()` was used to find the current position. For inputs with duplicate words (e.g. `apple, banana, apple`) this returned the first occurrence index, causing earlier words to be incorrectly reported as skipped
+
+### Technical
+- **Combined regex per group** - `highlightTextNode` now iterates over one pre-compiled `RegExp` per group instead of one `String.indexOf` call per word
+  - Cost per text node drops from O(words) to O(groups) — with max 10 groups the work is constant regardless of total word count
+  - Regex mode gains the same benefit: previously `new RegExp(pattern)` was created on every text node for every rule
+  - All matching semantics preserved: priority order, overlap detection, whole-word matching (`\b` assertions baked into pattern at compile time), case sensitivity (`i` flag), and user-defined regex patterns (alternatives joined with `|`)
+  - `flattenGroupsToRules` and the `rules` state variable replaced by `compileGroupRegexes` and `compiledGroups`
+- **Batch import storage** - New `addWordsToGroup(groupId, wordList)` in `storage.js` performs 1 storage read + 1 write for any file size; the previous sequential approach called `addWordToGroup` once per word (2N storage operations for N words)
+- **i18n** - 8 new keys added to all 8 locale files (`importWordsBtn`, `importWordsTitle`, `notifImportAdded`, `notifImportDuplicates`, `notifImportLimitReached`, `notifImportEmpty`, `notifImportFileTooBig`, `notifImportError`) with native-quality translations for each language
+- **Test import files** - New `tests/imports/` directory with 17 files covering standard test setup, performance keywords, phrases, duplicate detection, limit overflow, size rejection, regex patterns, and one file per max-capacity group (replacing manual copy-paste in max-capacity setup guide)
+
+---
+
 ## [0.11.0] - 2026-02-22
 
 ### Added

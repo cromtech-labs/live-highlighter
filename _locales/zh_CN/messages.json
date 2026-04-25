@@ -220,5 +220,33 @@
   },
   "colourCustom": {
     "message": "自定义"
+  },
+  "importWordsBtn": {
+    "message": "导入"
+  },
+  "importWordsTitle": {
+    "message": "从 .txt 文件导入（每行一个词或短语）"
+  },
+  "notifImportAdded": {
+    "message": "已导入 $1 个关键词",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "notifImportDuplicates": {
+    "message": "$1 个已存在，跳过",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "notifImportLimitReached": {
+    "message": "$1 个未添加（已到上限）",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "notifImportEmpty": {
+    "message": "文件里没有有效关键词"
+  },
+  "notifImportFileTooBig": {
+    "message": "文件太大（最大 $1 KB）",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "notifImportError": {
+    "message": "文件读取失败"
   }
 }

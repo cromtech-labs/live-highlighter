@@ -339,6 +339,45 @@ The extension supports 8 languages: English, Spanish, Portuguese (Brazil), Frenc
 
 ---
 
+---
+
+## Import Test Files
+
+Pre-built `.txt` files in `tests/imports/` for testing the Import feature. Use these via the **Import** button on any group in the options page.
+
+### General purpose
+
+| File | Words | Purpose |
+|---|---|---|
+| `basic-setup.txt` | 6 | The standard test config: `error, success, resource, data, tags, kv-`. Works with all test pages. |
+| `performance-keywords.txt` | 10 | Extended keyword set for `10000-words.html` and `complex-scrolling.html`. |
+| `phrases-test.txt` | 20 | Multi-word phrases (e.g. `request failed`, `permission denied`). Tests phrase import. |
+| `duplicates-test.txt` | 12 | First 6 entries duplicate `basic-setup.txt`. Import after `basic-setup.txt` to verify the "already in group" count in the summary notification. |
+| `limit-overflow-test.txt` | 30 | Greek letters + numbers. Import into a group that's close to its word limit to trigger the "not added (limit reached)" part of the summary. |
+| `too-large.txt` | 14,000 | 123 KB of random words — exceeds the 100 KB limit. Tests the file size rejection path — should show the "File is too large" error without importing anything. |
+| `regex-patterns.txt` | 4 | The four regex patterns from `regex.html`: `err(or\|eur)`, `\b\d{3}-\d{4}\b`, `https?://\S+`, `\b[A-Z]{2,5}-\d+\b`. Import into a group with **Regex** enabled, then open `regex.html` to verify all cases match. |
+
+### Max-capacity setup (replaces manual copy-paste)
+
+Import one file per group to set up `max-capacity.html` in seconds instead of manually entering 200 words:
+
+| File | Group | Color | Theme |
+|---|---|---|---|
+| `max-capacity-group-1.txt` | Group 1 | Yellow | Errors & Failures |
+| `max-capacity-group-2.txt` | Group 2 | Orange | Warnings & Issues |
+| `max-capacity-group-3.txt` | Group 3 | Cyan | Success & Completion |
+| `max-capacity-group-4.txt` | Group 4 | Pink | Data & Storage |
+| `max-capacity-group-5.txt` | Group 5 | Green | API & Network |
+| `max-capacity-group-6.txt` | Group 6 | Lavender | Users & Auth |
+| `max-capacity-group-7.txt` | Group 7 | Blue | Configuration |
+| `max-capacity-group-8.txt` | Group 8 | Peach | Network & Infrastructure |
+| `max-capacity-group-9.txt` | Group 9 | Teal | Monitoring & Observability |
+| `max-capacity-group-10.txt` | Group 10 | Indigo | Processing & Execution |
+
+Each file contains exactly 20 words matching the word list in `max-capacity/max-capacity-setup.md`.
+
+---
+
 ## Adding New Tests
 
 When adding new test files:

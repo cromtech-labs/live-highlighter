@@ -56,6 +56,17 @@ monitor, metric, log, trace, event, alert, alarm, threshold, dashboard, panel, c
 process, thread, task, job, worker, queue, scheduler, executor, pipeline, workflow, stage, step, phase, cycle, iteration, batch, stream, consumer, producer, handler
 ```
 
+## Fast Setup via Import (Recommended)
+
+Instead of manually entering words, use the **Import** button on each group and load the pre-built files from `tests/imports/`:
+
+1. Create Group 1, open it, click **Import** → select `max-capacity-group-1.txt`
+2. Repeat for Groups 2–10 using `max-capacity-group-2.txt` through `max-capacity-group-10.txt`
+
+All files are one word per line and contain exactly the 20 words listed below.
+
+---
+
 ## Quick Copy-Paste Format
 
 For adding words to each group (comma-separated):

@@ -220,5 +220,33 @@
   },
   "colourCustom": {
     "message": "Personalizado"
+  },
+  "importWordsBtn": {
+    "message": "Importar"
+  },
+  "importWordsTitle": {
+    "message": "Importar palabras desde archivo .txt (una palabra o frase por línea)"
+  },
+  "notifImportAdded": {
+    "message": "$1 palabras importadas",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "notifImportDuplicates": {
+    "message": "$1 ya estaban en el grupo",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "notifImportLimitReached": {
+    "message": "$1 no se añadieron (límite alcanzado)",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "notifImportEmpty": {
+    "message": "El archivo no contiene palabras válidas"
+  },
+  "notifImportFileTooBig": {
+    "message": "Archivo demasiado grande (máx. $1 KB)",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "notifImportError": {
+    "message": "No se pudo leer el archivo"
   }
 }

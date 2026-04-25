@@ -1,0 +1,4 @@
+err(or|eur)
+\b\d{3}-\d{4}\b
+https?://\S+
+\b[A-Z]{2,5}-\d+\b

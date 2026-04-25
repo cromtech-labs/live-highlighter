@@ -220,5 +220,33 @@
   },
   "colourCustom": {
     "message": "カスタム"
+  },
+  "importWordsBtn": {
+    "message": "インポート"
+  },
+  "importWordsTitle": {
+    "message": ".txtファイルからインポート（1行につき1ワードまたはフレーズ）"
+  },
+  "notifImportAdded": {
+    "message": "$1件のキーワードをインポートしました",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "notifImportDuplicates": {
+    "message": "$1件はすでにグループにあります",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "notifImportLimitReached": {
+    "message": "$1件は追加できませんでした（上限に達しました）",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "notifImportEmpty": {
+    "message": "有効なキーワードが見つかりませんでした"
+  },
+  "notifImportFileTooBig": {
+    "message": "ファイルが大きすぎます（最大$1 KB）",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "notifImportError": {
+    "message": "ファイルを読み込めませんでした"
   }
 }

@@ -635,6 +635,60 @@ LiveHighlighter.Storage = (function ()
   }
 
   /**
+   * Add multiple words to a group in a single storage read/write.
+   * Returns counts for UI feedback instead of calling addWordToGroup in a loop.
+   * @param {string} groupId - Group ID
+   * @param {string[]} wordList - Words to add
+   * @returns {Promise<{added: number, duplicates: number, skipped: number}>}
+   */
+  async function addWordsToGroup(groupId, wordList)
+  {
+    try {
+      const groups = await getGroups();
+      const group = groups.find(g => g.id === groupId);
+      if (!group) return { added: 0, duplicates: 0, skipped: 0 };
+
+      let added = 0;
+      let duplicates = 0;
+      let skipped = 0;
+
+      for (let i = 0; i < wordList.length; i++) {
+        const trimmed = typeof wordList[i] === 'string' ? wordList[i].trim() : '';
+
+        if (!trimmed || trimmed.length > 100) {
+          duplicates++;
+          continue;
+        }
+
+        // Check limits before each add (counts update as we add within the loop)
+        const totalNow = groups.reduce((sum, g) => sum + g.words.length, 0);
+        if (group.words.length >= MAX_WORDS_PER_GROUP || totalNow >= MAX_TOTAL_WORDS) {
+          skipped = wordList.length - i;
+          break;
+        }
+
+        // Case-insensitive duplicate check
+        if (group.words.some(w => w.toLowerCase() === trimmed.toLowerCase())) {
+          duplicates++;
+          continue;
+        }
+
+        group.words.push(trimmed);
+        added++;
+      }
+
+      if (added > 0) {
+        await saveGroups(groups);
+      }
+
+      return { added, duplicates, skipped };
+    } catch (error) {
+      console.error('Live Highlighter: Error adding words to group', error);
+      return { added: 0, duplicates: 0, skipped: 0 };
+    }
+  }
+
+  /**
    * Get total word count across all groups
    * @returns {Promise<number>} Total word count
    */
@@ -735,6 +789,7 @@ LiveHighlighter.Storage = (function ()
 
     // Word management
     addWordToGroup,
+    addWordsToGroup,
     removeWordFromGroup,
     updateWordInGroup,
     getTotalWordCount,

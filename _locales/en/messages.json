@@ -311,5 +311,41 @@
   "colourCustom": {
     "message": "Custom",
     "description": "Fallback label when a colour has no preset name"
+  },
+  "importWordsBtn": {
+    "message": "Import",
+    "description": "Button text for importing words from a file"
+  },
+  "importWordsTitle": {
+    "message": "Import words from .txt file (one word or phrase per line)",
+    "description": "Tooltip for import words button"
+  },
+  "notifImportAdded": {
+    "message": "Imported $1 words",
+    "description": "Import summary: number of words successfully added",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "notifImportDuplicates": {
+    "message": "$1 already in group",
+    "description": "Import summary: number of duplicates skipped",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "notifImportLimitReached": {
+    "message": "$1 not added (limit reached)",
+    "description": "Import summary: number of words skipped due to word limit",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "notifImportEmpty": {
+    "message": "File contains no valid words",
+    "description": "Notification when imported file is empty or blank"
+  },
+  "notifImportFileTooBig": {
+    "message": "File is too large (max $1 KB)",
+    "description": "Error when imported file exceeds the size limit",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "notifImportError": {
+    "message": "Failed to read file",
+    "description": "Error when the file cannot be read"
   }
 }

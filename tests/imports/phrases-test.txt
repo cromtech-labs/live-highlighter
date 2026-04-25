@@ -1,0 +1,20 @@
+request failed
+success response
+error message
+data not found
+authentication required
+permission denied
+service unavailable
+timeout expired
+invalid token
+connection refused
+rate limit exceeded
+internal server error
+not found
+bad request
+unauthorized access
+resource already exists
+operation completed
+unexpected error
+validation failed
+cache miss

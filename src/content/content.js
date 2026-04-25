@@ -14,7 +14,7 @@
   // ============================================================================
 
   let groups = [];   // Groups from storage
-  let rules = [];    // Flattened rules for highlighting (derived from groups)
+  let compiledGroups = [];    // Pre-compiled regex per group (derived from groups)
   let enabled = true;
   let observer = null;
   let debounceTimer = null;
@@ -47,36 +47,68 @@
   // Groups to Rules Flattening
   // ============================================================================
 
-  /**
-   * Flatten groups into a flat array of word-color mappings
-   * This maintains compatibility with existing highlighting logic
-   * @param {Array} groups - Array of group objects
-   * @returns {Array} Flat array of {text, colour, textColor, enabled, order, matchWholeWord, caseSensitive, useRegex} objects
-   */
-  function flattenGroupsToRules(groups)
+  function escapeRegExp(string)
   {
-    const flatRules = [];
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
 
-    groups.forEach(group =>
-    {
-      if (!group.enabled) return;
+  /**
+   * Compile groups into pre-built regex objects, one per enabled group.
+   * Called once when groups load; reused across every text node for O(groups) cost
+   * instead of O(words) per text node.
+   * @param {Array} groups - Array of group objects
+   * @returns {Array} Priority-sorted array of {regex, colour, order} objects
+   */
+  function compileGroupRegexes(groups)
+  {
+    const compiled = [];
 
-      group.words.forEach(word =>
-      {
-        flatRules.push({
-          text: word.trim(),
+    for (const group of groups) {
+      if (!group.enabled || !group.words || group.words.length === 0) continue;
+
+      const flags = group.caseSensitive ? 'g' : 'gi';
+      let pattern;
+
+      if (group.useRegex) {
+        const validPatterns = [];
+        for (const word of group.words) {
+          const trimmed = word.trim();
+          if (!trimmed) continue;
+          try {
+            new RegExp(trimmed);
+            validPatterns.push(`(?:${trimmed})`);
+          } catch (e) {
+            // invalid regex pattern, skip silently
+          }
+        }
+        if (validPatterns.length === 0) continue;
+        pattern = validPatterns.join('|');
+      } else {
+        const escapedWords = group.words
+          .map(w => w.trim())
+          .filter(w => w.length > 0)
+          .map(w => escapeRegExp(w));
+
+        if (escapedWords.length === 0) continue;
+
+        pattern = group.matchWholeWord
+          ? escapedWords.map(w => `\\b${w}\\b`).join('|')
+          : escapedWords.join('|');
+      }
+
+      try {
+        compiled.push({
+          regex: new RegExp(pattern, flags),
           colour: group.colour,
-          textColor: group.textColor,
-          enabled: true,
-          order: group.order,  // Inherit priority from group
-          matchWholeWord: group.matchWholeWord || false,  // Default to false for backward compatibility
-          caseSensitive: group.caseSensitive || false,    // Default to false for backward compatibility
-          useRegex: group.useRegex || false               // Default to false for backward compatibility
+          order: group.order
         });
-      });
-    });
+      } catch (e) {
+        console.warn('Live Highlighter: Failed to compile group regex', e);
+      }
+    }
 
-    return flatRules;
+    compiled.sort((a, b) => a.order - b.order);
+    return compiled;
   }
 
   // ============================================================================
@@ -103,18 +135,16 @@
     groups = await Storage.getGroups();
     enabled = await Storage.getEnabled();
 
-    // Flatten groups to rules for highlighting
-    rules = flattenGroupsToRules(groups);
+    compiledGroups = compileGroupRegexes(groups);
 
-    console.log(`Live Highlighter${frameInfo}: Loaded ${groups.length} groups (${rules.length} words), enabled: ${enabled}`);
+    const totalWords = groups.reduce((sum, g) => g.enabled ? sum + g.words.length : sum, 0);
+    console.log(`Live Highlighter${frameInfo}: Loaded ${groups.length} groups (${totalWords} words), enabled: ${enabled}`);
 
-    // Inject styles into the main document (for consistency with iframes)
-    // This ensures all documents use PRESET_COLOURS as the single source of truth
     if (!document.getElementById('live-highlighter-styles')) {
       injectStylesIntoDocument(document);
     }
 
-    if (enabled && rules.length > 0) {
+    if (enabled && compiledGroups.length > 0) {
       // Process the current page
       highlightPage();
 
@@ -144,7 +174,7 @@
    */
   function highlightPage()
   {
-    if (!enabled || rules.length === 0) {
+    if (!enabled || compiledGroups.length === 0) {
       clearAllHighlights();
       return;
     }
@@ -168,7 +198,7 @@
    */
   function processDocument()
   {
-    if (!enabled || rules.length === 0) {
+    if (!enabled || compiledGroups.length === 0) {
       return;
     }
 
@@ -192,7 +222,7 @@
    */
   function processNode(node)
   {
-    if (!node || !enabled || rules.length === 0) {
+    if (!node || !enabled || compiledGroups.length === 0) {
       return;
     }
 
@@ -358,154 +388,71 @@
     const text = textNode.textContent;
     if (!text) return;
 
-    // Get the CSS object from the document's window
     const cssHighlights = doc.defaultView?.CSS?.highlights;
     if (!cssHighlights) {
       console.warn('Live Highlighter: CSS Highlight API not available in this document context');
       return;
     }
 
-    // Track all matches and their positions
+    // Collect all matches across all groups in priority order.
+    // compiledGroups is pre-sorted by group priority; the overlap check ensures
+    // higher-priority groups claim positions before lower-priority ones.
     const matches = [];
 
-    // Helper function to check if a character is a word boundary
-    const isWordBoundary = (text, index) => {
-      if (index < 0 || index >= text.length) return true;  // Start/end of text is a boundary
-      const char = text[index];
-      return !/\w/.test(char);  // Non-word characters are boundaries
-    };
-
-    // Check each rule in priority order (rules are already sorted by order field)
-    for (const rule of rules) {
-      if (!rule.enabled) continue;
-
-      const searchText = rule.text;
-
-      if (rule.useRegex) {
-        // Regex matching path
-        let regex;
-        try {
-          regex = new RegExp(searchText, 'g');
-        } catch (e) {
-          // Invalid regex pattern - skip this rule silently
+    for (const compiledGroup of compiledGroups) {
+      compiledGroup.regex.lastIndex = 0;
+      let match;
+      while ((match = compiledGroup.regex.exec(text)) !== null) {
+        if (match[0].length === 0) {
+          compiledGroup.regex.lastIndex++;
           continue;
         }
 
-        let match;
-        while ((match = regex.exec(text)) !== null) {
-          // Prevent infinite loops on zero-length matches
-          if (match[0].length === 0) {
-            regex.lastIndex++;
-            continue;
-          }
+        const start = match.index;
+        const end = start + match[0].length;
 
-          const index = match.index;
-          const endIndex = index + match[0].length;
+        const isOverlapping = matches.some(m =>
+          (start >= m.start && start < m.end) ||
+          (end > m.start && end <= m.end) ||
+          (start <= m.start && end >= m.end)
+        );
 
-          // Check if this position is already covered by a higher priority rule
-          const isOverlapping = matches.some(m =>
-            (index >= m.start && index < m.end) ||
-            (endIndex > m.start && endIndex <= m.end) ||
-            (index <= m.start && endIndex >= m.end)
-          );
-
-          if (!isOverlapping) {
-            matches.push({
-              start: index,
-              end: endIndex,
-              rule: rule
-            });
-          }
-        }
-      } else {
-        // Standard substring matching path
-        const caseSensitive = rule.caseSensitive || false;
-        const matchWholeWord = rule.matchWholeWord || false;
-
-        // Conditionally convert to lowercase based on case sensitivity option
-        const compareText = caseSensitive ? text : text.toLowerCase();
-        const compareSearch = caseSensitive ? searchText : searchText.toLowerCase();
-
-        let startIndex = 0;
-        while (true) {
-          const index = compareText.indexOf(compareSearch, startIndex);
-          if (index === -1) break;
-
-          const endIndex = index + searchText.length;
-
-          // Check word boundaries if matchWholeWord is enabled
-          let isValidMatch = true;
-          if (matchWholeWord) {
-            const beforeIsWord = !isWordBoundary(text, index - 1);
-            const afterIsWord = !isWordBoundary(text, endIndex);
-            isValidMatch = !beforeIsWord && !afterIsWord;  // Both must be boundaries
-          }
-
-          if (!isValidMatch) {
-            startIndex = index + 1;
-            continue;
-          }
-
-          // Check if this position is already covered by a higher priority rule
-          const isOverlapping = matches.some(m =>
-            (index >= m.start && index < m.end) ||
-            (endIndex > m.start && endIndex <= m.end) ||
-            (index <= m.start && endIndex >= m.end)
-          );
-
-          if (!isOverlapping) {
-            matches.push({
-              start: index,
-              end: endIndex,
-              rule: rule
-            });
-          }
-
-          startIndex = index + 1;
+        if (!isOverlapping) {
+          matches.push({ start, end, colour: compiledGroup.colour });
         }
       }
     }
 
-    // If no matches found, nothing to do
     if (matches.length === 0) return;
 
-    // Create Range objects for each match and add to the document's CSS.highlights
     matches.forEach(match =>
     {
       try {
-        // Create a Range for this match using the document's window context
         const range = doc.createRange();
         range.setStart(textNode, match.start);
         range.setEnd(textNode, match.end);
 
-        // Get the highlight name for this rule's color
-        const highlightName = LiveHighlighter.getHighlightName(match.rule.colour);
+        const highlightName = LiveHighlighter.getHighlightName(match.colour);
         if (!highlightName) {
-          console.warn('Live Highlighter: Unknown color', match.rule.colour);
+          console.warn('Live Highlighter: Unknown color', match.colour);
           return;
         }
 
-        // Get or create the Highlight object for this color
         let highlight = cssHighlights.get(highlightName);
         if (!highlight) {
-          // Use the document's window to create the Highlight
           highlight = new doc.defaultView.Highlight();
           cssHighlights.set(highlightName, highlight);
         }
 
-        // Add this range to the highlight
         highlight.add(range);
 
-        // Cache the range for future updates (note: cross-document ranges might cause issues)
         if (!rangeCache.has(highlightName)) {
           rangeCache.set(highlightName, new Set());
         }
         rangeCache.get(highlightName).add(range);
 
-        // Mark navigation list as dirty so it rebuilds on next navigate
         navDirty = true;
       } catch (e) {
-        // Range creation can fail on some edge cases, silently ignore
         console.debug('Live Highlighter: Failed to create range', e);
       }
     });
@@ -590,7 +537,7 @@
     }
 
     // Clear and rebuild
-    if (enabled && rules.length > 0) {
+    if (enabled && compiledGroups.length > 0) {
       highlightPage();
     } else {
       clearAllHighlights();
@@ -648,7 +595,7 @@
    */
   function setupMutationObserver()
   {
-    if (!enabled || rules.length === 0) {
+    if (!enabled || compiledGroups.length === 0) {
       return;
     }
 
@@ -747,7 +694,7 @@
       // Skip when navigating or during navigation scroll to preserve state
       scrollTimer = setTimeout(() =>
       {
-        if (enabled && rules.length > 0 && navCurrentIndex < 0 && !navScrolling) {
+        if (enabled && compiledGroups.length > 0 && navCurrentIndex < 0 && !navScrolling) {
           // With CSS Highlight API, we can just re-process the page
           // This is fast because we only create Range objects, no DOM manipulation
           highlightPage();
@@ -983,7 +930,7 @@
 
     if (changes.groups) {
       groups = await Storage.getGroups();
-      rules = flattenGroupsToRules(groups);
+      compiledGroups = compileGroupRegexes(groups);
       needsRefresh = true;
     }
 

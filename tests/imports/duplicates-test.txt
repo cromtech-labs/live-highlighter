@@ -1,0 +1,12 @@
+error
+success
+resource
+data
+tags
+kv-
+alert
+warning
+critical
+info
+debug
+trace

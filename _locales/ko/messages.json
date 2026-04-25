@@ -220,5 +220,33 @@
   },
   "colourCustom": {
     "message": "사용자 지정"
+  },
+  "importWordsBtn": {
+    "message": "가져오기"
+  },
+  "importWordsTitle": {
+    "message": ".txt 파일에서 가져오기 (한 줄에 단어 또는 문구 하나씩)"
+  },
+  "notifImportAdded": {
+    "message": "키워드 $1개를 가져왔어요",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "notifImportDuplicates": {
+    "message": "$1개는 이미 그룹에 있어요",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "notifImportLimitReached": {
+    "message": "$1개는 추가할 수 없었어요 (한도 초과)",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "notifImportEmpty": {
+    "message": "유효한 키워드가 없어요"
+  },
+  "notifImportFileTooBig": {
+    "message": "파일이 너무 커요 (최대 $1 KB)",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "notifImportError": {
+    "message": "파일을 읽을 수 없었어요"
   }
 }
